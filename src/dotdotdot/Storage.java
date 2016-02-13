@@ -14,8 +14,8 @@ public class Storage {
     	return toDos;
     }
 	
-    public void setToDos() {
-    	
+    public void setToDos(ArrayList<String> toDos) {
+    	this.toDos = toDos;
     }
     
 }
