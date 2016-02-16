@@ -47,7 +47,7 @@ public class GUI {
 		        switch (event.keyCode) {
 		        // This is case happens after "enter" is pressed
 		        case SWT.CR:
-		          Parser parser = new Parser();
+		          // hughgjh
 		          break;
 		        case SWT.ESC:
 		          System.out.println(SWT.ESC);
