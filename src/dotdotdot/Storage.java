@@ -17,5 +17,9 @@ public class Storage {
     public void setToDos(ArrayList<String> toDos) {
     	this.toDos = toDos;
     }
+	
+	public readFromFile(){
+	
+	}
     
 }
