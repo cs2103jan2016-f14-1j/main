@@ -36,28 +36,34 @@ public class GUI {
 	public static void main(String[] args) {
 		Display display = Display.getDefault();
 		Shell shell = new Shell();
-		shell.setSize(640, 700);
+		shell.setSize(640, 620);
 		shell.setText("Dotdotdot");
+		
+		Parser parser = new Parser();
 		
 		Input = new Text(shell, SWT.BORDER);
 		Input.setText("Insert Input");
-		Input.setBounds(10, 603, 594, 31);
+		Input.setBounds(10, 522, 594, 31);
 		Input.addKeyListener(new KeyAdapter() {
 		      public void keyPressed(KeyEvent event) {
 		        switch (event.keyCode) {
 		        // This is case happens after "enter" is pressed
 		        case SWT.CR:
-		          Parser parser = new Parser();
+		          // jlkjkll
 		          break;
 		        case SWT.ESC:
 		          System.out.println(SWT.ESC);
 		          break;
+		        default:
+		          	
+		          break;
+		      
 		        }
 		      }
 		    });
 		
 		Category = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
-		Category.setBounds(10, 10, 155, 578);
+		Category.setBounds(10, 10, 155, 500);
 		
 		Events = new TableItem(Category, SWT.NONE);
 		Events.setText("Events");
@@ -67,7 +73,7 @@ public class GUI {
 		tableItem.setText("Meeting");
 		
 		Main = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
-		Main.setBounds(179, 10, 425, 578);
+		Main.setBounds(179, 10, 425, 500);
 		
 		tableItem_1 = new TableItem(Main, SWT.NONE);
 		tableItem_1.setText("Beat Sam");
