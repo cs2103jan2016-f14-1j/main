@@ -39,7 +39,7 @@ public class Storage {
 	 * @param line
 	 * 		the task to be added to the arrayList
 	 */
-	public void addUnformattedToDos(String line) {
+	public void addUnformattedToDo(String line) {
 		toDos.add(line);
 	}
 	
@@ -77,7 +77,7 @@ public class Storage {
 			bufferReader = new BufferedReader(new FileReader(FILENAME));
 			String currentLine = "";
 			while ((currentLine = bufferReader.readLine()) != null) {
-				addUnformattedToDos(currentLine);
+				addUnformattedToDo(currentLine);
 			}
 		} catch (FileNotFoundException ex) {
 			systemPrint(FILE_NOT_FOUND_ERROR_MSG);

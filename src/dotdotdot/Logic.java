@@ -80,12 +80,11 @@ public class Logic {
 
 	/**
 	 * This method is used to search for the task in the list,
-	 * after which if the task is found, the task will be removed from the list
-	 * and return the task to the user
+	 * after which if the task is found, return the task index to the user
 	 * @param taskID
 	 * 		the task ID to be searched
 	 * @return
-	 * 		the task if it is found, otherwise an empty string to represent not found
+	 * 		the task if it is found, otherwise -1 to represent not found
 	 */
 	private int searchForTask(int taskID) {
 		if (store.isListEmpty()) {
