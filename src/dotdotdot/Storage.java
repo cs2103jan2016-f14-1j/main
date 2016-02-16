@@ -1,13 +1,16 @@
 package dotdotdot;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Storage {
 
+	//format of the task in this array is [taskID]|[task]|[date]|[categories]|[isComplete]|
 	private ArrayList<String> toDos;
 	private final String FILENAME = "C:\\";
 	private final String GENERAL_ERROR_MSG = "Error has occured: %1$s.";
@@ -39,6 +42,30 @@ public class Storage {
 	public void addUnformattedToDos(String line) {
 		toDos.add(line);
 	}
+	
+	/**
+	 * Remove the task from the arrayList
+	 * @param line
+	 * 		the task to be removed from the arrayList
+	 */
+	public void removeUnformattedToDos(String line){
+		
+	}
+	
+	/**
+	 * Returns the concatenated task by using index
+	 * @param index
+	 * 		the index of the task to be obtained
+	 * @return
+	 * 		return the concatenated task to the caller
+	 */
+	public String getTaskByIndex(int index){
+		return toDos.get(index);
+	}
+	
+	public void setTaskByIndex(int index, String task){
+		toDos.set(index, task);
+	}
 
 	/**
 	 * This method directly read the contents of the file
@@ -64,6 +91,30 @@ public class Storage {
 			} catch (IOException ex) {
 				systemPrint(IO_ERROR_MSG);
 			}
+		}
+	}
+	
+	/**
+	 * A method to check if the current list is empty
+	 * @return
+	 * 		returns the truth value of the list
+	 */
+	public boolean isListEmpty(){
+		return toDos.isEmpty();
+	}
+	
+	/**
+	 * Overwrite the file directly with the data in the arrayList 
+	 */
+	public void writeToFile(){
+		try{
+		BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(FILENAME));
+		for(int index=0;index< toDos.size();index++){
+			bufferWriter.write(toDos.get(index));
+		}
+		bufferWriter.close();
+		}catch(IOException ex){
+			systemPrint(IO_ERROR_MSG);
 		}
 	}
 
