@@ -24,7 +24,7 @@ public class Logic {
 		return false;
 	}
 	
-	public boolean editTask() {
+	public boolean editTask(int taskID, String date) {
 		return false;
 	}
 	
@@ -35,16 +35,17 @@ public class Logic {
 	public boolean deleteTask(ArrayList<Integer> taskIDs){
 		return false;
 	}
+	
+	public boolean doTask(int taskID){
+		return false;
+	}
+
     
 	public boolean syncList() {
 		return false;
     }
     
 	public boolean writeToFile() {
-		return false;
-	}
-	
-	public boolean doTask(int taskID){
 		return false;
 	}
     
