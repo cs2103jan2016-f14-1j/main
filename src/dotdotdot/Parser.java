@@ -5,18 +5,19 @@ import java.util.Arrays;
 
 public class Parser {
 	
-	
-	private final int FIRST_ELEMENT = 0;
-	private final int SECOND_ELEMENT = 1;
-	private final int AFTER_PREPOSITION = 3;
-	private final int INVALID_ID = -1; 		// taskID can only be +ve
-	private final int SINGLE_DIGIT_DAY = 4; 	// 4 chars long; i.e. 9Jan
+	private Logic logic; 
+	public final int FIRST_ELEMENT = 0;
+	public final int SECOND_ELEMENT = 1;
+	public final int AFTER_PREPOSITION = 3;
+	public final int INVALID_ID = -1; 		// taskID can only be +ve
+	public final int SINGLE_DIGIT_DAY = 4; 	// 4 chars long; i.e. 9Jan
 	
 	enum COMMAND_TYPE {
 		ADD, EDIT, DO, DELETE, INVALID
 	};
 
 	public Parser() {	
+		logic = new Logic();
 	}
 	
 	/*
@@ -59,8 +60,6 @@ public class Parser {
 		boolean hasCategory = getCategories(categories, inputParts),
 				hasPreposition = getPreposition(preposition, inputParts);
 		
-		Logic logic = new Logic();
-		
 		if(!hasCategory && !hasPreposition) {
 			logic.addTask(taskName); 
 		} else if (hasCategory && !hasPreposition) {
@@ -92,7 +91,6 @@ public class Parser {
 			return false;
 		}
 		
-		Logic logic = new Logic();
 		logic.doTask(taskID);
 		return true;
 	}
@@ -110,7 +108,6 @@ public class Parser {
 			return false;
 		}
 		
-		Logic logic = new Logic();
 		logic.editTask(taskID, date);
 		
 		return true;
@@ -295,6 +292,16 @@ public class Parser {
 	}
 	private int lastIndexOf(ArrayList<String> as) {
 		return as.size() - 1;
+	}
+	
+	/**
+	 * This method is to link GUI class to the logic class through parser class
+	 * 
+	 * @return
+	 * 		return logic created in this class
+	 */
+	public Logic getLogic(){
+		return logic;
 	}
 	
 }

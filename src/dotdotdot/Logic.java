@@ -29,6 +29,8 @@ public class Logic {
 	}
 
 	public boolean addTask(String task) {
+		store.addUnformattedToDo(task);
+		store.writeToFile();
 		return false;
 	}
 
@@ -47,13 +49,38 @@ public class Logic {
 	public boolean editTask(int taskID, String date) {
 		return false;
 	}
-
+	
+	/**
+	 * The following deleteTask() methods allow the user to delete task(s)
+	 * 
+	 * @param int taskID or a list of integers(taskIDs)
+	 *            the taskID is used to search for the task in the storage
+	 * @return it will return successful when a task is deleted,
+	 *         else otherwise.
+	 */
 	public boolean deleteTask(int taskID) {
-		return false;
+		if (!isTaskFound(taskID)) {
+			return false;
+		}
+		String toDelete = getTaskByIndex(taskID);
+		removeUnformattedToDo(toDelete);
+		syncTaskToList(toDelete, taskID, DELETE);
+		writeToFile();
+		return true;
 	}
 
 	public boolean deleteTask(ArrayList<Integer> taskIDs) {
-		return false;
+		while(!taskIDs.isEmpty()){
+			if (!isTaskFound(taskID)) {
+				return false;
+			}
+			String toDelete = getTaskByIndex(taskID);
+			removeUnformattedToDo(toDelete);
+			syncTaskToList(toDelete, taskID, DELETE);
+			writeToFile();
+			return true;
+		}
+		return false; //this part might have problems since the deletion does nothing
 	}
 
 	/**
@@ -181,7 +208,17 @@ public class Logic {
 		store.writeToFile();
 		return true;
 	}
-
+	
+	/**
+	 * This method is to link GUI class to the storage class through logic class
+	 * 
+	 * @return
+	 * 		return storage created in this class
+	 */
+	public Storage getStorage(){
+		return store;
+	}
+	
 	/**
 	 * A general method to print out to the console
 	 * @param toPrint
