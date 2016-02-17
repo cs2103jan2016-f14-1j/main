@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Parser {
-	public final int FIRST_ELEMENT = 0;
-	public final int SECOND_ELEMENT = 1;
-	public final int AFTER_PREPOSITION = 3;
-	public final int INVALID_ID = -1; 		// taskID can only be +ve
-	public final int SINGLE_DIGIT_DAY = 4; 	// 4 chars long; i.e. 9Jan
+	
+	
+	private final int FIRST_ELEMENT = 0;
+	private final int SECOND_ELEMENT = 1;
+	private final int AFTER_PREPOSITION = 3;
+	private final int INVALID_ID = -1; 		// taskID can only be +ve
+	private final int SINGLE_DIGIT_DAY = 4; 	// 4 chars long; i.e. 9Jan
 	
 	enum COMMAND_TYPE {
 		ADD, EDIT, DO, DELETE, INVALID
@@ -19,10 +21,10 @@ public class Parser {
 	
 	/*
 	 * @param String
-	 * @return boolean
+	 * @return int
 	 * 
 	 * true if user command is executed successfully
-	 * false otherwise
+	 * false otherwise (or unrecognised command)
 	 */
 	public boolean input(String rawInput) {
 		String commandTypeString = getCommand(rawInput);	
