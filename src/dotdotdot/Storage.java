@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public class Storage {
 
 	//format of the task in this array is [taskID]|[task]|[date]|[categories]|[isComplete]|
-	private static ArrayList<String> toDos = new ArrayList<String>();
+	private ArrayList<String> toDos = new ArrayList<String>();
 	
-	private final String FILENAME = "C:\\";
+	private final String FILENAME = "./test.txt";
 	private final String GENERAL_ERROR_MSG = "Error has occured: %1$s.";
 	private final String FILE_NOT_FOUND_ERROR_MSG = "The file is not found. Check the path of file";
 	private final String IO_ERROR_MSG = "Input/Output error.";
@@ -31,7 +31,7 @@ public class Storage {
 	 * @return 
 	 * 		returns an arrayList of unformatted tasks to the caller
 	 */
-	public static ArrayList<String> getUnformattedToDos() {
+	public ArrayList<String> getUnformattedToDos() {
 		return toDos;
 	}
 
@@ -112,6 +112,7 @@ public class Storage {
 		BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(FILENAME));
 		for(int index=0;index< toDos.size();index++){
 			bufferWriter.write(toDos.get(index));
+			bufferWriter.newLine();
 		}
 		bufferWriter.close();
 		}catch(IOException ex){

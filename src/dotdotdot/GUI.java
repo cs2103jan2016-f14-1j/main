@@ -42,6 +42,9 @@ public class GUI {
 	}
 	
 	private static void displayList() {
+		
+		mainTable.removeAll();
+    	
 		for(int i=0; i<list.size(); i++){
 			mainItem = new TableItem(mainTable, SWT.NONE);
 			mainItem.setText((i+1) + ". " + list.get(i));
@@ -49,6 +52,9 @@ public class GUI {
 	}
 	
 	private static void displayHelp() {
+		
+		mainTable.removeAll();
+		
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		mainItem.setText("Adding tasks");
@@ -120,9 +126,7 @@ public class GUI {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// Initialize the array list from the text file
-		list = null;
-		//list = logic.init();
+		
 		Display display = Display.getDefault();
 		Shell shell = new Shell();
 		shell.setSize(685, 619);
@@ -148,10 +152,16 @@ public class GUI {
 		hintColor = display.getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
 		normalColor = display.getSystemColor(SWT.COLOR_BLACK);
 		
+		categoryTable = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
+		categoryTable.setBounds(10, 10, 155, 500);
+		
+		mainTable = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
+		mainTable.setBounds(179, 10, 474, 500);
+		
 		input = new Text(shell, SWT.BORDER);
 		inputToHint();
 		input.setBounds(10, 522, 643, 31);
-		
+		input.setFocus();
 		input.addKeyListener(new KeyAdapter() {
 		      public void keyPressed(KeyEvent event) {
 		        switch (event.keyCode) {
@@ -161,14 +171,12 @@ public class GUI {
 		        	inputToHint();
 	        		
 		        	if(tempInput.equals(HELP_COMMAND_1) || tempInput.equals(HELP_COMMAND_2)){
-		        		mainTable.removeAll();
 		        		displayHelp();
 		        	} else {
 
 					    if(parser.input(tempInput)){
 					    	// Command Success 
-					    	mainTable.clearAll();
-					    	// list = Storage.getUnformattedToDos();
+					    	list = parser.getLogic().getStorage().getUnformattedToDos();
 					    	displayList();
 					    } else {
 					        // Command Failed
@@ -195,13 +203,8 @@ public class GUI {
 		      }
 		    });
 		
-		categoryTable = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
-		categoryTable.setBounds(10, 10, 155, 500);
-		
-		mainTable = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
-		mainTable.setBounds(179, 10, 474, 500);
-		
-		//displayList();
+		list = logic.getStorage().getUnformattedToDos();
+		displayList();
 		
 		shell.open();
 		shell.layout();

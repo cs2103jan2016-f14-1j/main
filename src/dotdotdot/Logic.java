@@ -29,6 +29,8 @@ public class Logic {
 	}
 
 	public boolean addTask(String task) {
+		store.addUnformattedToDo(task);
+		store.writeToFile();
 		return false;
 	}
 
@@ -206,7 +208,17 @@ public class Logic {
 		store.writeToFile();
 		return true;
 	}
-
+	
+	/**
+	 * This method is to link GUI class to the storage class through logic class
+	 * 
+	 * @return
+	 * 		return storage created in this class
+	 */
+	public Storage getStorage(){
+		return store;
+	}
+	
 	/**
 	 * A general method to print out to the console
 	 * @param toPrint
