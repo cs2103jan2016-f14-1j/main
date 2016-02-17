@@ -49,8 +49,14 @@ public class Logic {
 	}
 
 	public boolean deleteTask(int taskID) {
-		//testing
-		return false;
+		if (!isTaskFound(taskID)) {
+			return false;
+		}
+		String toDelete = getTaskByIndex(taskID);
+		removeUnformattedToDo(toDelete);
+		syncTaskToList(toDelete, taskID, DELETE);
+		writeToFile();
+		return true;
 	}
 
 	public boolean deleteTask(ArrayList<Integer> taskIDs) {
