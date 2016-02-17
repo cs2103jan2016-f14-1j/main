@@ -164,15 +164,15 @@ public class GUI {
 		        		mainTable.removeAll();
 		        		displayHelp();
 		        	} else {
-		        		// ArrayList<String> tempList = parser.input(tempInput);
-					    ArrayList<String> tempList = null;
-					    if(list.equals(tempList)){
-					    	// Command Failed Because No Change
-					    } else {
-					        // Command Success
+
+					    if(parser.input(tempInput)){
+					    	// Command Success 
 					    	mainTable.clearAll();
-					    	list = tempList;
+					    	// list = Storage.getUnformattedToDos();
 					    	displayList();
+					    } else {
+					        // Command Failed
+					    	
 					    }
 		        	}		     				  
 		            break;
