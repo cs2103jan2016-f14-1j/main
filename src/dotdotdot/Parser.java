@@ -48,7 +48,7 @@ public class Parser {
 
 		COMMAND_TYPE commandType = determineCommandType(commandTypeString);
 		
-		switch(commandType) {
+		switch (commandType) {
 			case ADD:
 				addTask(rawInput);
 				break;
@@ -57,6 +57,9 @@ public class Parser {
 				break;
 			case EDIT:
 				editTask(rawInput);
+				break;
+			case DELETE:
+				deleteTask(rawInput);
 				break;
 			default:
 				// TODO: DOESN'T FIT INTO ANY OF THE ABOVE!!!
@@ -76,7 +79,7 @@ public class Parser {
 		boolean hasCategory = getCategories(categories, inputParts),
 				hasPreposition = getPreposition(preposition, inputParts);
 		
-		if(!hasCategory && !hasPreposition) {
+		if (!hasCategory && !hasPreposition) {
 			logic.addTask(taskName); 
 		} else if (hasCategory && !hasPreposition) {
 			taskName = getTaskNameWithCategories(taskName);
@@ -100,15 +103,31 @@ public class Parser {
 	 * @return true if taskID exists, false otherwise
 	 */
 	private boolean doTask(String rawInput) {
+		// TODO: actually this method should set task as COMPLETED instead of deleting
 		String 	taskName = getTaskName(rawInput);
 		int taskID = convertToInt(taskName);
 		
-		if(isInvalidID(taskID)) {
+		if (isInvalidID(taskID)) {
 			return false;
-		}
+		}	
 		
 		logic.doTask(taskID);
 		return true;
+	}
+	
+	/**
+	 * @param rawInput: the taskID as a String
+	 * @return true if taskID exists, false otherwise
+	 */
+	private boolean deleteTask(String rawInput) {
+		String taskName = getTaskName(rawInput);
+		int taskID = convertToInt(taskName);
+		
+		if (isInvalidID(taskID)) {
+			return false;
+		}
+		
+		return logic.deleteTask(taskID);
 	}
 	
 	/**
@@ -120,7 +139,7 @@ public class Parser {
 		int taskID = convertToInt(getTaskID(inputParts));
 		String date = getDateFromRaw(inputParts);
 		
-		if(isInvalidID(taskID)) {
+		if (isInvalidID(taskID)) {
 			return false;
 		}
 		
@@ -132,7 +151,7 @@ public class Parser {
 	private String getDateFromRaw(ArrayList<String> inputParts) {
 		String date = EMPTY_STRING;
 		
-		for(int i = AFTER_PREPOSITION; i < inputParts.size(); i++) {
+		for (int i = AFTER_PREPOSITION; i < inputParts.size(); i++) {
 			date += inputParts.get(i);
 		}
 		
@@ -140,8 +159,8 @@ public class Parser {
 	}
 
 	private String formatDate(String date) {
-		String formattedDate = date.replaceAll("\\s+",EMPTY_STRING);
-		return (formattedDate.length() == SINGLE_DIGIT_DAY) ? appendZero(formattedDate) : formattedDate;
+		String formattedDate = removeAllSpaces(date);
+		return isSingleDigitDay(formattedDate) ? appendZero(formattedDate) : formattedDate;
 	}
 
 	private String getTaskID(ArrayList<String> inputParts) {
@@ -184,8 +203,8 @@ public class Parser {
 	private String getTaskNameWithCategories(String taskName) {
 		String out = EMPTY_STRING;
 		ArrayList<String> as = breakString(taskName);
-		for(String s : as) {
-			if(!isCategory(s)) {
+		for (String s : as) {
+			if (!isCategory(s)) {
 				out += s + SPACE_STRING;
 			}
 		}
@@ -201,8 +220,8 @@ public class Parser {
 	private String getTaskNameWithPreposition(String taskName) {
 		String out = EMPTY_STRING;
 		ArrayList<String> as = breakString(taskName);
-		for(String s : as) {
-			if(!isPreposition(s) && !isCategory(s)) {
+		for (String s : as) {
+			if (!isPreposition(s) && !isCategory(s)) {
 				out += s + SPACE_STRING;
 			} else {
 				break;
@@ -216,7 +235,7 @@ public class Parser {
 		String 	out = EMPTY_STRING,
 				s = EMPTY_STRING;
 		ArrayList<String> as = breakString(taskName);
-		for(int i = lastIndexOf(as); !isPreposition(s); i--) {
+		for (int i = lastIndexOf(as); !isPreposition(s); i--) {
 			s = as.get(i);
 			if(!isPreposition(s) && !isCategory(s)) {
 				out = s + out;
@@ -243,7 +262,7 @@ public class Parser {
      */
 	private boolean getCategories(ArrayList<String> cats, ArrayList<String> parts){
 		boolean hasFound = false;
-		for(String s : parts) {
+		for (String s : parts) {
 			if(isCategory(s)) {
 				cats.add(s);
 				hasFound = true;
@@ -260,8 +279,8 @@ public class Parser {
 	 */
 	private boolean getPreposition(ArrayList<String> prep, ArrayList<String> parts){
 		boolean hasFound = false;
-		for(String s : parts) {
-			if(isPreposition(s)) {
+		for (String s : parts) {
+			if (isPreposition(s)) {
 				prep.add(s);
 				hasFound = true;
 			}
@@ -313,6 +332,12 @@ public class Parser {
 	}
 	private int lastIndexOf(ArrayList<String> as) {
 		return as.size() - 1;
+	}
+	private String removeAllSpaces(String date) {
+		return date.replaceAll("\\s+", EMPTY_STRING);
+	}
+	private boolean isSingleDigitDay(String date) {
+		return date.length() == SINGLE_DIGIT_DAY;
 	}
 	
 	/**

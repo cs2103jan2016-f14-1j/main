@@ -177,12 +177,15 @@ public class GUI {
 		        		int returnCode = parser.input(tempInput);
 					    if (returnCode == Parser.COMMAND_SUCCESS) {
 					    	list = parser.getLogic().getStorage().getUnformattedToDos();
-					    	displayList();
+					    	
 					    } else if (returnCode == Parser.COMMAND_FAIL){
 					    	// TODO: feedback to user that command has failed
+					    	
 					    } else { // returnCode == Parser.COMMAND_UNRECOGNISED
 					    	// TODO: feedback to user that command is unrecognised
+					    	
 					    }
+					    displayList();
 		        	}		     				  
 		            break;
 		        case SWT.ESC:

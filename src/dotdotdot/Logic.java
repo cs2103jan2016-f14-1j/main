@@ -85,15 +85,21 @@ public class Logic {
 	
 	public boolean deleteTask(int taskID) {
 		ArrayList<String> list = store.getUnformattedToDos();
-		if (!isTaskFound(taskID-1, list)) { //is this a magic number?
+		// TODO: currently this checks not by TaskID but by order in ArrayList
+		if (!isTaskFound(taskID, list)) { 
 			return false;
 		}
-		String toDelete = store.getTaskByIndex(taskID);
-		syncTaskToList(toDelete, taskID, COMMAND.DELETE);
+		//String toDelete = store.getTaskByIndex(taskID);
+		syncTaskToList(EMPTY_STRING, taskID, COMMAND.DELETE);
 		writeToFile();
 		return true;
 	}
 
+	// TODO:	don't bother doing delete of multiple task until
+	// 			deleting single task via taskID is OK
+	//			ideally, this should just call deleteTask(int TaskID) multiple times
+	//
+	// 			need to do the taskID generator first
 	public boolean deleteTask(ArrayList<Integer> taskIDs) {
 		ArrayList<String> list = store.getUnformattedToDos();
 		for (int taskID: taskIDs) {
@@ -109,12 +115,7 @@ public class Logic {
 	}
 
 	public boolean isTaskFound(int taskID, ArrayList<String> list) {
-		try {
-			list.get(taskID-1);
-		} catch (IndexOutOfBoundsException e){
-			return false;
-		}
-		return true;
+		return list.size() >= taskID;
 	}
 	
 
@@ -225,7 +226,7 @@ public class Logic {
 		case ADD:
 			break;
 		case DELETE:
-			store.removeUnformattedToDos(taskToSync);
+			store.removeUnformattedToDos(taskIndex);
 			break;
 		case EDIT:
 			break;

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class Storage {
 
-	//format of the task in this array is [taskID]|[task]|[date]|[categories]|[isComplete]|
+	//FORMAT OF EACH TASK: [taskID]|[task]|[date]|[categories]|[isComplete]|
 	private ArrayList<String> toDos = new ArrayList<String>();
 	
 	private final String FILENAME = "./test.txt";
@@ -49,8 +49,10 @@ public class Storage {
 	 * @param line
 	 * 		the task to be removed from the arrayList
 	 */
-	public void removeUnformattedToDos(String line){
-		
+	public void removeUnformattedToDos(int taskID){
+		// TODO: currently this removes by the order in which it is in ArrayList
+		// TODO: we want it to remove by the taskID
+		toDos.remove(taskID - 1);
 	}
 	
 	/**
@@ -78,6 +80,7 @@ public class Storage {
 			bufferReader = new BufferedReader(new FileReader(FILENAME));
 			String currentLine = "";
 			while ((currentLine = bufferReader.readLine()) != null) {
+				// TODO: NEED TO UNFORMAT!! (in tandem with writeToFile's BufferedWriter.write)
 				addUnformattedToDo(currentLine);
 			}
 		} catch (FileNotFoundException ex) {
@@ -108,14 +111,15 @@ public class Storage {
 	 * Overwrite the file directly with the data in the arrayList 
 	 */
 	public void writeToFile(){
-		try{
+		try {
 		BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(FILENAME));
-		for(int index=0;index< toDos.size();index++){
+		for (int index = 0; index < toDos.size(); index++) {
+			// TODO: NEED TO FORMAT!!
 			bufferWriter.write(toDos.get(index));
 			bufferWriter.newLine();
 		}
 		bufferWriter.close();
-		}catch(IOException ex){
+		} catch (IOException ex) {
 			systemPrint(IO_ERROR_MSG);
 		}
 	}
