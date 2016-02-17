@@ -82,32 +82,41 @@ public class Logic {
 	 * @return it will return successful when a task is deleted,
 	 *         else otherwise.
 	 */
-	/*
+	
 	public boolean deleteTask(int taskID) {
-		if (!isTaskFound(taskID)) {
+		ArrayList<String> list = store.getUnformattedToDos();
+		if (!isTaskFound(taskID-1, list)) { //is this a magic number?
 			return false;
 		}
-		String toDelete = getTaskByIndex(taskID);
-		removeUnformattedToDo(toDelete);
-		syncTaskToList(toDelete, taskID, DELETE);
+		String toDelete = store.getTaskByIndex(taskID);
+		syncTaskToList(toDelete, taskID, COMMAND.DELETE);
 		writeToFile();
 		return true;
 	}
 
 	public boolean deleteTask(ArrayList<Integer> taskIDs) {
-		while(!taskIDs.isEmpty()){
-			if (!isTaskFound(taskID)) {
+		ArrayList<String> list = store.getUnformattedToDos();
+		for (int taskID: taskIDs) {
+			if (!isTaskFound(taskID, list)) {
 				return false;
 			}
-			String toDelete = getTaskByIndex(taskID);
-			removeUnformattedToDo(toDelete);
-			syncTaskToList(toDelete, taskID, DELETE);
+			String toDelete = store.getTaskByIndex(taskID);
+			syncTaskToList(toDelete, taskID, COMMAND.DELETE);
 			writeToFile();
 			return true;
 		}
 		return false; //this part might have problems since the deletion does nothing
 	}
-	*/
+
+	public boolean isTaskFound(int taskID, ArrayList<String> list) {
+		try {
+			list.get(taskID-1);
+		} catch (IndexOutOfBoundsException e){
+			return false;
+		}
+		return true;
+	}
+	
 
 	/**
 	 * This method allows the user to mark task as completed
@@ -216,6 +225,7 @@ public class Logic {
 		case ADD:
 			break;
 		case DELETE:
+			store.removeUnformattedToDos(taskToSync);
 			break;
 		case EDIT:
 			break;
