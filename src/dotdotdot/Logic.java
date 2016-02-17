@@ -47,7 +47,15 @@ public class Logic {
 	public boolean editTask(int taskID, String date) {
 		return false;
 	}
-
+	
+	/**
+	 * The following deleteTask() methods allow the user to delete task(s)
+	 * 
+	 * @param int taskID or a list of integers(taskIDs)
+	 *            the taskID is used to search for the task in the storage
+	 * @return it will return successful when a task is deleted,
+	 *         else otherwise.
+	 */
 	public boolean deleteTask(int taskID) {
 		if (!isTaskFound(taskID)) {
 			return false;
@@ -60,7 +68,17 @@ public class Logic {
 	}
 
 	public boolean deleteTask(ArrayList<Integer> taskIDs) {
-		return false;
+		while(!taskIDs.isEmpty()){
+			if (!isTaskFound(taskID)) {
+				return false;
+			}
+			String toDelete = getTaskByIndex(taskID);
+			removeUnformattedToDo(toDelete);
+			syncTaskToList(toDelete, taskID, DELETE);
+			writeToFile();
+			return true;
+		}
+		return false; //this part might have problems since the deletion does nothing
 	}
 
 	/**
