@@ -11,7 +11,8 @@ import java.util.ArrayList;
 public class Storage {
 
 	//format of the task in this array is [taskID]|[task]|[date]|[categories]|[isComplete]|
-	private ArrayList<String> toDos;
+	private static ArrayList<String> toDos = new ArrayList<String>();
+	
 	private final String FILENAME = "C:\\";
 	private final String GENERAL_ERROR_MSG = "Error has occured: %1$s.";
 	private final String FILE_NOT_FOUND_ERROR_MSG = "The file is not found. Check the path of file";
@@ -21,7 +22,7 @@ public class Storage {
 	 *  Constructor method to initialize the values of the variables
 	 */
 	public Storage() {
-		toDos = new ArrayList<>();
+		readFromFile();
 	}
 
 	/**
@@ -30,7 +31,7 @@ public class Storage {
 	 * @return 
 	 * 		returns an arrayList of unformatted tasks to the caller
 	 */
-	public ArrayList<String> getUnformattedToDos() {
+	public static ArrayList<String> getUnformattedToDos() {
 		return toDos;
 	}
 
