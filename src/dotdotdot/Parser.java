@@ -6,11 +6,27 @@ import java.util.Arrays;
 public class Parser {
 	
 	private Logic logic; 
-	public final int FIRST_ELEMENT = 0;
-	public final int SECOND_ELEMENT = 1;
-	public final int AFTER_PREPOSITION = 3;
-	public final int INVALID_ID = -1; 		// taskID can only be +ve
-	public final int SINGLE_DIGIT_DAY = 4; 	// 4 chars long; i.e. 9Jan
+	private static String lastCommand = "";
+	
+	public static final int COMMAND_SUCCESS = 0;
+	public static final int COMMAND_FAIL = 1;	
+	public static final int COMMAND_UNRECOGNISED = 2;
+	public static final String CMD_ADD = "add";
+	public static final String CMD_DO = "do";
+	public static String CMD_DELETE = "delete";
+	public static String CMD_EDIT = "edit";
+	public static String CMD_INVALID = "invalid";
+	
+	private final int FIRST_ELEMENT = 0;
+	private final int SECOND_ELEMENT = 1;
+	private final int AFTER_PREPOSITION = 3;
+	private final int INVALID_ID = -1; 		// taskID can only be +ve
+	private final int SINGLE_DIGIT_DAY = 4; 	// 4 chars long; i.e. 9Jan
+	private final String PREPOSITIONS = "(at|by|on|to)";
+	private final String CATEGORIES = "@";
+	private final String EMPTY_STRING = "";
+	private final String SPACE_STRING = " ";
+	
 	
 	enum COMMAND_TYPE {
 		ADD, EDIT, DO, DELETE, INVALID
@@ -27,7 +43,7 @@ public class Parser {
 	 * true if user command is executed successfully
 	 * false otherwise (or unrecognised command)
 	 */
-	public boolean input(String rawInput) {
+	public int input(String rawInput) {
 		String commandTypeString = getCommand(rawInput);	
 
 		COMMAND_TYPE commandType = determineCommandType(commandTypeString);
@@ -44,16 +60,16 @@ public class Parser {
 				break;
 			default:
 				// TODO: DOESN'T FIT INTO ANY OF THE ABOVE!!!
-				return false;
+				return COMMAND_UNRECOGNISED;
 		}
 		
-		return true;
+		return COMMAND_SUCCESS;
 	}
 	
 	private boolean addTask(String rawInput) {
 		String 	taskName = getTaskName(rawInput),
-				date = "",
-				prep = "";
+				date = EMPTY_STRING,
+				prep = EMPTY_STRING;
 		ArrayList<String> 	inputParts = breakString(rawInput),
 							categories = new ArrayList<String>(),
 							preposition = new ArrayList<String>();
@@ -114,7 +130,7 @@ public class Parser {
 	}
 	
 	private String getDateFromRaw(ArrayList<String> inputParts) {
-		String date = "";
+		String date = EMPTY_STRING;
 		
 		for(int i = AFTER_PREPOSITION; i < inputParts.size(); i++) {
 			date += inputParts.get(i);
@@ -124,7 +140,7 @@ public class Parser {
 	}
 
 	private String formatDate(String date) {
-		String formattedDate = date.replaceAll("\\s+","");
+		String formattedDate = date.replaceAll("\\s+",EMPTY_STRING);
 		return (formattedDate.length() == SINGLE_DIGIT_DAY) ? appendZero(formattedDate) : formattedDate;
 	}
 
@@ -150,14 +166,14 @@ public class Parser {
 	 * @return first token of rawInput, delimited by spaces
 	 */
 	private String getCommand(String rawInput) {
-		return rawInput.split(" ",2)[FIRST_ELEMENT];
+		return rawInput.split(SPACE_STRING,2)[FIRST_ELEMENT];
     }
 	
 	/*
 	 * returns string without first token, delimited by spaces
 	 */
 	private String getTaskName(String rawInput) {
-		return rawInput.split(" ",2)[SECOND_ELEMENT];
+		return rawInput.split(SPACE_STRING,2)[SECOND_ELEMENT];
     }
 	
 	/**
@@ -166,11 +182,11 @@ public class Parser {
 	 * @return String without commandType and @categories
 	 */
 	private String getTaskNameWithCategories(String taskName) {
-		String out = "";
+		String out = EMPTY_STRING;
 		ArrayList<String> as = breakString(taskName);
 		for(String s : as) {
 			if(!isCategory(s)) {
-				out += s + " ";
+				out += s + SPACE_STRING;
 			}
 		}
 		
@@ -183,11 +199,11 @@ public class Parser {
 	 * @return String without commandType and preposition/date
 	 */
 	private String getTaskNameWithPreposition(String taskName) {
-		String out = "";
+		String out = EMPTY_STRING;
 		ArrayList<String> as = breakString(taskName);
 		for(String s : as) {
 			if(!isPreposition(s) && !isCategory(s)) {
-				out += s + " ";
+				out += s + SPACE_STRING;
 			} else {
 				break;
 			}
@@ -197,8 +213,8 @@ public class Parser {
     }
 	
 	private String getDateFromRaw(String taskName) {
-		String 	out = "",
-				s = "";
+		String 	out = EMPTY_STRING,
+				s = EMPTY_STRING;
 		ArrayList<String> as = breakString(taskName);
 		for(int i = lastIndexOf(as); !isPreposition(s); i--) {
 			s = as.get(i);
@@ -217,7 +233,7 @@ public class Parser {
 	 * @return
 	 */
     private ArrayList<String> breakString(String rawInput){
-    	return new ArrayList<String>(Arrays.asList(rawInput.split(" ")));
+    	return new ArrayList<String>(Arrays.asList(rawInput.split(SPACE_STRING)));
     }
 	
     /**
@@ -267,24 +283,29 @@ public class Parser {
 			throw new Error("command type string cannot be null!");
 
 		if (commandTypeString.equalsIgnoreCase("add")) {
+			lastCommand = CMD_ADD;
 			return COMMAND_TYPE.ADD;
 		} else if (commandTypeString.equalsIgnoreCase("do")) {
+			lastCommand = CMD_DO;
 			return COMMAND_TYPE.DO;
 		} else if (commandTypeString.equalsIgnoreCase("delete")) {
+			lastCommand = CMD_DELETE;
 			return COMMAND_TYPE.DELETE;
 		} else if (commandTypeString.equalsIgnoreCase("edit")) {
+			lastCommand = CMD_EDIT;
 			return COMMAND_TYPE.EDIT;
 		} else {
+			lastCommand = CMD_INVALID;
 			return COMMAND_TYPE.INVALID;
 		}
 	}
 	
 	private boolean isCategory(String s) {
-		return s.startsWith("@");
+		return s.startsWith(CATEGORIES);
 	}
 	
 	private boolean isPreposition(String s) {
-		return s.matches("(at|by|to|on)");
+		return s.matches(PREPOSITIONS);
 	}
 	
 	private String appendZero(String s) {

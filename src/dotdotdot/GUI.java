@@ -23,11 +23,12 @@ public class GUI {
 	private static Parser parser = new Parser();
 	private static Logic logic = new Logic();
 	private static ArrayList<String> list;
+	
 	private static final String GUI_TITLE = "Dotdotdot";
 	private static final String GUI_HINT = "< Input ? or help to show available commands >";
-	private static final String HELP_COMMAND_1 = "?";
-	private static final String HELP_COMMAND_2 = "help";
+	private static final String HELP_REGEX = "(help|\\?|HELP)";
 	private static final String EMPTY_STRING = "";
+	
 	private static Color hintColor;
 	private static Color normalColor;
 	
@@ -45,9 +46,9 @@ public class GUI {
 		
 		mainTable.removeAll();
     	
-		for(int i=0; i<list.size(); i++){
+		for(int i = 0; i < list.size(); i++){
 			mainItem = new TableItem(mainTable, SWT.NONE);
-			mainItem.setText((i+1) + ". " + list.get(i));
+			mainItem.setText((i + 1) + ". " + list.get(i));
 		}
 	}
 	
@@ -166,21 +167,21 @@ public class GUI {
 		      public void keyPressed(KeyEvent event) {
 		        switch (event.keyCode) {
 		        case SWT.CR:
-		        	// This case happens after "enter" is pressed
+		        	// SWT.CR : when "ENTER" key is pressed
 		        	String tempInput = input.getText();		
 		        	inputToHint();
 	        		
-		        	if(tempInput.equals(HELP_COMMAND_1) || tempInput.equals(HELP_COMMAND_2)){
+		        	if(isHelp(tempInput)) {
 		        		displayHelp();
 		        	} else {
-
-					    if(parser.input(tempInput)){
-					    	// Command Success 
+		        		int returnCode = parser.input(tempInput);
+					    if (returnCode == Parser.COMMAND_SUCCESS) {
 					    	list = parser.getLogic().getStorage().getUnformattedToDos();
 					    	displayList();
-					    } else {
-					        // Command Failed
-					    	
+					    } else if (returnCode == Parser.COMMAND_FAIL){
+					    	// TODO: feedback to user that command has failed
+					    } else { // returnCode == Parser.COMMAND_UNRECOGNISED
+					    	// TODO: feedback to user that command is unrecognised
 					    }
 		        	}		     				  
 		            break;
@@ -188,14 +189,13 @@ public class GUI {
 		            System.out.println(SWT.ESC);
 		            break;
 		        case SWT.BS:
-		        	// 1 Character left before backspace
-		        	if(input.getText().length() == 1){
+		        	if(isTextEmpty(input)) {
 		        		inputToHint();
 		        	} 
 		        	break;
 		        default:
-		        	// Input is still a hint
-		        	if(input.getForeground().equals(hintColor)){
+		        	// removes hint and changes input back to normal
+		        	if(input.getForeground().equals(hintColor)) {
 		        		inputToNormal();
 		        	}       	
 		        	break;
@@ -214,4 +214,13 @@ public class GUI {
 			}
 		}
 	}
+	
+	private static boolean isHelp(String s) {
+		return s.matches(HELP_REGEX);
+	}
+	
+	private static boolean isTextEmpty(Text t){
+		return t.getText().length() == 1;
+	}
+	
 }

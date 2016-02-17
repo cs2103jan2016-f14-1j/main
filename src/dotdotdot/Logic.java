@@ -18,32 +18,56 @@ public class Logic {
 	private final String NOT_COMPLETED = "0";
 	private final String DELIMITER = "|";
 	private final String EMPTY_STRING = "";
+	private final String SPACE_STRING = " ";
 	
 	enum COMMAND{
 		ADD, DELETE, EDIT, COMPLETE
 	}
 
 	public Logic() {
-		// Do case based on pass in command
 		store = new Storage();
 	}
 
 	public boolean addTask(String task) {
 		store.addUnformattedToDo(task);
 		store.writeToFile();
-		return false;
+		return true;
 	}
 
 	public boolean addTask(String task, ArrayList<String> categories) {
-		return false;
+		String fullTask = addCategoriesToTask(task, categories);
+		store.addUnformattedToDo(fullTask);
+		store.writeToFile();
+		return true;
+	}
+	
+	/**
+	 * used by addTask(String, ArrayList<String)
+	 * @param task
+	 * @param cats
+	 * @return task + cats
+	 */
+	private String addCategoriesToTask(String task, ArrayList<String> cats) {
+		String output = task;
+		for(String s : cats) {
+			output += s + SPACE_STRING;
+		}
+		return output;
 	}
 
 	public boolean addTask(String task, String preposition, String date) {
+		// TODO: differentiate between different prepositions (i.e. by VS at/to/on)
+		// TODO: add date
 		return false;
 	}
 
 	public boolean addTask(String task, String preposition, String date, ArrayList<String> categories) {
-		return false;
+		String fullTask = addCategoriesToTask(task, categories);
+		store.addUnformattedToDo(fullTask);
+		store.writeToFile();
+		// TODO: differentiate between different prepositions (i.e. by VS at/to/on)
+		// TODO: add date
+		return true;
 	}
 
 	public boolean editTask(int taskID, String date) {
@@ -58,6 +82,7 @@ public class Logic {
 	 * @return it will return successful when a task is deleted,
 	 *         else otherwise.
 	 */
+	/*
 	public boolean deleteTask(int taskID) {
 		if (!isTaskFound(taskID)) {
 			return false;
@@ -82,6 +107,7 @@ public class Logic {
 		}
 		return false; //this part might have problems since the deletion does nothing
 	}
+	*/
 
 	/**
 	 * This method allows the user to mark task as completed
