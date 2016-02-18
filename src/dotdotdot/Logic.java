@@ -70,8 +70,26 @@ public class Logic {
 		return true;
 	}
 
+	/**
+	 * This method allows the user to edit a task
+	 * 
+	 * @param taskID
+	 *            the taskID is used to search for the task in the storage
+	 * @param date
+	 *            changes to be made to the task's date
+	 * @return 
+	 * 			  it will return successful when a task is edited, else otherwise.
+	 */
 	public boolean editTask(int taskID, String date) {
-		return false;
+		ArrayList<String> list = store.getUnformattedToDos();
+		// TODO: currently this checks not by TaskID but by order in ArrayList
+		if (!isTaskFound(taskID, list)) { 
+			return false;
+		}
+		// TODO: edit task using date
+		syncTaskToList(date, taskID, COMMAND.EDIT);
+		store.writeToFile();
+		return true;
 	}
 	
 	/**
@@ -82,7 +100,6 @@ public class Logic {
 	 * @return it will return successful when a task is deleted,
 	 *         else otherwise.
 	 */
-	
 	public boolean deleteTask(int taskID) {
 		ArrayList<String> list = store.getUnformattedToDos();
 		// TODO: currently this checks not by TaskID but by order in ArrayList
@@ -229,6 +246,7 @@ public class Logic {
 			store.removeUnformattedToDos(taskIndex);
 			break;
 		case EDIT:
+			store.setTaskByIndex(taskIndex, taskToSync);
 			break;
 		case COMPLETE:
 			store.setTaskByIndex(taskIndex, taskToSync);
