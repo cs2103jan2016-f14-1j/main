@@ -8,8 +8,8 @@ public class Logic {
 	private Storage store = null;
 	private final String EMPTY_LIST_MSG = "The list is empty";
 	private final String TASK_NOT_FOUND_MSG = "The task is not found";
-	private final String PREP_BY_PREPEND = "- by ";
-	private final String PREP_ON_PREPEND = "- on ";
+	private final String PREP_BY_PREPEND = " - by ";
+	private final String PREP_ON_PREPEND = " - on ";
 	
 	private final int TASK_ID = 0;
 	private final int TASK_DESC = 1;
@@ -33,19 +33,24 @@ public class Logic {
 		store = new Storage();
 	}
 
+	/**
+	 * add task with taskName only
+	 */
 	public boolean addTask(String task) {
 		store.addUnformattedToDo(task);
 		store.writeToFile();
 		return true;
 	}
 
+	/**
+	 * add task with taskName and categories only
+	 */
 	public boolean addTask(String task, ArrayList<String> categories) {
 		String fullTask = addCategoriesToTask(task, categories);
 		store.addUnformattedToDo(fullTask);
 		store.writeToFile();
 		return true;
-	}
-	
+	}	
 	/**
 	 * used by addTask(String, ArrayList<String)
 	 * @param task
@@ -57,12 +62,11 @@ public class Logic {
 		for(String s : cats) {
 			output += s + SPACE_STRING;
 		}
-		return output;
+		return output.trim();
 	}
 
 	/**
-	 * add task with only date
-	 * @return true if success
+	 * add task with taskName and date
 	 */
 	public boolean addTask(String task, String preposition, String date) {
 		String fullTask = "";
@@ -89,6 +93,9 @@ public class Logic {
 		return task + PREP_ON_PREPEND + date;
 	}
 
+	/**
+	 * add task with taskName, date, and categories
+	 */
 	public boolean addTask(String task, String preposition, String date, ArrayList<String> categories) {
 		String fullTask = addCategoriesToTask(task, categories);
 		if (isBy(preposition)) {
