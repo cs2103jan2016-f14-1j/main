@@ -8,6 +8,9 @@ public class Logic {
 	private Storage store = null;
 	private final String EMPTY_LIST_MSG = "The list is empty";
 	private final String TASK_NOT_FOUND_MSG = "The task is not found";
+	private final String PREP_BY_PREPEND = "- by ";
+	private final String PREP_ON_PREPEND = "- on ";
+	
 	private final int TASK_ID = 0;
 	private final int TASK_DESC = 1;
 	private final int TASK_DATE = 2;
@@ -16,9 +19,11 @@ public class Logic {
 	private final int TASK_NOT_FOUND = -1;
 	private final String COMPLETED = "1";
 	private final String NOT_COMPLETED = "0";
+	
 	private final String DELIMITER = "|";
 	private final String EMPTY_STRING = "";
 	private final String SPACE_STRING = " ";
+	private final String PREP_BY = "by";
 	
 	enum COMMAND{
 		ADD, DELETE, EDIT, COMPLETE
@@ -55,18 +60,44 @@ public class Logic {
 		return output;
 	}
 
+	/**
+	 * add task with only date
+	 * @return true if success
+	 */
 	public boolean addTask(String task, String preposition, String date) {
-		// TODO: differentiate between different prepositions (i.e. by VS at/to/on)
-		// TODO: add date
-		return false;
+		String fullTask = "";
+		if (isBy(preposition)) {
+			fullTask = concatDateToTaskBy(task, date);
+		} else {
+			fullTask = concatDateToTaskOn(task, date);
+		}
+		store.addUnformattedToDo(fullTask);
+		store.writeToFile();
+		return true;
+	}
+	/**
+	 * helper methods used by addTask(String,String,String[,ArrayList<String>]): 
+	 * isBy(String), concatDateToTask(By|On)(String,String)
+	 */
+	private boolean isBy(String p) {
+		return p.equals(PREP_BY);
+	}
+	private String concatDateToTaskBy(String task, String date) {
+		return task + PREP_BY_PREPEND + date;
+	}
+	private String concatDateToTaskOn(String task, String date) {
+		return task + PREP_ON_PREPEND + date;
 	}
 
 	public boolean addTask(String task, String preposition, String date, ArrayList<String> categories) {
 		String fullTask = addCategoriesToTask(task, categories);
+		if (isBy(preposition)) {
+			fullTask = concatDateToTaskBy(fullTask, date);
+		} else {
+			fullTask = concatDateToTaskOn(fullTask, date);
+		}
 		store.addUnformattedToDo(fullTask);
 		store.writeToFile();
-		// TODO: differentiate between different prepositions (i.e. by VS at/to/on)
-		// TODO: add date
 		return true;
 	}
 

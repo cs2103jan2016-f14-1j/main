@@ -1,3 +1,4 @@
 /bin/
 /*.txt
 /src/dotdotdot/*Test.java
+/.classpath

@@ -16,17 +16,17 @@ public class Parser {
 	public static String CMD_DELETE = "delete";
 	public static String CMD_EDIT = "edit";
 	public static String CMD_INVALID = "invalid";
+	private final String REGEX_PREPOSITIONS = "(at|by|on|to)";
+	private final String REGEX_ALL_SPACES = "\\s+";
+	private final String CATEGORIES = "@";
+	private final String EMPTY_STRING = "";
+	private final String SPACE_STRING = " ";
 	
 	private final int FIRST_ELEMENT = 0;
 	private final int SECOND_ELEMENT = 1;
 	private final int AFTER_PREPOSITION = 3;
 	private final int INVALID_ID = -1; 		// taskID can only be +ve
 	private final int SINGLE_DIGIT_DAY = 4; 	// 4 chars long; i.e. 9Jan
-	private final String PREPOSITIONS = "(at|by|on|to)";
-	private final String CATEGORIES = "@";
-	private final String EMPTY_STRING = "";
-	private final String SPACE_STRING = " ";
-	
 	
 	enum COMMAND_TYPE {
 		ADD, EDIT, DO, DELETE, INVALID
@@ -36,6 +36,36 @@ public class Parser {
 		logic = new Logic();
 	}
 	
+	/**
+	 * DUMMY METHOD SOLELY USED FOR JUNIT TESTING
+	 */
+	public String inputTest(String rawInput) {
+		String commandTypeString = getCommand(rawInput);	
+
+		COMMAND_TYPE commandType = determineCommandType(commandTypeString);
+		
+		switch (commandType) {
+			case ADD:
+				addTask(rawInput);
+				break;
+			case DO:
+				doTask(rawInput);
+				break;
+			case EDIT:
+				editTask(rawInput);
+				break;
+			case DELETE:
+				deleteTask(rawInput);
+				break;
+			default:
+				// TODO: DOESN'T FIT INTO ANY OF THE ABOVE!!!
+				return "f";
+		}
+		
+		String t = logic.getStorage().getTaskByIndex(0);
+		deleteTask("delete 1");
+		return t;
+	}
 	/*
 	 * @param String
 	 * @return int
@@ -85,9 +115,9 @@ public class Parser {
 			taskName = getTaskNameWithCategories(taskName);
 			logic.addTask(taskName, categories); 
 		} else { // hasPreposition
-			taskName = getTaskNameWithPreposition(taskName);
-			prep = getFirstElementInArrayList(preposition);
 			date = getDateFromRaw(taskName);
+			taskName = getTaskNameWithPreposition(taskName);
+			prep = getFirstElementInArrayList(preposition);	
 			if (!hasCategory) { // && hasPreposition
 				logic.addTask(taskName, prep, date);
 			} else { // hasCategory && hasPreposition
@@ -185,14 +215,14 @@ public class Parser {
 	 * @return first token of rawInput, delimited by spaces
 	 */
 	private String getCommand(String rawInput) {
-		return rawInput.split(SPACE_STRING,2)[FIRST_ELEMENT];
+		return rawInput.split(SPACE_STRING, 2)[FIRST_ELEMENT];
     }
 	
 	/*
 	 * returns string without first token, delimited by spaces
 	 */
 	private String getTaskName(String rawInput) {
-		return rawInput.split(SPACE_STRING,2)[SECOND_ELEMENT];
+		return rawInput.split(SPACE_STRING, 2)[SECOND_ELEMENT];
     }
 	
 	/**
@@ -213,7 +243,6 @@ public class Parser {
     }
 	
 	/**
-	 * 
 	 * @param rawInput without commandType (i.e. add/delete)
 	 * @return String without commandType and preposition/date
 	 */
@@ -223,7 +252,7 @@ public class Parser {
 		for (String s : as) {
 			if (!isPreposition(s) && !isCategory(s)) {
 				out += s + SPACE_STRING;
-			} else {
+			} else if (isPreposition(s)) {
 				break;
 			}
 		}
@@ -324,7 +353,7 @@ public class Parser {
 	}
 	
 	private boolean isPreposition(String s) {
-		return s.matches(PREPOSITIONS);
+		return s.matches(REGEX_PREPOSITIONS);
 	}
 	
 	private String appendZero(String s) {
@@ -334,7 +363,7 @@ public class Parser {
 		return as.size() - 1;
 	}
 	private String removeAllSpaces(String date) {
-		return date.replaceAll("\\s+", EMPTY_STRING);
+		return date.replaceAll(REGEX_ALL_SPACES, EMPTY_STRING);
 	}
 	private boolean isSingleDigitDay(String date) {
 		return date.length() == SINGLE_DIGIT_DAY;
