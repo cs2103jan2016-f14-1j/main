@@ -28,7 +28,12 @@ public class GUI {
 	private static final String GUI_HINT = "< Input ? or help to show available commands >";
 	private static final String HELP_REGEX = "(help|\\?|HELP)";
 	private static final String EMPTY_STRING = "";
+	private static final String SUCCESS_MESSAGE = "Your command has been executed successfully!";
+	private static final String FAIL_MESSAGE = "Your command has failed to execute.";
+	private static final String UNRECOGNISED_MESSAGE = "Your command is not recognised.";
+	private static final String ERROR_MESSAGE = "An error has occured.";
 	
+	private static String outputStatus = EMPTY_STRING;
 	private static Color hintColor;
 	private static Color normalColor;
 	
@@ -49,6 +54,12 @@ public class GUI {
 		for(int i = 0; i < list.size(); i++){
 			mainItem = new TableItem(mainTable, SWT.NONE);
 			mainItem.setText((i + 1) + ". " + list.get(i));
+		}
+		
+		if(!outputStatus.isEmpty()){
+			mainItem = new TableItem(mainTable, SWT.NONE);
+			mainItem = new TableItem(mainTable, SWT.NONE);
+			mainItem.setText(outputStatus);
 		}
 	}
 	
@@ -132,23 +143,6 @@ public class GUI {
 		Shell shell = new Shell();
 		shell.setSize(685, 619);
 		shell.setText(GUI_TITLE);
-
-		/*
-		shell.addKeyListener(new KeyAdapter(){
-			public void keyPressed(KeyEvent event) {
-				switch (event.keyCode) {
-		        // This case happens after "I" is pressed
-		        case LETTER_I_CODE:
-		        	Input.setText("");
-		        	Input.setFocus();
-		        	break;
-				default:
-					
-					break;
-				}	
-			}
-		});
-		*/
 			
 		hintColor = display.getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
 		normalColor = display.getSystemColor(SWT.COLOR_BLACK);
@@ -177,13 +171,13 @@ public class GUI {
 		        		int returnCode = parser.input(tempInput);
 					    if (returnCode == Parser.COMMAND_SUCCESS) {
 					    	list = parser.getLogic().getStorage().getUnformattedToDos();
-					    	
+					    	outputStatus = SUCCESS_MESSAGE;
 					    } else if (returnCode == Parser.COMMAND_FAIL){
-					    	// TODO: feedback to user that command has failed
-					    	
-					    } else { // returnCode == Parser.COMMAND_UNRECOGNISED
-					    	// TODO: feedback to user that command is unrecognised
-					    	
+					    	outputStatus = FAIL_MESSAGE;
+					    } else if (returnCode == Parser.COMMAND_UNRECOGNISED){
+					    	outputStatus = UNRECOGNISED_MESSAGE;
+					    } else {
+					    	outputStatus = ERROR_MESSAGE;
 					    }
 					    displayList();
 		        	}		     				  
