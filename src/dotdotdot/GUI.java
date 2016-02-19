@@ -29,13 +29,8 @@ public class GUI {
 	
 	private static final String GUI_TITLE = "Dotdotdot";
 	private static final String GUI_HINT = "< Input ? or help to show available commands >";
-<<<<<<< HEAD
 	private static final String HELP_REGEX = "(h|H|help|HELP|\\?)";
-	private static final String VIEW_REGEX = "view";
-=======
-	private static final String HELP_REGEX = "(help|\\?|HELP)";
 	private static final String VIEW_REGEX = "(view|VIEW)";
->>>>>>> ab6871de452cfd588c0cc383c6be68aa9447e254
 	private static final String EMPTY_STRING = "";
 	private static final String SUCCESS_MESSAGE = "Your command has been executed successfully!";
 	private static final String FAIL_MESSAGE = "Your command has failed to execute.";
@@ -61,19 +56,6 @@ public class GUI {
 	private static void displayList() {
 		
 		mainTable.removeAll();
-<<<<<<< HEAD
-
-		for (String entry : list) {
-			mainItem = new TableItem(mainTable, SWT.NONE);
-			mainItem.setText(entry);
-		}
-
-		if (!outputStatus.isEmpty()) {
-			mainItem = new TableItem(mainTable, SWT.NONE);
-			mainItem = new TableItem(mainTable, SWT.NONE);
-			mainItem.setText(outputStatus);
-=======
-    	
 		for(int i = 0; i < list.size(); i++){
 			String formattedOutput = WordUtils.wrap(list.get(i), WRAP_AROUND);
 			String outputArray[] = formattedOutput.split("\n");
@@ -87,7 +69,6 @@ public class GUI {
 					mainItem.setText("      " + outputArray[z]);
 				}
 			}
->>>>>>> ab6871de452cfd588c0cc383c6be68aa9447e254
 		}
 		
 	}
