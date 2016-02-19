@@ -20,7 +20,8 @@ public class Logic {
 	private final String COMPLETED = "1";
 	private final String NOT_COMPLETED = "0";
 	
-	private final String DELIMITER = "|";
+	private final String DELIMITER = "\\|";
+	private final String WRITE_DELIMITER = "|";
 	private final String EMPTY_STRING = "";
 	private final String SPACE_STRING = " ";
 	private final String PREP_BY = "by";
@@ -37,18 +38,32 @@ public class Logic {
 	 * add task with taskName only
 	 */
 	public boolean addTask(String task) {
-		store.addStoreFormattedToDo(task);
-		store.writeToFile();
+		String formatted = formatToDo(task, EMPTY_STRING, new ArrayList<String>(), 0); 
+		commitToStore(formatted);
 		return true;
+	}
+	private String formatToDo(	String taskName, String date, 
+								ArrayList<String> cats, int completeStatus) {
+		int forNewTaskId = store.getNextTaskId();
+		String allCats = concatCats(cats);
+		return 	forNewTaskId + WRITE_DELIMITER + taskName + WRITE_DELIMITER + 
+		date + WRITE_DELIMITER + allCats + WRITE_DELIMITER + completeStatus + WRITE_DELIMITER;
+	}
+	private String concatCats(ArrayList<String> cats) {
+		String out = EMPTY_STRING;
+		for(String s : cats) {
+			out += s + SPACE_STRING;
+		}
+		return out.trim();
 	}
 
 	/**
 	 * add task with taskName and categories only
 	 */
 	public boolean addTask(String task, ArrayList<String> categories) {
-		String fullTask = addCategoriesToTask(task, categories);
-		store.addStoreFormattedToDo(fullTask);
-		store.writeToFile();
+		//String fullTask = addCategoriesToTask(task, categories);
+		String formatted = formatToDo(task, EMPTY_STRING, categories, 0);
+		commitToStore(formatted);
 		return true;
 	}	
 	/**
@@ -69,14 +84,8 @@ public class Logic {
 	 * add task with taskName and date
 	 */
 	public boolean addTask(String task, String preposition, String date) {
-		String fullTask = EMPTY_STRING;
-		if (isBy(preposition)) {
-			fullTask = concatDateToTaskBy(task, date);
-		} else {
-			fullTask = concatDateToTaskOn(task, date);
-		}
-		store.addStoreFormattedToDo(fullTask);
-		store.writeToFile();
+		String formatted = formatToDo(task, date, new ArrayList<String>(), 0);
+		commitToStore(formatted);
 		return true;
 	}
 	/**
@@ -97,15 +106,13 @@ public class Logic {
 	 * add task with taskName, date, and categories
 	 */
 	public boolean addTask(String task, String preposition, String date, ArrayList<String> categories) {
-		String fullTask = addCategoriesToTask(task, categories);
-		if (isBy(preposition)) {
-			fullTask = concatDateToTaskBy(fullTask, date);
-		} else {
-			fullTask = concatDateToTaskOn(fullTask, date);
-		}
-		store.addStoreFormattedToDo(fullTask);
-		store.writeToFile();
+		String formatted = formatToDo(task, date, categories, 0);
+		commitToStore(formatted);
 		return true;
+	}
+	private void commitToStore(String formatted) {
+		store.addStoreFormattedToDo(formatted);
+		store.writeToFile();
 	}
 
 	/**
@@ -247,7 +254,7 @@ public class Logic {
 	private String formatTaskForStorage(String[] taskInformation) {
 		String concatTaskInfo = EMPTY_STRING;
 		for (String info : taskInformation) {
-			concatTaskInfo += info + DELIMITER;
+			concatTaskInfo += info + WRITE_DELIMITER;
 		}
 		return concatTaskInfo;
 	}
@@ -301,6 +308,19 @@ public class Logic {
 	private boolean writeToFile() {
 		store.writeToFile();
 		return true;
+	}
+	
+	public ArrayList<String> getUserFormattedToDos() {
+		// TODO: format todos into nice nice for display
+		ArrayList<String> out = new ArrayList<String>();
+		for (String s : store.getStoreFormattedToDos()) {
+			out.add(formatToUserFormat(s));
+		}
+		return out;
+	}
+	private String formatToUserFormat(String s) {
+		// TODO: format it into user-viewable format (i.e. split by delimiters etc)
+		return s;
 	}
 	
 	/**

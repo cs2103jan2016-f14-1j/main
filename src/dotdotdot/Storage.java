@@ -16,8 +16,10 @@ public class Storage {
 	private LinkedList<Integer> freedIds = new LinkedList<Integer>();
 	private int newTaskId = 0;
 	
+	private final String STORE_DELIMITER = "|";
 	private final String FILENAME_FILEPATH = "./test.txt";
-	private final String QUEUE_FILEPATH = "./queue.txt";
+	private final String EMPTY_STRING = "";
+	private final String SPACE_STRING = " ";
 	
 	private final String GENERAL_ERROR_MSG = "Error has occured: %1$s.";
 	private final String FILE_NOT_FOUND_ERROR_MSG = "The file is not found. Check the path of file";
@@ -28,6 +30,7 @@ public class Storage {
 	 */
 	public Storage() {
 		readFromFile();
+		readQueueFromFile();
 	}
 
 	/**
@@ -41,9 +44,7 @@ public class Storage {
 	}
 
 	/**
-	 * Add an unformatted task to the arrayList
-	 * @param line
-	 * 		the task to be added to the arrayList
+	 * Add StoreFormatted todo
 	 */
 	public void addStoreFormattedToDo(String line) {
 		toDos.add(line);
@@ -87,7 +88,6 @@ public class Storage {
 			bufferReader = new BufferedReader(new FileReader(FILENAME_FILEPATH));
 			String currentLine = "";
 			while ((currentLine = bufferReader.readLine()) != null) {
-				// TODO: NEED TO UNFORMAT!! (in tandem with writeToFile's BufferedWriter.write)
 				addStoreFormattedToDo(currentLine);
 			}
 		} catch (FileNotFoundException ex) {
@@ -103,30 +103,12 @@ public class Storage {
 				systemPrint(IO_ERROR_MSG);
 			}
 		}
-		
-		readQueueFromFile();
 	}
 	private void readQueueFromFile() {
-		BufferedReader bufferReader = null;
-		String currentLine = "";
-		try {
-			bufferReader = new BufferedReader(new FileReader(QUEUE_FILEPATH));
-			currentLine = bufferReader.readLine();
-		} catch (FileNotFoundException ex) {
-			systemPrint(FILE_NOT_FOUND_ERROR_MSG);
-		} catch (IOException ex) {
-			systemPrint(IO_ERROR_MSG);
-		} finally {
-			try {
-				if (bufferReader != null) {
-					bufferReader.close();
-				}
-			} catch (IOException ex) {
-				systemPrint(IO_ERROR_MSG);
-			}
-		}
-		
-		convertIDStringToQueue(currentLine);	
+		convertIDStringToQueue(getLastElement(toDos));
+	}
+	private String getLastElement(ArrayList<String> as){
+		return as.remove(as.size() - 1);
 	}
 	private void convertIDStringToQueue(String s) {
 		String[] stringOfIds = s.split(" ");
@@ -136,11 +118,11 @@ public class Storage {
 		setNextTaskId(freedIds.pollLast());
 	}
 	private void setNextTaskId(int a) {
-		newTaskId = a;
+		this.newTaskId = a;
 	}
 	public int getNextTaskId() {
 		if (freedIds.isEmpty()) {
-			return newTaskId;
+			return newTaskId++;
 		} else {
 			return freedIds.poll();
 		}
@@ -162,16 +144,23 @@ public class Storage {
 		try {
 			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(FILENAME_FILEPATH));
 			for (int index = 0; index < toDos.size(); index++) {
-				// TODO: NEED TO FORMAT!!
 				bufferWriter.write(toDos.get(index));
 				bufferWriter.newLine();
 			}
+			bufferWriter.write(getTaskIdString());
 		bufferWriter.close();
 		} catch (IOException ex) {
 			systemPrint(IO_ERROR_MSG);
 		}
 	}
-
+	private String getTaskIdString() {
+		String out = "";
+		for (int id : freedIds) {
+			out += id + SPACE_STRING;
+		}
+		out += newTaskId;
+		return out;
+	}
 	/**
 	 * A general method to print the output to the console
 	 * 
