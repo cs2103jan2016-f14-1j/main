@@ -138,6 +138,7 @@ public class Logic {
 	 * @return it will return successful when a task is deleted,
 	 *         else otherwise.
 	 */
+	
 	public boolean deleteTask(int taskID) {
 		int taskIndex = searchForTask(taskID);
 		if (taskIndex == -1) {
@@ -145,7 +146,7 @@ public class Logic {
 			return false;
 		}
 		
-		syncTaskToList(EMPTY_STRING, taskID, COMMAND.DELETE);
+		syncTaskToList(EMPTY_STRING, taskIndex, COMMAND.DELETE);
 		writeToFile();
 		return true;
 	}
@@ -156,17 +157,25 @@ public class Logic {
 	//
 	// 			need to do the taskID generator first
 	public boolean deleteTask(ArrayList<Integer> taskIDs) {
-		ArrayList<String> list = store.getStoreFormattedToDos();
-		for (int taskID: taskIDs) {
-			if (!isTaskFound(taskID, list)) {
-				return false;
+		int numTasks = taskIDs.size();
+		boolean value = false;
+		for (int i = 0; i < numTasks; i++) {
+			if (deleteTask(taskIDs.get(i))) {
+				value = true;
 			}
-			String toDelete = store.getTaskByIndex(taskID);
-			syncTaskToList(toDelete, taskID, COMMAND.DELETE);
-			writeToFile();
-			return true;
 		}
-		return false; //this part might have problems since the deletion does nothing
+		return value;
+	}
+	
+	// Dummy method for JUnit testing
+	public static boolean delete(int taskID) {
+		Logic lg = new Logic();
+		return lg.deleteTask(taskID);
+	}
+	// Dummy method for JUnit testing
+	public static boolean delete(ArrayList<Integer> taskIDs) {
+		Logic lg = new Logic();
+		return lg.deleteTask(taskIDs);
 	}
 
 	private boolean isTaskFound(int taskID, ArrayList<String> list) {

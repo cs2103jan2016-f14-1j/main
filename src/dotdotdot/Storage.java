@@ -59,7 +59,7 @@ public class Storage {
 		// TODO: we want it to remove by the taskID
 		freedIds.offer(taskId);
 		
-		toDos.remove(taskId - 1);
+		toDos.remove(taskId);
 	}
 	
 	/**
@@ -110,7 +110,7 @@ public class Storage {
 		BufferedReader bufferReader = null;
 		String currentLine = "";
 		try {
-			bufferReader = new BufferedReader(new FileReader(QUEUE_FILEPATH));
+			bufferReader = new BufferedReader(new FileReader(FILENAME_FILEPATH));
 			currentLine = bufferReader.readLine();
 		} catch (FileNotFoundException ex) {
 			systemPrint(FILE_NOT_FOUND_ERROR_MSG);
