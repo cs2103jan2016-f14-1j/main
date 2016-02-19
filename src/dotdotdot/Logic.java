@@ -73,7 +73,7 @@ public class Logic {
 	 * add task with taskName and date
 	 */
 	public boolean addTask(String task, String preposition, String date) {
-		String fullTask = "";
+		String fullTask = EMPTY_STRING;
 		if (isBy(preposition)) {
 			fullTask = concatDateToTaskBy(task, date);
 		} else {
@@ -145,12 +145,12 @@ public class Logic {
 	 * @return it will return successful when a task is deleted, else otherwise.
 	 */
 	public boolean deleteTask(int taskID) {
-		ArrayList<String> list = store.getStoreFormattedToDos();
-		// TODO: currently this checks not by TaskID but by order in ArrayList
-		if (!isTaskFound(taskID, list)) {
+
+		int taskIndex = searchForTask(taskID);
+		if (taskIndex == -1) {
+			System.out.println(TASK_NOT_FOUND_MSG);
 			return false;
 		}
-		// String toDelete = store.getTaskByIndex(taskID);
 		syncTaskToList(EMPTY_STRING, taskID, COMMAND.DELETE);
 		writeToFile();
 		return true;
