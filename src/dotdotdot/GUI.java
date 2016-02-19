@@ -188,7 +188,8 @@ public class GUI {
 		        	// SWT.CR : when "ENTER" key is pressed
 		        	String tempInput = input.getText();		
 		        	inputToHint();
-	        		
+		        	tip.setVisible(false);
+				       
 		        	if(isHelp(tempInput)) {
 		        		displayHelp();
 		        	} else {
