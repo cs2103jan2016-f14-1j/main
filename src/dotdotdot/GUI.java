@@ -37,7 +37,7 @@ public class GUI {
 	private static final String UNRECOGNISED_MESSAGE = "Your command is not recognised.";
 	private static final String ERROR_MESSAGE = "An error has occured.";
 	private static final int SCROLL_AMOUNT = 5;
-	private static final int WRAP_AROUND = 40;
+	private static final int WRAP_AROUND = 50;
 	
 	private static String outputStatus = EMPTY_STRING;
 	private static Color hintColor;
@@ -188,7 +188,8 @@ public class GUI {
 		        	// SWT.CR : when "ENTER" key is pressed
 		        	String tempInput = input.getText();		
 		        	inputToHint();
-	        		
+		        	tip.setVisible(false);
+				       
 		        	if(isHelp(tempInput)) {
 		        		displayHelp();
 		        	} else {
@@ -200,6 +201,7 @@ public class GUI {
 							} else {
 								list = parser.getLogic().getUserFormattedToDos();
 							}
+		        		  	outputStatus = SUCCESS_MESSAGE;
 					    } else if (returnCode == Parser.COMMAND_FAIL){
 					    	outputStatus = FAIL_MESSAGE;
 					    } else if (returnCode == Parser.COMMAND_UNRECOGNISED){
