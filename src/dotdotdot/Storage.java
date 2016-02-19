@@ -54,10 +54,12 @@ public class Storage {
 	 * @param line
 	 * 		the task to be removed from the arrayList
 	 */
-	public void removeUnformattedToDos(int taskID){
+	public void removeUnformattedToDos(int taskId){
 		// TODO: currently this removes by the order in which it is in ArrayList
 		// TODO: we want it to remove by the taskID
-		toDos.remove(taskID - 1);
+		freedIds.offer(taskId);
+		
+		toDos.remove(taskId - 1);
 	}
 	
 	/**
