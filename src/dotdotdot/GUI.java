@@ -27,6 +27,7 @@ public class GUI {
 	private static final String GUI_TITLE = "Dotdotdot";
 	private static final String GUI_HINT = "< Input ? or help to show available commands >";
 	private static final String HELP_REGEX = "(help|\\?|HELP)";
+	private static final String VIEW_REGEX = "(view|VIEW)";
 	private static final String EMPTY_STRING = "";
 	private static final String SUCCESS_MESSAGE = "Your command has been executed successfully!";
 	private static final String FAIL_MESSAGE = "Your command has failed to execute.";
@@ -167,7 +168,9 @@ public class GUI {
 	        		
 		        	if(isHelp(tempInput)) {
 		        		displayHelp();
-		        	} else {
+		        	} else if(isView(tempInput)){
+		        		parser.getLogic().viewIsCompletedTasks(0);
+		        	}else {
 		        		int returnCode = parser.input(tempInput);
 					    if (returnCode == Parser.COMMAND_SUCCESS) {
 					    	list = parser.getLogic().getStorage().getStoreFormattedToDos();
@@ -214,6 +217,10 @@ public class GUI {
 	
 	private static boolean isHelp(String s) {
 		return s.matches(HELP_REGEX);
+	}
+	
+	private static boolean isView(String s){
+		return s.contains(VIEW_REGEX);
 	}
 	
 	private static boolean isTextEmpty(Text t){

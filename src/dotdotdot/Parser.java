@@ -106,7 +106,7 @@ public class Parser {
 	}
 	
 	private boolean viewTask(String rawInput){
-		return false;
+		return true;
 	}
 	
 	private boolean addTask(String rawInput) {
