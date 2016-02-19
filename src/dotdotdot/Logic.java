@@ -216,7 +216,7 @@ public class Logic {
 	}
 
 	public ArrayList<String> viewIsCompletedTasks(int completed) {
-		ArrayList<String> filterList = store.getStoreFormattedToDos();
+		ArrayList<String> filterList = (ArrayList<String>) store.getStoreFormattedToDos().clone();
 		for (int index = 0; index < filterList.size(); index++) {
 			if (Integer.parseInt(formatTaskforDisplay(filterList.get(index)).get(TASK_ISCOMPLETE)) != completed) {
 				filterList.remove(index);

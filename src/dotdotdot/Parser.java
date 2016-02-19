@@ -16,6 +16,12 @@ public class Parser {
 	public static String CMD_DELETE = "delete";
 	public static String CMD_EDIT = "edit";
 	public static String CMD_INVALID = "invalid";
+	public static String CMD_VIEW = "view";
+	
+	public final String NOT_DONE = "not done";
+	private final int INT_NOT_DONE = 0;
+	private final int INT_DONE = 1;
+	
 	private final String REGEX_PREPOSITIONS = "(at|by|on|to)";
 	private final String REGEX_ALL_SPACES = "\\s+";
 	private final String CATEGORIES = "@";
@@ -58,7 +64,6 @@ public class Parser {
 				deleteTask(rawInput);
 				break;
 			case VIEW:
-				viewTask(rawInput);
 				break;
 			default:
 				// TODO: DOESN'T FIT INTO ANY OF THE ABOVE!!!
@@ -95,7 +100,6 @@ public class Parser {
 				deleteTask(rawInput);
 				break;
 			case VIEW:
-				viewTask(rawInput);
 				break;
 			default:
 				// TODO: DOESN'T FIT INTO ANY OF THE ABOVE!!!
@@ -105,8 +109,8 @@ public class Parser {
 		return COMMAND_SUCCESS;
 	}
 	
-	private boolean viewTask(String rawInput){
-		return true;
+	public int isCompleted(String rawInput){
+		return (rawInput.contains(NOT_DONE))? INT_NOT_DONE : INT_DONE;
 	}
 	
 	private boolean addTask(String rawInput) {
@@ -352,7 +356,10 @@ public class Parser {
 		} else if (commandTypeString.equalsIgnoreCase("edit")) {
 			lastCommand = CMD_EDIT;
 			return COMMAND_TYPE.EDIT;
-		} else {
+		} else if(commandTypeString.equalsIgnoreCase("view")){
+			lastCommand = CMD_VIEW;
+			return COMMAND_TYPE.VIEW;
+		}else{
 			lastCommand = CMD_INVALID;
 			return COMMAND_TYPE.INVALID;
 		}
