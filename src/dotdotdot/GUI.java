@@ -170,7 +170,7 @@ public class GUI {
 		        	} else {
 		        		int returnCode = parser.input(tempInput);
 					    if (returnCode == Parser.COMMAND_SUCCESS) {
-					    	list = parser.getLogic().getStorage().getUnformattedToDos();
+					    	list = parser.getLogic().getStorage().getStoreFormattedToDos();
 					    	outputStatus = SUCCESS_MESSAGE;
 					    } else if (returnCode == Parser.COMMAND_FAIL){
 					    	outputStatus = FAIL_MESSAGE;
@@ -200,7 +200,7 @@ public class GUI {
 		      }
 		    });
 		
-		list = logic.getStorage().getUnformattedToDos();
+		list = logic.getStorage().getStoreFormattedToDos();
 		displayList();
 		
 		shell.open();
