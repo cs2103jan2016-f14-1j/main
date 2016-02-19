@@ -7,13 +7,18 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Storage {
 
 	//FORMAT OF EACH TASK: [taskID]|[task]|[date]|[categories]|[isComplete]|
 	private ArrayList<String> toDos = new ArrayList<String>();
+	private LinkedList<Integer> freedIds = new LinkedList<Integer>();
+	private int newTaskId = 0;
 	
-	private final String FILENAME = "./test.txt";
+	private final String FILENAME_FILEPATH = "./test.txt";
+	private final String QUEUE_FILEPATH = "./queue.txt";
+	
 	private final String GENERAL_ERROR_MSG = "Error has occured: %1$s.";
 	private final String FILE_NOT_FOUND_ERROR_MSG = "The file is not found. Check the path of file";
 	private final String IO_ERROR_MSG = "Input/Output error.";
@@ -77,10 +82,9 @@ public class Storage {
 	public void readFromFile() {
 		BufferedReader bufferReader = null;
 		try {
-			bufferReader = new BufferedReader(new FileReader(FILENAME));
+			bufferReader = new BufferedReader(new FileReader(FILENAME_FILEPATH));
 			String currentLine = "";
 			while ((currentLine = bufferReader.readLine()) != null) {
-				// TODO: NEED TO UNFORMAT!! (in tandem with writeToFile's BufferedWriter.write)
 				addUnformattedToDo(currentLine);
 			}
 		} catch (FileNotFoundException ex) {
@@ -95,6 +99,47 @@ public class Storage {
 			} catch (IOException ex) {
 				systemPrint(IO_ERROR_MSG);
 			}
+		}
+		
+		readQueueFromFile();
+	}
+	private void readQueueFromFile() {
+		BufferedReader bufferReader = null;
+		String currentLine = "";
+		try {
+			bufferReader = new BufferedReader(new FileReader(QUEUE_FILEPATH));
+			currentLine = bufferReader.readLine();
+		} catch (FileNotFoundException ex) {
+			systemPrint(FILE_NOT_FOUND_ERROR_MSG);
+		} catch (IOException ex) {
+			systemPrint(IO_ERROR_MSG);
+		} finally {
+			try {
+				if (bufferReader != null) {
+					bufferReader.close();
+				}
+			} catch (IOException ex) {
+				systemPrint(IO_ERROR_MSG);
+			}
+		}
+		
+		convertIDStringToQueue(currentLine);	
+	}
+	private void convertIDStringToQueue(String s) {
+		String[] stringOfIds = s.split(" ");
+		for (String id : stringOfIds) {
+			freedIds.offer(Integer.parseInt(id));
+		}
+		setNextTaskId(freedIds.pollLast());
+	}
+	private void setNextTaskId(int a) {
+		newTaskId = a;
+	}
+	public int getNextTaskId() {
+		if (freedIds.isEmpty()) {
+			return newTaskId;
+		} else {
+			return freedIds.poll();
 		}
 	}
 	
@@ -112,12 +157,12 @@ public class Storage {
 	 */
 	public void writeToFile(){
 		try {
-		BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(FILENAME));
-		for (int index = 0; index < toDos.size(); index++) {
-			// TODO: NEED TO FORMAT!!
-			bufferWriter.write(toDos.get(index));
-			bufferWriter.newLine();
-		}
+			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(FILENAME_FILEPATH));
+			for (int index = 0; index < toDos.size(); index++) {
+				// TODO: NEED TO FORMAT!!
+				bufferWriter.write(toDos.get(index));
+				bufferWriter.newLine();
+			}
 		bufferWriter.close();
 		} catch (IOException ex) {
 			systemPrint(IO_ERROR_MSG);

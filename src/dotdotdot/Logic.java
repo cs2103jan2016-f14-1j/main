@@ -69,7 +69,7 @@ public class Logic {
 	 * add task with taskName and date
 	 */
 	public boolean addTask(String task, String preposition, String date) {
-		String fullTask = "";
+		String fullTask = EMPTY_STRING;
 		if (isBy(preposition)) {
 			fullTask = concatDateToTaskBy(task, date);
 		} else {
@@ -144,6 +144,7 @@ public class Logic {
 		if (!isTaskFound(taskID, list)) { 
 			return false;
 		}
+		// TODO: add taskID into Storage.freedIDs
 		//String toDelete = store.getTaskByIndex(taskID);
 		syncTaskToList(EMPTY_STRING, taskID, COMMAND.DELETE);
 		writeToFile();
