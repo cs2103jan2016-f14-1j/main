@@ -134,7 +134,7 @@ public class Parser {
 	 */
 	private boolean doTask(String rawInput) {
 		// TODO: actually this method should set task as COMPLETED instead of deleting
-		String 	taskName = getTaskName(rawInput);
+		String taskName = getTaskName(rawInput);
 		int taskID = convertToInt(taskName);
 		
 		if (isInvalidID(taskID)) {
@@ -222,7 +222,7 @@ public class Parser {
 	 * returns string without first token, delimited by spaces
 	 */
 	private String getTaskName(String rawInput) {
-		return rawInput.split(SPACE_STRING, 2)[SECOND_ELEMENT];
+		return rawInput.split(SPACE_STRING, 2)[SECOND_ELEMENT].trim();
     }
 	
 	/**

@@ -132,7 +132,7 @@ public class Logic {
 			return false;
 		}
 		// TODO: edit task using date
-		syncTaskToList(date, taskID, COMMAND.EDIT);
+		syncTaskToList(date, 0, taskID, COMMAND.EDIT);
 		store.writeToFile();
 		return true;
 	}
@@ -145,14 +145,14 @@ public class Logic {
 	 * @return it will return successful when a task is deleted,
 	 *         else otherwise.
 	 */
-	public boolean deleteTask(int taskID) {
-		int taskIndex = searchForTask(taskID);
-		if (taskIndex == -1) {
+	public boolean deleteTask(int taskId) {
+		int taskIndex = searchForTask(taskId);
+		if (taskIndex == TASK_NOT_FOUND) {
 			System.out.println(TASK_NOT_FOUND_MSG);
 			return false;
 		}
 		
-		syncTaskToList(EMPTY_STRING, taskID, COMMAND.DELETE);
+		syncTaskToList(EMPTY_STRING, taskId, taskIndex, COMMAND.DELETE);
 		writeToFile();
 		return true;
 	}
@@ -169,7 +169,7 @@ public class Logic {
 				return false;
 			}
 			String toDelete = store.getTaskByIndex(taskID);
-			syncTaskToList(toDelete, taskID, COMMAND.DELETE);
+			syncTaskToList(toDelete, 0, taskID, COMMAND.DELETE);
 			writeToFile();
 			return true;
 		}
@@ -199,7 +199,7 @@ public class Logic {
 		String[] taskInformation = formatTaskforDisplay(task);
 		taskInformation[TASK_ISCOMPLETE] = COMPLETED;
 		task = formatTaskForStorage(taskInformation);
-		syncTaskToList(task, taskIndex, COMMAND.COMPLETE);
+		syncTaskToList(task, 0, taskIndex, COMMAND.COMPLETE);
 		return true;
 	}
 
@@ -283,12 +283,12 @@ public class Logic {
 	 * @return
 	 * 		return the result, true being successful, false is fail
 	 */
-	private boolean syncTaskToList(String taskToSync, int taskIndex, COMMAND command) {
+	private boolean syncTaskToList(String taskToSync, int taskId, int taskIndex, COMMAND command) {
 		switch(command){
 		case ADD:
 			break;
 		case DELETE:
-			store.removeStoreFormattedToDo(taskIndex);
+			store.removeStoreFormattedToDo(taskId, taskIndex);
 			break;
 		case EDIT:
 			store.setTaskByIndex(taskIndex, taskToSync);
