@@ -261,7 +261,7 @@ public class GUI {
 	}
 	
 	private static boolean isView(String s) {
-		return s.contains(VIEW_REGEX);
+		return s.matches(VIEW_REGEX);
 	}
 	
 	private static boolean isTextEmpty(Text t){

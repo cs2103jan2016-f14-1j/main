@@ -131,14 +131,17 @@ public class Logic {
 	 * @return it will return successful when a task is edited, else otherwise.
 	 */
 	public boolean editTask(int taskID, String date) {
-		ArrayList<String> list = store.getStoreFormattedToDos();
-		// TODO: currently this checks not by TaskID but by order in ArrayList
-		if (!isTaskFound(taskID, list)) {
+		int taskIndex = searchForTask(taskID);
+		if (taskIndex == TASK_NOT_FOUND) {
+			System.out.println(TASK_NOT_FOUND_MSG);
 			return false;
 		}
-		// TODO: edit task using date
-		syncTaskToList(date, 0, taskID, COMMAND.EDIT);
-		store.writeToFile();
+
+		String task = store.getTaskByIndex(taskIndex);
+		ArrayList<String> taskInformation = formatTaskforDisplay(task);
+		taskInformation.set(TASK_DATE,date);
+		task = formatTaskForStorage(taskInformation);
+		syncTaskToList(task, 0, taskIndex, COMMAND.EDIT);
 		return true;
 	}
 
@@ -321,6 +324,7 @@ public class Logic {
 			break;
 		case EDIT:
 			store.setTaskByIndex(taskIndex, taskToSync);
+			writeToFile();
 			break;
 		case COMPLETE:
 			store.setTaskByIndex(taskIndex, taskToSync);
