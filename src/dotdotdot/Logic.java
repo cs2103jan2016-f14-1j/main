@@ -146,13 +146,12 @@ public class Logic {
 	 *         else otherwise.
 	 */
 	public boolean deleteTask(int taskID) {
-		ArrayList<String> list = store.getStoreFormattedToDos();
-		// TODO: currently this checks not by TaskID but by order in ArrayList
-		if (!isTaskFound(taskID, list)) { 
+		int taskIndex = searchForTask(taskID);
+		if (taskIndex == -1) {
+			System.out.println(TASK_NOT_FOUND_MSG);
 			return false;
 		}
-		// TODO: add taskID into Storage.freedIDs
-		//String toDelete = store.getTaskByIndex(taskID);
+		
 		syncTaskToList(EMPTY_STRING, taskID, COMMAND.DELETE);
 		writeToFile();
 		return true;
