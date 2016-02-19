@@ -31,7 +31,7 @@ public class Storage {
 	 * @return 
 	 * 		returns an arrayList of unformatted tasks to the caller
 	 */
-	public ArrayList<String> getUnformattedToDos() {
+	public ArrayList<String> getStoreFormattedToDos() {
 		return toDos;
 	}
 
@@ -40,7 +40,7 @@ public class Storage {
 	 * @param line
 	 * 		the task to be added to the arrayList
 	 */
-	public void addUnformattedToDo(String line) {
+	public void addStoreFormattedToDo(String line) {
 		toDos.add(line);
 	}
 	
@@ -49,7 +49,7 @@ public class Storage {
 	 * @param line
 	 * 		the task to be removed from the arrayList
 	 */
-	public void removeUnformattedToDos(int taskID){
+	public void removeStoreFormattedToDo(int taskID){
 		// TODO: currently this removes by the order in which it is in ArrayList
 		// TODO: we want it to remove by the taskID
 		toDos.remove(taskID - 1);
@@ -81,7 +81,7 @@ public class Storage {
 			String currentLine = "";
 			while ((currentLine = bufferReader.readLine()) != null) {
 				// TODO: NEED TO UNFORMAT!! (in tandem with writeToFile's BufferedWriter.write)
-				addUnformattedToDo(currentLine);
+				addStoreFormattedToDo(currentLine);
 			}
 		} catch (FileNotFoundException ex) {
 			systemPrint(FILE_NOT_FOUND_ERROR_MSG);
@@ -129,7 +129,7 @@ public class Storage {
 	 * 
 	 * @param toPrint
 	 */
-	public void systemPrint(String toPrint) {
+	private void systemPrint(String toPrint) {
 		System.out.println(toPrint);
 	}
 
