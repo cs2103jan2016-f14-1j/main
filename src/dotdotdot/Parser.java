@@ -29,7 +29,7 @@ public class Parser {
 	private final int SINGLE_DIGIT_DAY = 4; 	// 4 chars long; i.e. 9Jan
 	
 	enum COMMAND_TYPE {
-		ADD, EDIT, DO, DELETE, INVALID
+		ADD, EDIT, DO, DELETE, INVALID, VIEW
 	};
 
 	public Parser() {	
@@ -56,6 +56,9 @@ public class Parser {
 				break;
 			case DELETE:
 				deleteTask(rawInput);
+				break;
+			case VIEW:
+				viewTask(rawInput);
 				break;
 			default:
 				// TODO: DOESN'T FIT INTO ANY OF THE ABOVE!!!
@@ -91,12 +94,19 @@ public class Parser {
 			case DELETE:
 				deleteTask(rawInput);
 				break;
+			case VIEW:
+				viewTask(rawInput);
+				break;
 			default:
 				// TODO: DOESN'T FIT INTO ANY OF THE ABOVE!!!
 				return COMMAND_UNRECOGNISED;
 		}
 		
 		return COMMAND_SUCCESS;
+	}
+	
+	private boolean viewTask(String rawInput){
+		return true;
 	}
 	
 	private boolean addTask(String rawInput) {
@@ -134,7 +144,7 @@ public class Parser {
 	 */
 	private boolean doTask(String rawInput) {
 		// TODO: actually this method should set task as COMPLETED instead of deleting
-		String 	taskName = getTaskName(rawInput);
+		String taskName = getTaskName(rawInput);
 		int taskID = convertToInt(taskName);
 		
 		if (isInvalidID(taskID)) {
@@ -222,7 +232,7 @@ public class Parser {
 	 * returns string without first token, delimited by spaces
 	 */
 	private String getTaskName(String rawInput) {
-		return rawInput.split(SPACE_STRING, 2)[SECOND_ELEMENT];
+		return rawInput.split(SPACE_STRING, 2)[SECOND_ELEMENT].trim();
     }
 	
 	/**
