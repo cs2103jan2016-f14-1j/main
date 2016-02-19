@@ -37,7 +37,7 @@ public class Logic {
 	 * add task with taskName only
 	 */
 	public boolean addTask(String task) {
-		store.addUnformattedToDo(task);
+		store.addStoreFormattedToDo(task);
 		store.writeToFile();
 		return true;
 	}
@@ -47,7 +47,7 @@ public class Logic {
 	 */
 	public boolean addTask(String task, ArrayList<String> categories) {
 		String fullTask = addCategoriesToTask(task, categories);
-		store.addUnformattedToDo(fullTask);
+		store.addStoreFormattedToDo(fullTask);
 		store.writeToFile();
 		return true;
 	}	
@@ -75,7 +75,7 @@ public class Logic {
 		} else {
 			fullTask = concatDateToTaskOn(task, date);
 		}
-		store.addUnformattedToDo(fullTask);
+		store.addStoreFormattedToDo(fullTask);
 		store.writeToFile();
 		return true;
 	}
@@ -103,7 +103,7 @@ public class Logic {
 		} else {
 			fullTask = concatDateToTaskOn(fullTask, date);
 		}
-		store.addUnformattedToDo(fullTask);
+		store.addStoreFormattedToDo(fullTask);
 		store.writeToFile();
 		return true;
 	}
@@ -119,7 +119,7 @@ public class Logic {
 	 * 			  it will return successful when a task is edited, else otherwise.
 	 */
 	public boolean editTask(int taskID, String date) {
-		ArrayList<String> list = store.getUnformattedToDos();
+		ArrayList<String> list = store.getStoreFormattedToDos();
 		// TODO: currently this checks not by TaskID but by order in ArrayList
 		if (!isTaskFound(taskID, list)) { 
 			return false;
@@ -139,7 +139,7 @@ public class Logic {
 	 *         else otherwise.
 	 */
 	public boolean deleteTask(int taskID) {
-		ArrayList<String> list = store.getUnformattedToDos();
+		ArrayList<String> list = store.getStoreFormattedToDos();
 		// TODO: currently this checks not by TaskID but by order in ArrayList
 		if (!isTaskFound(taskID, list)) { 
 			return false;
@@ -157,7 +157,7 @@ public class Logic {
 	//
 	// 			need to do the taskID generator first
 	public boolean deleteTask(ArrayList<Integer> taskIDs) {
-		ArrayList<String> list = store.getUnformattedToDos();
+		ArrayList<String> list = store.getStoreFormattedToDos();
 		for (int taskID: taskIDs) {
 			if (!isTaskFound(taskID, list)) {
 				return false;
@@ -170,7 +170,7 @@ public class Logic {
 		return false; //this part might have problems since the deletion does nothing
 	}
 
-	public boolean isTaskFound(int taskID, ArrayList<String> list) {
+	private boolean isTaskFound(int taskID, ArrayList<String> list) {
 		return list.size() >= taskID;
 	}
 	
@@ -210,7 +210,7 @@ public class Logic {
 			systemPrint(EMPTY_LIST_MSG);
 			return TASK_NOT_FOUND;
 		}
-		ArrayList<String> toDoList = store.getUnformattedToDos();
+		ArrayList<String> toDoList = store.getStoreFormattedToDos();
 		Iterator<String> looper = toDoList.iterator();
 		String currentLine = EMPTY_STRING;
 		int indexCounter = 0;
@@ -232,7 +232,7 @@ public class Logic {
 	 * @return
 	 * 		returns the ID of the unformatted task
 	 */
-	public String getTaskID(String task) {
+	private String getTaskID(String task) {
 		return task.split(DELIMITER)[TASK_ID];
 	}
 
@@ -244,7 +244,7 @@ public class Logic {
 	 * @return
 	 * 		a string of concatenated line with delimiters
 	 */
-	public String formatTaskForStorage(String[] taskInformation) {
+	private String formatTaskForStorage(String[] taskInformation) {
 		String concatTaskInfo = EMPTY_STRING;
 		for (String info : taskInformation) {
 			concatTaskInfo += info + DELIMITER;
@@ -260,7 +260,7 @@ public class Logic {
 	 * @return
 	 * 		return the task in blocks of information stored in String[]
 	 */
-	public String[] formatTaskforDisplay(String task) {
+	private String[] formatTaskforDisplay(String task) {
 		return task.split(DELIMITER);
 	}
 
@@ -277,12 +277,12 @@ public class Logic {
 	 * @return
 	 * 		return the result, true being successful, false is fail
 	 */
-	public boolean syncTaskToList(String taskToSync, int taskIndex, COMMAND command) {
+	private boolean syncTaskToList(String taskToSync, int taskIndex, COMMAND command) {
 		switch(command){
 		case ADD:
 			break;
 		case DELETE:
-			store.removeUnformattedToDos(taskIndex);
+			store.removeStoreFormattedToDo(taskIndex);
 			break;
 		case EDIT:
 			store.setTaskByIndex(taskIndex, taskToSync);
@@ -298,7 +298,7 @@ public class Logic {
 	 * This method will initiate the writeToFile method in the Storage class
 	 * @return
 	 */
-	public boolean writeToFile() {
+	private boolean writeToFile() {
 		store.writeToFile();
 		return true;
 	}
@@ -318,7 +318,7 @@ public class Logic {
 	 * @param toPrint
 	 * 		the string to be printed out
 	 */
-	public void systemPrint(String toPrint) {
+	private void systemPrint(String toPrint) {
 		System.out.println(toPrint);
 	}
 }
