@@ -18,6 +18,7 @@ public class Logic {
 	private final int TASK_CATEGORIES = 3;
 	private final int TASK_ISCOMPLETE = 4;
 	private final int TASK_NOT_FOUND = -1;
+	private final int TASK_BOTH = -2;
 	private final String COMPLETED = "1";
 	private final String NOT_COMPLETED = "0";
 	private final String DELIMITER = "\\|";
@@ -215,8 +216,11 @@ public class Logic {
 		return true;
 	}
 
-	public ArrayList<String> viewIsCompletedTasks(int completed) {
+	public ArrayList<String> viewTasks(int completed) {
 		ArrayList<String> filterList = (ArrayList<String>) store.getStoreFormattedToDos().clone();
+		if(completed==TASK_BOTH){
+			return filterList;
+		}
 		for (int index = 0; index < filterList.size(); index++) {
 			if (Integer.parseInt(formatTaskforDisplay(filterList.get(index)).get(TASK_ISCOMPLETE)) != completed) {
 				filterList.remove(index);

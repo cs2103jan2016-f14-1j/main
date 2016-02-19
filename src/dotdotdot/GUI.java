@@ -172,7 +172,7 @@ public class GUI {
 						int returnCode = parser.input(tempInput);
 						if (returnCode == Parser.COMMAND_SUCCESS) {
 							if (isView(tempInput)) {
-								list = parser.getLogic().viewIsCompletedTasks(parser.isCompleted(tempInput));
+								list = parser.getLogic().viewTasks(parser.isCompleted(tempInput));
 							} else {
 								list = parser.getLogic().getStorage().getStoreFormattedToDos();
 							}
