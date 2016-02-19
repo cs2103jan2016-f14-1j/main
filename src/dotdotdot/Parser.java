@@ -172,13 +172,9 @@ public class Parser {
 	 */
 	private boolean deleteTask(String rawInput) {
 		String taskName = getTaskName(rawInput);
-		int taskID = convertToInt(taskName);
+		ArrayList<Integer> ids = convertToIds(taskName);
 
-		if (isInvalidID(taskID)) {
-			return false;
-		}
-
-		return logic.deleteTask(taskID);
+		return logic.deleteTask(ids);
 	}
 
 	/**
@@ -218,14 +214,26 @@ public class Parser {
 	private String getTaskID(ArrayList<String> inputParts) {
 		return inputParts.get(SECOND_ELEMENT);
 	}
-
+	
 	private int convertToInt(String taskName) {
-		int taskID = INVALID_ID;
+		int id = INVALID_ID;
 		try {
-			taskID = Integer.parseInt(taskName);
+			id = Integer.parseInt(taskName);
 		} catch (NumberFormatException nfe) {
 		}
-		return taskID;
+		
+		return id;
+	}
+	
+	private ArrayList<Integer> convertToIds(String taskName) {
+		ArrayList<Integer> ids = new ArrayList<Integer>();
+		for (String s : taskName.split(" ")) {
+			try {
+				ids.add(Integer.parseInt(s));
+			} catch (NumberFormatException nfe) {
+			}
+		}
+		return ids;
 	}
 
 	private boolean isInvalidID(int taskID) {
@@ -262,12 +270,12 @@ public class Parser {
 			}
 		}
 
-		return out;
+		return out.trim();
 	}
 
 	/**
-	 * @param rawInput
-	 *            without commandType (i.e. add/delete)
+	 * @param rawInput:
+	 * 				without commandType (i.e. add/delete)
 	 * @return String without commandType and preposition/date
 	 */
 	private String getTaskNameWithPreposition(String taskName) {
@@ -281,9 +289,12 @@ public class Parser {
 			}
 		}
 
-		return out;
+		return out.trim();
 	}
 
+	/**
+	 * Get Date from raw input
+	 */
 	private String getDateFromRaw(String taskName) {
 		String out = EMPTY_STRING, s = EMPTY_STRING;
 		ArrayList<String> as = breakString(taskName);
@@ -300,8 +311,7 @@ public class Parser {
 	}
 
 	/**
-	 * @param rawInput
-	 * @return
+	 * Returns an ArrayList<String> of rawInput, separated by spaces
 	 */
 	private ArrayList<String> breakString(String rawInput) {
 		return new ArrayList<String>(Arrays.asList(rawInput.split(SPACE_STRING)));

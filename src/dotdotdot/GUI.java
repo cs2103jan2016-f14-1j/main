@@ -26,7 +26,7 @@ public class GUI {
 
 	private static final String GUI_TITLE = "Dotdotdot";
 	private static final String GUI_HINT = "< Input ? or help to show available commands >";
-	private static final String HELP_REGEX = "(help|\\?|HELP)";
+	private static final String HELP_REGEX = "(h|H|help|HELP|\\?)";
 	private static final String VIEW_REGEX = "view";
 	private static final String EMPTY_STRING = "";
 	private static final String SUCCESS_MESSAGE = "Your command has been executed successfully!";
@@ -52,9 +52,9 @@ public class GUI {
 
 		mainTable.removeAll();
 
-		for (int i = 0; i < list.size(); i++) {
+		for (String entry : list) {
 			mainItem = new TableItem(mainTable, SWT.NONE);
-			mainItem.setText((i + 1) + ". " + list.get(i));
+			mainItem.setText(entry);
 		}
 
 		if (!outputStatus.isEmpty()) {
@@ -125,7 +125,7 @@ public class GUI {
 		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		mainItem.setText("Show help");
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setText("[? | help]");
+		mainItem.setText("[? | help | h]");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
@@ -174,7 +174,7 @@ public class GUI {
 							if (isView(tempInput)) {
 								list = parser.getLogic().viewTasks(parser.isCompleted(tempInput));
 							} else {
-								list = parser.getLogic().getStorage().getStoreFormattedToDos();
+								list = parser.getLogic().getUserFormattedToDos();
 							}
 							outputStatus = SUCCESS_MESSAGE;
 						} else if (returnCode == Parser.COMMAND_FAIL) {
@@ -205,7 +205,7 @@ public class GUI {
 			}
 		});
 
-		list = logic.getStorage().getStoreFormattedToDos();
+		list = logic.getUserFormattedToDos();
 		displayList();
 
 		shell.open();

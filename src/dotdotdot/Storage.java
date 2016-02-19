@@ -56,12 +56,8 @@ public class Storage {
 	 * 		the task to be removed from the arrayList
 	 */
 	public void removeStoreFormattedToDo(int taskId, int taskIndex){
-		// TODO: currently this removes by the order in which it is in ArrayList
-		// TODO: we want it to remove by the taskID
 		freedIds.offer(taskId);
-		
 		toDos.remove(taskIndex);
-
 	}
 	
 	/**
@@ -114,7 +110,7 @@ public class Storage {
 	private void convertIDStringToQueue(String s) {
 		String[] stringOfIds = s.split(" ");
 		for (String id : stringOfIds) {
-			freedIds.offer(Integer.parseInt(id));
+			freedIds.offerFirst(Integer.parseInt(id));
 		}
 		setNextTaskId(freedIds.pollLast());
 	}
