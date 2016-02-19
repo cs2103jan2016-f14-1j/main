@@ -161,17 +161,6 @@ public class Logic {
 	 *            search for the task in the storage
 	 * @return it will return successful when a task is deleted, else otherwise.
 	 */
-	public boolean deleteTask(int taskId) {
-		int taskIndex = searchForTask(taskId);
-		if (taskIndex == TASK_NOT_FOUND) {
-			System.out.println(TASK_NOT_FOUND_MSG);
-			return false;
-		}
-		syncTaskToList(EMPTY_STRING, taskId, taskIndex, COMMAND.DELETE);
-		writeToFile();
-		return true;
-	}
-
 	public boolean deleteTask(ArrayList<Integer> taskIds) {
 		boolean value = false;
 		for (int id : taskIds) {
@@ -180,6 +169,16 @@ public class Logic {
 			}
 		}
 		return value;
+	}
+	private boolean deleteTask(int taskId) {
+		int taskIndex = searchForTask(taskId);
+		if (taskIndex == TASK_NOT_FOUND) {
+			System.out.println(TASK_NOT_FOUND_MSG);
+			return false;
+		}
+		syncTaskToList(EMPTY_STRING, taskId, taskIndex, COMMAND.DELETE);
+		writeToFile();
+		return true;
 	}
 	
 	// Dummy method for JUnit testing
@@ -209,7 +208,7 @@ public class Logic {
 		}
 		String task = store.getTaskByIndex(taskIndex);
 		ArrayList<String> taskInformation = formatTaskForDisplay(task);
-		taskInformation.set(TASK_ISCOMPLETE,COMPLETED);
+		taskInformation.set(TASK_ISCOMPLETE, COMPLETED);
 		task = formatTaskForStorage(taskInformation);
 		syncTaskToList(task, 0, taskIndex, COMMAND.COMPLETE);
 		return true;

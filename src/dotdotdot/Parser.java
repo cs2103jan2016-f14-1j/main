@@ -29,6 +29,7 @@ public class Parser {
 	private final String EMPTY_STRING = "";
 	private final String SPACE_STRING = " ";
 
+	private final int DEFAULT_VIEW = 1;
 	private final int FIRST_ELEMENT = 0;
 	private final int SECOND_ELEMENT = 1;
 	private final int AFTER_PREPOSITION = 3;
@@ -65,7 +66,7 @@ public class Parser {
 		case DELETE:
 			deleteTask(rawInput);
 			break;
-		case VIEW:
+		case VIEW:			
 			break;
 		default:
 			// TODO: DOESN'T FIT INTO ANY OF THE ABOVE!!!
@@ -104,6 +105,7 @@ public class Parser {
 			deleteTask(rawInput);
 			break;
 		case VIEW:
+			viewTask(rawInput);
 			break;
 		default:
 			// TODO: DOESN'T FIT INTO ANY OF THE ABOVE!!!
@@ -152,17 +154,11 @@ public class Parser {
 	 * @return true if taskID exists, false otherwise
 	 */
 	private boolean doTask(String rawInput) {
-		// TODO: actually this method should set task as COMPLETED instead of
-		// deleting
-		String taskName = getTaskName(rawInput);
-		int taskID = convertToInt(taskName);
-
+		int taskID = convertToInt(getTaskName(rawInput));
 		if (isInvalidID(taskID)) {
 			return false;
 		}
-
-		logic.doTask(taskID);
-		return true;
+		return logic.doTask(taskID);
 	}
 
 	/**
@@ -175,6 +171,20 @@ public class Parser {
 		ArrayList<Integer> ids = convertToIds(taskName);
 
 		return logic.deleteTask(ids);
+	}
+	
+	private boolean viewTask(String rawInput) {
+		ArrayList<String> inputParts = breakString(rawInput);
+		if (isDefaultView(inputParts)) {
+			// TODO: show todos that are not completed
+		} else {
+			// TODO: show by category/all
+		}
+		
+		return true;
+	}
+	private boolean isDefaultView(ArrayList<String> ip) {
+		return ip.size() == DEFAULT_VIEW;
 	}
 
 	/**

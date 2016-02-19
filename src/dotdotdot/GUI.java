@@ -30,7 +30,7 @@ public class GUI {
 	private static final String GUI_TITLE = "Dotdotdot";
 	private static final String GUI_HINT = "< Input ? or help to show available commands >";
 	private static final String HELP_REGEX = "(h|H|help|HELP|\\?)";
-	private static final String VIEW_REGEX = "(view|VIEW)";
+	private static final String VIEW_REGEX = "(v|V|view|VIEW)";
 	private static final String EMPTY_STRING = "";
 	private static final String SUCCESS_MESSAGE = "Your command has been executed successfully!";
 	private static final String FAIL_MESSAGE = "Your command has failed to execute.";
@@ -59,14 +59,14 @@ public class GUI {
 		for(int i = 0; i < list.size(); i++){
 			String formattedOutput = WordUtils.wrap(list.get(i), WRAP_AROUND);
 			String outputArray[] = formattedOutput.split("\n");
-			for(int z=0; z<outputArray.length; z++){
+			for(int j = 0; j < outputArray.length; j++){
 				
 				mainItem = new TableItem(mainTable, SWT.NONE);
 				
-				if(z==0){
-					mainItem.setText(outputArray[z]);
+				if(j == 0){
+					mainItem.setText(outputArray[j]);
 				} else {
-					mainItem.setText("      " + outputArray[z]);
+					mainItem.setText("      " + outputArray[j]);
 				}
 			}
 		}
