@@ -7,6 +7,8 @@ import java.util.Iterator;
 public class Logic {
 
 	private Storage store = null;
+	private ArrayList<Integer> currTaskIDs = new ArrayList<Integer>();
+	private ArrayList<String> currTaskDescs = new ArrayList<String>();
 	private final String EMPTY_LIST_MSG = "The list is empty";
 	private final String TASK_NOT_FOUND_MSG = "The task is not found";
 	private final String PREP_BY_PREPEND = "by ";
@@ -165,6 +167,7 @@ public class Logic {
 		boolean value = false;
 		for (int id : taskIds) {
 			if (deleteTask(id)) {
+				currTaskIDs.add(id);
 				value = true;
 			}
 		}
@@ -176,6 +179,7 @@ public class Logic {
 			System.out.println(TASK_NOT_FOUND_MSG);
 			return false;
 		}
+		currTaskDescs.add(getTaskDesc(store.getStoreFormattedToDos().get(taskIndex)));
 		syncTaskToList(EMPTY_STRING, taskId, taskIndex, COMMAND.DELETE);
 		writeToFile();
 		return true;
@@ -235,7 +239,7 @@ public class Logic {
 	 *            the task ID to be searched
 	 * @return the task if it is found, otherwise -1 to represent not found
 	 */
-	private int searchForTask(int taskID) {
+	public int searchForTask(int taskID) {
 		if (store.isListEmpty()) {
 			systemPrint(EMPTY_LIST_MSG);
 			return TASK_NOT_FOUND;
@@ -266,6 +270,17 @@ public class Logic {
 		return task.split(DELIMITER)[TASK_ID];
 	}
 
+	/**
+	 * This method is used to retrieve the task description of the unformatted task
+	 * 
+	 * @param task
+	 *            takes in the unformatted task
+	 * @return returns the description of the unformatted task
+	 */
+	private String getTaskDesc(String task) {
+		return task.split(DELIMITER)[TASK_DESC];
+	}
+	
 	/**
 	 * This method is used to format the task information, which is in String[],
 	 * for storing into the storage by concatenating the information into a
@@ -378,5 +393,17 @@ public class Logic {
 	 */
 	private void systemPrint(String toPrint) {
 		System.out.println(toPrint);
+	}
+	
+	public void clearCurrTasks(){
+	    currTaskIDs.clear();
+	    currTaskDescs.clear();
+	}
+	
+	public ArrayList<Integer> getCurrTaskIDs(){
+		return currTaskIDs;
+	}
+	public ArrayList<String> getCurrTaskDescs(){
+		return currTaskDescs;
 	}
 }

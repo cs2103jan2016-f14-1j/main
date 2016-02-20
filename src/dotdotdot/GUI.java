@@ -32,7 +32,8 @@ public class GUI {
 	private static final String HELP_REGEX = "(h|H|help|HELP|\\?)";
 	private static final String VIEW_REGEX = "(view|v|V|VIEW)(.*)";
 	private static final String EMPTY_STRING = "";
-	private static final String SUCCESS_MESSAGE = "Your command has been executed successfully!";
+	private static final String SUCCESS_CONTENT_MESSAGE = "(%1$s) %2$s";
+	private static final String SUCCESS_TITLE_MESSAGE = "%1$s Successful";
 	private static final String FAIL_MESSAGE = "Your command has failed to execute.";
 	private static final String UNRECOGNISED_MESSAGE = "Your command is not recognised.";
 	private static final String ERROR_MESSAGE = "An error has occured.";
@@ -196,7 +197,9 @@ public class GUI {
 						displayHelp();
 					} else {
 						int returnCode = parser.input(tempInput);
-
+						outputStatus = EMPTY_STRING;
+						tip.setText(outputStatus);
+						
 						if (returnCode == Parser.COMMAND_SUCCESS) {
 							if (isView(tempInput)) {
 								list = parser.getLogic().viewTasks(parser.isCompleted(tempInput));
@@ -205,7 +208,17 @@ public class GUI {
 								list = parser.getLogic().viewTasks(NOT_DONE);
 								System.out.println("It is not a view command, get all not done to do list");
 							}
-							outputStatus = SUCCESS_MESSAGE;
+							
+							char capitalFirstLetter = Character.toUpperCase(parser.getLastCommand().charAt(0));
+							String capitalString = capitalFirstLetter + parser.getLastCommand().substring(1);
+							tip.setText(String.format(SUCCESS_TITLE_MESSAGE, capitalString));
+							
+							ArrayList <Integer> deletedIDS = parser.getLogic().getCurrTaskIDs();
+							for(int i =0 ; i < deletedIDS.size() ; i++){
+								outputStatus += String.format(SUCCESS_CONTENT_MESSAGE,deletedIDS.get(i),parser.getLogic().getCurrTaskDescs()) + "\n";
+							}
+							parser.getLogic().clearCurrTasks();
+							
 						} else if (returnCode == Parser.COMMAND_FAIL) {
 							outputStatus = FAIL_MESSAGE;
 						} else if (returnCode == Parser.COMMAND_UNRECOGNISED) {
@@ -216,7 +229,7 @@ public class GUI {
 
 						tip.setLocation(new Point(shell.getLocation().x + mainTable.getSize().x / 4,
 								shell.getLocation().y + mainTable.getSize().y));
-						tip.setText(outputStatus);
+						tip.setMessage(outputStatus);
 						tip.setVisible(true);
 
 						displayList();

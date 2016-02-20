@@ -7,7 +7,7 @@ public class Parser {
 
 	private Logic logic;
 	private static String lastCommand = "";
-
+	
 	public static final int COMMAND_SUCCESS = 0;
 	public static final int COMMAND_FAIL = 1;
 	public static final int COMMAND_UNRECOGNISED = 2;
@@ -398,6 +398,10 @@ public class Parser {
 		}
 	}
 
+	public String getLastCommand(){
+		return lastCommand;
+	}
+	
 	private boolean isCategory(String s) {
 		return s.startsWith(CATEGORIES);
 	}
