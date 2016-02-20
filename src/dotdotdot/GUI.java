@@ -67,7 +67,7 @@ public class GUI {
 				if (j == 0) {
 					mainItem.setText(outputArray[j]);
 				} else {
-					mainItem.setText("      " + outputArray[j]);
+					mainItem.setText("       " + outputArray[j]);
 				}
 			}
 		}
