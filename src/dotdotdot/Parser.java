@@ -130,6 +130,10 @@ public class Parser {
 		boolean hasCategory = getCategories(categories, inputParts),
 				hasPreposition = getPreposition(preposition, inputParts);
 
+		if (taskName.equals(EMPTY_STRING)) {
+			return false;
+		}
+		
 		if (!hasCategory && !hasPreposition) {
 			logic.addTask(taskName);
 		} else if (hasCategory && !hasPreposition) {
@@ -223,7 +227,11 @@ public class Parser {
 	}
 
 	private String getTaskID(ArrayList<String> inputParts) {
-		return inputParts.get(SECOND_ELEMENT);
+		try {
+			return inputParts.get(SECOND_ELEMENT);
+		} catch (IndexOutOfBoundsException e) {
+			return EMPTY_STRING;
+		}
 	}
 	
 	private int convertToInt(String taskName) {
@@ -238,10 +246,18 @@ public class Parser {
 	
 	private ArrayList<Integer> convertToIds(String taskName) {
 		ArrayList<Integer> ids = new ArrayList<Integer>();
+		
+		if (taskName.equals(EMPTY_STRING)) {
+			ids.add(INVALID_ID);
+			return ids;
+		}
+		
 		for (String s : taskName.split(" ")) {
 			try {
 				ids.add(Integer.parseInt(s));
 			} catch (NumberFormatException nfe) {
+				ids.add(INVALID_ID);
+				return ids;
 			}
 		}
 		return ids;
@@ -263,7 +279,13 @@ public class Parser {
 	 * returns string without first token, delimited by spaces
 	 */
 	private String getTaskName(String rawInput) {
-		return rawInput.split(SPACE_STRING, 2)[SECOND_ELEMENT].trim();
+		String taskName;
+		try {
+			taskName = rawInput.split(SPACE_STRING, 2)[SECOND_ELEMENT].trim();
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return EMPTY_STRING;
+		}
+		return taskName;
 	}
 
 	/**
@@ -325,7 +347,14 @@ public class Parser {
 	 * Returns an ArrayList<String> of rawInput, separated by spaces
 	 */
 	private ArrayList<String> breakString(String rawInput) {
-		return new ArrayList<String>(Arrays.asList(rawInput.split(SPACE_STRING)));
+		try {
+			return new ArrayList<String>(Arrays.asList(rawInput.split(SPACE_STRING)));
+		} catch (IndexOutOfBoundsException e) {
+			ArrayList<String> empty = new ArrayList<String>();
+			empty.add(EMPTY_STRING);
+			return empty;
+		}
+		
 	}
 
 	/**
