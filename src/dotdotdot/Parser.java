@@ -20,6 +20,7 @@ public class Parser {
 
 	public final String NOT_DONE = "not done";
 	public final String DONE = "done";
+	public final String ALL = "all";
 	private final int INT_NOT_DONE = 0;
 	private final int INT_DONE = 1;
 
@@ -116,10 +117,10 @@ public class Parser {
 	}
 
 	public int isCompleted(String rawInput) {
-		if (!rawInput.contains(NOT_DONE) && !rawInput.contains(DONE)) {
+		if (rawInput.contains(ALL)) {
 			return TASK_BOTH;
 		}
-		return (rawInput.contains(NOT_DONE)) ? INT_NOT_DONE : INT_DONE;
+		return (rawInput.contains(NOT_DONE) ||(!rawInput.contains(DONE) && !rawInput.contains(NOT_DONE))) ? INT_NOT_DONE : INT_DONE;
 	}
 
 	private boolean addTask(String rawInput) {

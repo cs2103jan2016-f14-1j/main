@@ -216,13 +216,12 @@ public class Logic {
 
 	public ArrayList<String> viewTasks(int completed) {
 		ArrayList<String> filterList = (ArrayList<String>) store.getStoreFormattedToDos().clone();
-		if(completed == TASK_BOTH){
-			return filterList;
-		}
 		for (int index = 0; index < filterList.size(); index++) {
-			if (Integer.parseInt(formatTaskForDisplay(filterList.get(index)).get(TASK_ISCOMPLETE)) != completed) {
+			if (Integer.parseInt(formatTaskForDisplay(filterList.get(index)).get(TASK_ISCOMPLETE)) != completed && completed!=TASK_BOTH) {
 				filterList.remove(index);
 				index--;
+			}else{
+				filterList.set(index, formatToUserFormat(filterList.get(index)));
 			}
 		}
 		return filterList;
