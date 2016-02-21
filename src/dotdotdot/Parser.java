@@ -88,31 +88,35 @@ public class Parser {
 	 * unrecognised command)
 	 */
 	public int input(String rawInput) {
+		boolean result;
+		
 		String commandTypeString = getCommand(rawInput);
-
+		
 		COMMAND_TYPE commandType = determineCommandType(commandTypeString);
 
 		switch (commandType) {
 		case ADD:
-			addTask(rawInput);
+			result = addTask(rawInput);
 			break;
 		case DO:
-			doTask(rawInput);
+			result = doTask(rawInput);
 			break;
 		case EDIT:
-			editTask(rawInput);
+			result = editTask(rawInput);
 			break;
 		case DELETE:
-			deleteTask(rawInput);
+			result = deleteTask(rawInput);
 			break;
 		case VIEW:
-			viewTask(rawInput);
+			result = viewTask(rawInput);
 			break;
 		default:
 			// TODO: DOESN'T FIT INTO ANY OF THE ABOVE!!!
 			return COMMAND_UNRECOGNISED;
 		}
-
+		if (result == false) {
+			return COMMAND_FAIL;
+		}
 		return COMMAND_SUCCESS;
 	}
 

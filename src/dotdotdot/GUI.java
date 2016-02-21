@@ -34,7 +34,7 @@ public class GUI {
 	private static final String EMPTY_STRING = "";
 	private static final String SUCCESS_CONTENT_MESSAGE = "(%1$s) %2$s";
 	private static final String SUCCESS_TITLE_MESSAGE = "%1$s Successful";
-	private static final String FAIL_MESSAGE = "Your command has failed to execute.";
+	private static final String FAIL_MESSAGE = "Your command has failed. Incomplete or invalid command.";
 	private static final String UNRECOGNISED_MESSAGE = "Your command is not recognised.";
 	private static final String ERROR_MESSAGE = "An error has occured.";
 	private static final int SCROLL_AMOUNT = 5;
