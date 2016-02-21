@@ -182,19 +182,21 @@ public class Parser {
 		return logic.deleteTask(ids);
 	}
 	
+	// let's keep this first in case required in the future as there will be changes
 	private boolean viewTask(String rawInput) {
 		ArrayList<String> inputParts = breakString(rawInput);
-		if (isDefaultView(inputParts)) {
+		/*if (isDefaultView(inputParts)) {
 			// TODO: show todos that are not completed
 		} else {
 			// TODO: show by category/all
-		}
+		}*/
 		
 		return true;
 	}
+	/*
 	private boolean isDefaultView(ArrayList<String> ip) {
 		return ip.size() == DEFAULT_VIEW;
-	}
+	}*/
 
 	/**
 	 * @param rawInput:
