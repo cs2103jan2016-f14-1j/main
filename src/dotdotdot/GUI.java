@@ -41,7 +41,6 @@ public class GUI {
 	private static final int WRAP_AROUND = 50;
 	private static final int NOT_DONE = 0;
 
-	private static String outputStatus = EMPTY_STRING;
 	private static Color hintColor;
 	private static Color normalColor;
 
@@ -197,8 +196,7 @@ public class GUI {
 						displayHelp();
 					} else {
 						int returnCode = parser.input(tempInput);
-						outputStatus = EMPTY_STRING;
-						tip.setText(outputStatus);
+						tip.setText(EMPTY_STRING);
 						
 						if (returnCode == Parser.COMMAND_SUCCESS) {
 							if (isView(tempInput)) {
@@ -209,27 +207,27 @@ public class GUI {
 								System.out.println("It is not a view command, get all not done to do list");
 							}
 							
-							char capitalFirstLetter = Character.toUpperCase(parser.getLastCommand().charAt(0));
-							String capitalString = capitalFirstLetter + parser.getLastCommand().substring(1);
-							tip.setText(String.format(SUCCESS_TITLE_MESSAGE, capitalString));
+							tip.setText(String.format(SUCCESS_TITLE_MESSAGE, setFirstCharToUpper(parser.getLastCommand())));
 							
 							ArrayList <Integer> deletedIDS = parser.getLogic().getCurrTaskIDs();
+							String outputStatus = EMPTY_STRING;
 							for(int i =0 ; i < deletedIDS.size() ; i++){
-								outputStatus += String.format(SUCCESS_CONTENT_MESSAGE,deletedIDS.get(i),parser.getLogic().getCurrTaskDescs()) + "\n";
+								outputStatus += String.format(SUCCESS_CONTENT_MESSAGE,deletedIDS.get(i),parser.getLogic().getCurrTaskDescs().get(i)) + "\n";
 							}
+							
+							tip.setMessage(outputStatus);
 							parser.getLogic().clearCurrTasks();
 							
 						} else if (returnCode == Parser.COMMAND_FAIL) {
-							outputStatus = FAIL_MESSAGE;
+							tip.setText(FAIL_MESSAGE);
 						} else if (returnCode == Parser.COMMAND_UNRECOGNISED) {
-							outputStatus = UNRECOGNISED_MESSAGE;
+							tip.setText(UNRECOGNISED_MESSAGE);
 						} else {
-							outputStatus = ERROR_MESSAGE;
+							tip.setText(ERROR_MESSAGE);
 						}
 
 						tip.setLocation(new Point(shell.getLocation().x + mainTable.getSize().x / 4,
 								shell.getLocation().y + mainTable.getSize().y));
-						tip.setMessage(outputStatus);
 						tip.setVisible(true);
 
 						displayList();
@@ -286,5 +284,8 @@ public class GUI {
 	private static boolean isTextEmpty(Text t) {
 		return t.getText().length() == 1;
 	}
-
+	
+	private static String setFirstCharToUpper(String s){
+		return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+	}
 }
