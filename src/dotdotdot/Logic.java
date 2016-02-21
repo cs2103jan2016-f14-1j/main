@@ -145,6 +145,8 @@ public class Logic {
 		if (taskIndex == TASK_NOT_FOUND) {
 			System.out.println(TASK_NOT_FOUND_MSG);
 			return false;
+		} else if (date.isEmpty()) {
+			return false;
 		}
 
 		String task = store.getTaskByIndex(taskIndex);

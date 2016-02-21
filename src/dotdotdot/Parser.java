@@ -210,9 +210,7 @@ public class Parser {
 			return false;
 		}
 
-		logic.editTask(taskID, date);
-
-		return true;
+		return logic.editTask(taskID, date);
 	}
 
 	private String getDateFromRaw(ArrayList<String> inputParts) {
