@@ -206,7 +206,7 @@ public class Parser {
 		int taskID = convertToInt(getTaskID(inputParts));
 		String date = getDateFromRaw(inputParts);
 
-		if (isInvalidID(taskID)) {
+		if (isInvalidID(taskID) || date.isEmpty()) {
 			return false;
 		}
 
