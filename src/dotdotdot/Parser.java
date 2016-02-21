@@ -338,7 +338,7 @@ public class Parser {
 			if (!isPreposition(s) && !isCategory(s)) {
 				out = s + out;
 			} else {
-				break;
+				continue;
 			}
 		}
 
