@@ -124,7 +124,10 @@ public class Parser {
 		if (rawInput.contains(ALL)) {
 			return TASK_BOTH;
 		}
-		return (rawInput.contains(NOT_DONE) ||(!rawInput.contains(DONE) && !rawInput.contains(NOT_DONE))) ? INT_NOT_DONE : INT_DONE;
+		return 	(rawInput.contains(NOT_DONE) || 
+				(!rawInput.contains(DONE) && !rawInput.contains(NOT_DONE))) ? 
+				INT_NOT_DONE : 
+				INT_DONE;
 	}
 
 	private boolean addTask(String rawInput) {
@@ -209,10 +212,10 @@ public class Parser {
 		if (isInvalidID(taskID) || date.isEmpty()) {
 			return false;
 		}
-
 		return logic.editTask(taskID, date);
 	}
-
+	/** returns rawDate if found, otherwise returns EMPTY_STRING
+	 */
 	private String getDateFromRaw(ArrayList<String> inputParts) {
 		String date = EMPTY_STRING;
 
@@ -337,7 +340,7 @@ public class Parser {
 			s = as.get(i);
 			if (!isPreposition(s) && !isCategory(s)) {
 				out = s + out;
-			} else {
+			} else if (isPreposition(s)) {
 				break;
 			}
 		}

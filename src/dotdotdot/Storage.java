@@ -102,9 +102,9 @@ public class Storage {
 		}
 	}
 	private void readQueueFromFile() {
-		convertIDStringToQueue(getLastElement(toDos));
+		convertIDStringToQueue(removeLastElement(toDos));
 	}
-	private String getLastElement(ArrayList<String> as){
+	private String removeLastElement(ArrayList<String> as){
 		return as.remove(as.size() - 1);
 	}
 	private void convertIDStringToQueue(String s) {

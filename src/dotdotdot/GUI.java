@@ -211,7 +211,7 @@ public class GUI {
 							
 							ArrayList <Integer> deletedIDS = parser.getLogic().getCurrTaskIDs();
 							String outputStatus = EMPTY_STRING;
-							for(int i =0 ; i < deletedIDS.size() ; i++){
+							for(int i = 0; i < deletedIDS.size(); i++){
 								outputStatus += String.format(SUCCESS_CONTENT_MESSAGE,deletedIDS.get(i),parser.getLogic().getCurrTaskDescs().get(i)) + "\n";
 							}
 							

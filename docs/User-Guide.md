@@ -26,12 +26,13 @@ To add a normal task, use this command.
 add <TODO> (at | by | on | to) <date> [@category]
 ```
 
-`<date>` refers to the date, which can either be a date or day. Dates can be strings like `31Feb` or `Tue`. You can assign single-word category(s) to each task by appending `@` to the word.
+`<date>` refers to the date. Dates can be strings like `31Feb` or `2 Mar`. You can assign single-word category(s) to each task by appending `@` to the word.
 
 Examples:
 * `add receive quest on 31feb`
-* `add do CS2103 tutorial by Sun`
+* `add do CS2103 tutorial by 2 mar`
 * `add buy milk by 15Feb @shopping`
+* `add Caroline @21st birthday party on 31feb`
 
 ## Edit tasks
 To edit the date/deadline of a task, use this command.
@@ -55,26 +56,40 @@ Examples:
 ## Complete tasks
 To complete a task, use this command.
 ```
-do <TODO | task_ID#>
+do <task_ID#>
 ```
-
-`<TODO>` refers to the name of the task. Alternatively, you can use the task ID instead.
 
 Examples:
 * `do receive quest`
 * `do 1`
 
+## Delete tasks
+To delete task(s), use this command.
+```
+delete <task_IDs#>
+```
+
+You can input several task IDs, separated by spaces.
+
+Examples: 
+* `delete 2`
+* `delete 44 72 3 49`
+
 ## View tasks
 To view task by category, use this command.
+```
+view <category>
+```
 
-`view <category>`
+`<category>` can either be categories assigned to tasks, or the keywords `done` and `not done`.
 
 Examples:
 * `view shopping`
+* `view done`
 
 ## Show help
 ```
-[? | help]
+[? | h | help]
 ```
 
 Shows a help screen containing all commands available.
