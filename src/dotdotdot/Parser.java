@@ -185,6 +185,8 @@ public class Parser {
 		return logic.deleteTask(ids);
 	}
 	
+	// private boolean deleteByCat()
+	
 	// let's keep this first in case required in the future as there will be changes
 	private boolean viewTask(String rawInput) {
 		ArrayList<String> inputParts = breakString(rawInput);

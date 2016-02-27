@@ -144,6 +144,25 @@ public class Logic {
 		return true;
 	}
 	
+	/**
+	 * This method allows user to delete all tasks under a category.
+	 * Finds all taskIDs of tasks under category and call the 
+	 * deleteTask method
+	 */
+	private boolean deleteByCat(ArrayList<String> categories) {
+		ArrayList<Integer> iDs = new ArrayList<Integer>();
+		// TODO: method to get all the iDs in category
+		if (iDs.isEmpty()) {
+			return false;
+		}
+		
+		for (int taskID : iDs) {
+			deleteTask(taskID);
+		}
+		
+		return true;
+	}
+	
 	/** This method allows the user to mark task as completed
 	 * @param taskID
 	 *            the taskID is used to search for the task in the storage
