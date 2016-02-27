@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Storage {
@@ -15,6 +16,7 @@ public class Storage {
 	// FORMAT OF EACH TASK: [taskID]|[task]|[date]|[categories]|[isComplete]|
 	private ArrayList<String> toDos = new ArrayList<String>();
 	private LinkedList<Integer> freedIds = new LinkedList<Integer>();
+	private HashMap<String, Integer> tasksPerCat = new HashMap<>();
 	private int newTaskId = 0;
 
 	private final String STORE_DELIMITER = "|";
@@ -179,6 +181,18 @@ public class Storage {
 	 */
 	private void systemPrint(String toPrint) {
 		System.out.println(toPrint);
+	}
+	
+	public void addToHashMap(String categoryName, int noOfTasks){
+		tasksPerCat.put(categoryName, noOfTasks);
+	}
+	
+	public int getCountForEachCat(String categoryName){
+		return (tasksPerCat.get(categoryName)==null)? 0:tasksPerCat.get(categoryName);
+	}
+	
+	public HashMap<String, Integer> getTasksCountPerCat(){
+		return tasksPerCat;
 	}
 
 }

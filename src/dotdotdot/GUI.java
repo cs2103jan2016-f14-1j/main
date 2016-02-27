@@ -65,11 +65,7 @@ public class GUI {
 	private static void displayCategory(){
 		categoryTable.removeAll();
 		// Call logic for list
-		ArrayList<String> categories = new ArrayList<String>();
-		categories.add("Meetings");
-		categories.add("Kill people");
-		categories.add("Events");
-		
+		ArrayList<String> categories = parser.getLogic().getListOfCategoriesWithCount();
 		for(int i =0 ; i < categories.size(); i++){
 			mainItem = new TableItem(categoryTable, SWT.NONE);
 			mainItem.setText(categories.get(i));
