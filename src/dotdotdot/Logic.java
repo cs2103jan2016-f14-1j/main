@@ -128,6 +128,25 @@ public class Logic {
 	}
 	
 	/**
+	 * This method allows user to delete all tasks under a category.
+	 * Finds all taskIDs of tasks under category and call the 
+	 * deleteTask method
+	 */
+	public boolean deleteByCat(ArrayList<String> categories) {
+		ArrayList<Integer> iDs = new ArrayList<Integer>();
+		iDs = getTaskIDsByCat(categories);
+		if (iDs.isEmpty()) {
+			return false;
+		}
+		
+		for (int taskID : iDs) {
+			deleteTask(taskID);
+		}
+		
+		return true;
+	}
+	
+	/**
 	 * 
 	 * @param taskId
 	 * @return
@@ -141,25 +160,6 @@ public class Logic {
 		currTaskDescs.add(getTaskDesc(store.getStoreFormattedToDos().get(taskIndex)));
 		syncTaskToList(EMPTY_STRING, taskId, taskIndex, COMMAND.DELETE);
 		writeToFile();
-		return true;
-	}
-	
-	/**
-	 * This method allows user to delete all tasks under a category.
-	 * Finds all taskIDs of tasks under category and call the 
-	 * deleteTask method
-	 */
-	private boolean deleteByCat(ArrayList<String> categories) {
-		ArrayList<Integer> iDs = new ArrayList<Integer>();
-		// TODO: method to get all the iDs in category
-		if (iDs.isEmpty()) {
-			return false;
-		}
-		
-		for (int taskID : iDs) {
-			deleteTask(taskID);
-		}
-		
 		return true;
 	}
 	
@@ -364,6 +364,18 @@ public class Logic {
 			temp.add(category+SPACE_STRING+"("+count+")");
 		}
 		return temp;
+	}
+	
+	public ArrayList<Integer> getTaskIDsByCat(ArrayList<String> categories) {
+		ArrayList<String> tasks = new ArrayList<String>();
+		ArrayList<Integer> iDs = new ArrayList<Integer>();
+		for (String cat : categories) {
+			tasks.addAll(store.getIDByCat(cat));
+		}
+		for (String task : tasks) {
+			iDs.add(Integer.parseInt(task.split(DELIMITER)[TASK_ID]));
+		}
+		return iDs;
 	}
 	//============================== END OF GETTER FUNCTIONS ==============================
 	
