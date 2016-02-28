@@ -120,14 +120,14 @@ public class Parser {
 		return COMMAND_SUCCESS;
 	}
 
-	public int isCompleted(String rawInput) {
+	public boolean isCompleted(String rawInput) {
 		if (rawInput.contains(ALL)) {
-			return TASK_BOTH;
+			return false;
 		}
 		return 	(rawInput.contains(NOT_DONE) || 
 				(!rawInput.contains(DONE) && !rawInput.contains(NOT_DONE))) ? 
-				INT_NOT_DONE : 
-				INT_DONE;
+				false : 
+				true;
 	}
 
 	private boolean addTask(String rawInput) {
@@ -190,22 +190,33 @@ public class Parser {
 		return logic.deleteTask(ids);
 	}
 	
-	// let's keep this first in case required in the future as there will be changes
 	private boolean viewTask(String rawInput) {
-		ArrayList<String> inputParts = breakString(rawInput);
-		/*if (isDefaultView(inputParts)) {
-			// TODO: show todos that are not completed
+		String viewType = removeCommand(rawInput);
+		if (isDefaultView(viewType)) {
+			return logic.viewTasks(NOT_DONE);
+		} else if (isCompleted(viewType)){
+			return logic.viewTasks(DONE);
+		} else if (isCategory(viewType)) {
+			return logic.viewTasks(viewType);
 		} else {
-			// TODO: show by category/all
-		}*/
-		
-		return true;
+			return false;
+		}
 	}
-	/*
-	private boolean isDefaultView(ArrayList<String> ip) {
-		return ip.size() == DEFAULT_VIEW;
-	}*/
-
+	
+	private boolean isDefaultView(String viewType) {
+		if (viewType.isEmpty()) {
+			return true;
+		} else if (viewType.equalsIgnoreCase(NOT_DONE)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private String removeCommand(String rawInput) {
+		return rawInput.replace(getCommand(rawInput), EMPTY_STRING).trim();
+	}
+	
 	/**
 	 * @param rawInput:
 	 *            taskID as a String
@@ -474,6 +485,14 @@ public class Parser {
 	 */
 	public Logic getLogic() {
 		return logic;
+	}
+	
+	public ArrayList<String> getViewList() {
+		return logic.getViewList();
+	}
+	
+	public ArrayList<String> getDefaultList() {
+		return logic.getDefaultList();
 	}
 
 }

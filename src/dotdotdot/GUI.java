@@ -41,9 +41,9 @@ public class GUI {
 	private static final String FAIL_MESSAGE = "Invalid command";
 	private static final String UNRECOGNISED_MESSAGE = "Unknown command";
 	private static final String ERROR_MESSAGE = "An error has occured.";
+	private static final String NOT_DONE = "NOT DONE";
 	private static final int SCROLL_AMOUNT = 5;
 	private static final int WRAP_AROUND = 45;
-	private static final int NOT_DONE = 0;
 	private static final int BORDER_WIDTH = 2;
 	private static final int TASK_ID = 0;
 	private static final int TASK_DESC = 1;
@@ -77,7 +77,7 @@ public class GUI {
 		mainTable.removeAll();
 		for (int i = 0; i < list.size(); i++) {
 	
-			String [] taskIDandDesc = getTaskIdAndDesc(list.get(i));
+			String[] taskIDandDesc = getTaskIdAndDesc(list.get(i));
 			String formattedOutput = WordUtils.wrap(taskIDandDesc[TASK_DESC], WRAP_AROUND);
 			String outputArray[] = formattedOutput.split("\n");
 			for (int j = 0; j < outputArray.length; j++) {
@@ -225,10 +225,10 @@ public class GUI {
 						
 						if (returnCode == Parser.COMMAND_SUCCESS) {
 							if (isView(tempInput)) {
-								list = parser.getLogic().viewTasks(parser.isCompleted(tempInput));
+								list = parser.getViewList();
 								System.out.println("Size of list for view is: " + list.size());
 							} else {
-								list = parser.getLogic().viewTasks(NOT_DONE);
+								list = parser.getDefaultList();
 								System.out.println("It is not a view command, get all not done to do list");
 							}
 							
@@ -296,7 +296,7 @@ public class GUI {
 			}
 		});
 		
-		list = logic.viewTasks(NOT_DONE);
+		list = parser.getDefaultList();
 		displayCategory();
 		displayList();
 
