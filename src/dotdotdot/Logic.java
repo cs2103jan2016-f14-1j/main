@@ -38,6 +38,7 @@ public class Logic {
 	public final String NOT_DONE = "not done";
 	public final String DONE = "done";
 	public final String ALL = "all";
+	public final String SORT = "sort";
 	
 	private final ArrayList<String> EMPTY_ARRAYLIST = new ArrayList<String>();
 
@@ -190,6 +191,12 @@ public class Logic {
 		return true;
 	}
 	
+	public boolean sortTask(String sortType) {
+		viewTasks(sortType);
+		viewList.sort(null);
+		return true;
+	}
+	
 	public boolean viewTasks(String input) {
 		defaultList.clear();
 		viewList.clear();
@@ -199,11 +206,14 @@ public class Logic {
 		if (input.equalsIgnoreCase(DONE)) {
 			viewList = view(Integer.parseInt(COMPLETED));
 			return true;
-		} else if (input.equalsIgnoreCase(NOT_DONE)) {
+		} else if (input.equalsIgnoreCase(NOT_DONE) || input.equalsIgnoreCase(SORT)) {
 			viewList = view(Integer.parseInt(NOT_COMPLETED));
 			return true;
 		} else if (input.contains(CATEGORIES)) {
 			viewList = viewByCat(input);
+			if (viewList.isEmpty()) {
+				return false;
+			}
 			return true;
 		} else {
 			return false;
@@ -412,8 +422,11 @@ public class Logic {
 		for (String s : store.getIDByCat(input)) {
 			tasks.add(formatToUserFormat(s));
 		}
-		System.out.println(tasks.toString());
 		return tasks;
+	}
+	
+	public ArrayList<String> getSortedList() {
+		return viewList;
 	}
 	
 	public ArrayList<String> getViewList() {
@@ -421,9 +434,12 @@ public class Logic {
 	}
 	
 	public ArrayList<String> getDefaultList() {
+		defaultList.clear();
 		ArrayList<String> tempList = store.getStoreFormattedToDos();
 		for (String task : tempList) {
-			defaultList.add(formatToUserFormat(task));
+			if (task.split(DELIMITER)[TASK_ISCOMPLETE].equals(NOT_COMPLETED)) {
+				defaultList.add(formatToUserFormat(task));
+			}
 		}
 		return defaultList;
 	}

@@ -246,9 +246,9 @@ public class GUI {
 								}
 								tip.setMessage(outputStatus);
 								parser.getLogic().clearCurrTasks();
-							} else if (parser.getLastCommand().equals("sort")) {
-								// Call logic to get sorted list
-								// list = parser.getLogic().getSortedList
+							} else if (parser.getLastCommand().equals(Parser.CMD_SORT)) {
+								// Call parse to get logic to sort list
+								list = parser.getLogic().getSortedList();
 							}
 							
 						} else if (returnCode == Parser.COMMAND_FAIL) {

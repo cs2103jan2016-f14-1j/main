@@ -16,6 +16,7 @@ public class Parser {
 	public static String CMD_DELETE = "delete";
 	public static String CMD_EDIT = "edit";
 	public static String CMD_INVALID = "invalid";
+	public static String CMD_SORT = "sort";
 	public static String CMD_VIEW = "view";
 
 	public final String NOT_DONE = "not done";
@@ -39,7 +40,7 @@ public class Parser {
 	private final int TASK_BOTH = -2;
 
 	enum COMMAND_TYPE {
-		ADD, EDIT, DO, DELETE, INVALID, VIEW
+		ADD, DO, DELETE, EDIT, INVALID, SORT, VIEW
 	};
 
 	public Parser() {
@@ -66,6 +67,9 @@ public class Parser {
 			break;
 		case DELETE:
 			deleteTask(rawInput);
+			break;
+		case SORT:
+			sortTask(rawInput);
 			break;
 		case VIEW:			
 			break;
@@ -106,6 +110,9 @@ public class Parser {
 			break;
 		case DELETE:
 			result = deleteTask(rawInput);
+			break;
+		case SORT:
+			result = sortTask(rawInput);
 			break;
 		case VIEW:
 			result = viewTask(rawInput);
@@ -188,6 +195,10 @@ public class Parser {
 		}
 		ids = convertToIds(taskName);
 		return logic.deleteTask(ids);
+	}
+	
+	private boolean sortTask(String rawInput) {
+		return logic.sortTask(rawInput);
 	}
 	
 	private boolean viewTask(String rawInput) {
@@ -441,6 +452,9 @@ public class Parser {
 		} else if (commandTypeString.equalsIgnoreCase("edit")) {
 			lastCommand = CMD_EDIT;
 			return COMMAND_TYPE.EDIT;
+		} else if (commandTypeString.equalsIgnoreCase("sort")) {
+			lastCommand = CMD_SORT;
+			return COMMAND_TYPE.SORT;
 		} else if (commandTypeString.equalsIgnoreCase("view")) {
 			lastCommand = CMD_VIEW;
 			return COMMAND_TYPE.VIEW;
