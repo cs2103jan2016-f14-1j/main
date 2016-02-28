@@ -216,8 +216,7 @@ public class GUI {
 							}
 							
 							tip.setMessage(outputStatus);
-							parser.getLogic().clearCurrTasks();
-							
+							parser.getLogic().clearCurrTasks();		
 						} else if (returnCode == Parser.COMMAND_FAIL) {
 							tip.setText(FAIL_MESSAGE);
 						} else if (returnCode == Parser.COMMAND_UNRECOGNISED) {

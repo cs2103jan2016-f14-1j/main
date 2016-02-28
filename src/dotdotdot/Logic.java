@@ -9,6 +9,14 @@ public class Logic {
 	private Storage store = null;
 	private ArrayList<Integer> currTaskIDs = new ArrayList<Integer>();
 	private ArrayList<String> currTaskDescs = new ArrayList<String>();
+	
+	private ArrayList<String> tasksToDisplay = new ArrayList<String>();
+	private static int VIEW_CURRENT = 1;
+	private static String VIEW_CATEGORY = "";
+	public static final int VIEW_DEFAULT = 1;
+	public static final int VIEW_DONE = 2;
+	public static final int VIEW_CAT = 3;
+	
 	private final String EMPTY_LIST_MSG = "The list is empty";
 	private final String TASK_NOT_FOUND_MSG = "The task is not found";
 	private final String PREP_BY_PREPEND = "by ";
@@ -402,10 +410,32 @@ public class Logic {
 	    currTaskDescs.clear();
 	}
 	
-	public ArrayList<Integer> getCurrTaskIDs(){
+	public ArrayList<Integer> getCurrTaskIDs() {
 		return currTaskIDs;
 	}
-	public ArrayList<String> getCurrTaskDescs(){
+	public ArrayList<String> getCurrTaskDescs() {
 		return currTaskDescs;
+	}
+	public ArrayList<String> getTasksToDisplay() {
+		return tasksToDisplay;
+	}
+	public void clearTasksToDisplay() {
+		tasksToDisplay.clear();
+	}
+
+	public static String getViewCategory() {
+		return VIEW_CATEGORY;
+	}
+
+	public static void setViewCategory(String vIEW_CATEGORY) {
+		VIEW_CATEGORY = vIEW_CATEGORY;
+	}
+
+	public static int getViewCurrent() {
+		return VIEW_CURRENT;
+	}
+
+	public static void setViewCurrent(int vIEW_CURRENT) {
+		VIEW_CURRENT = vIEW_CURRENT;
 	}
 }
