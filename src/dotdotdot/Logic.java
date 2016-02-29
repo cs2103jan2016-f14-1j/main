@@ -376,6 +376,17 @@ public class Logic {
 	    currTaskDescs.clear();
 	}
 	
+	public int getNoOfUncompletedTasks(){
+		ArrayList<String> temp = store.getStoreFormattedToDos();
+		int count = 0;
+		for(String toDo : temp){
+			if(Integer.parseInt(formatTaskForDisplay(toDo).get(TASK_ISCOMPLETE))==0){
+				count++;
+			}
+		}
+		return count;
+	}
+	
 	public ArrayList<String> getCategoryOfToDo(String toDo){
 		return separateCats(formatTaskForDisplay(toDo).get(TASK_CATEGORIES));
 	}
@@ -391,7 +402,7 @@ public class Logic {
 								int currentCount = store.getCountForEachCat(cat);
 								currentCount++;
 								store.addToHashMap(cat, currentCount);
-						}
+							}
 					}
 			}
 		}
@@ -402,6 +413,7 @@ public class Logic {
 			int count = countCatTasksNo.get(category);
 			temp.add(category+SPACE_STRING+"("+count+")");
 		}
+		temp.add("@uncompleted ("+getNoOfUncompletedTasks()+")");
 		store.clearHashMap();
 		return temp;
 	}
