@@ -220,7 +220,7 @@ public class GUI {
 					} else {
 						tip.setMessage(EMPTY_STRING);
 						parser.input(tempInput);
-						
+				
 						list = parser.getList();
 						tip.setText(parser.getNotifyTitle());
 						
@@ -228,6 +228,7 @@ public class GUI {
 
 						if(!notifyMsg.equals(EMPTY_STRING)){
 							tip.setMessage(notifyMsg);
+
 						}
 						tip.setLocation(new Point(shell.getLocation().x + shell.getSize().x - parser.getMsgSize() ,
 								shell.getLocation().y + borderSize));

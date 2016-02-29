@@ -10,6 +10,12 @@ public class Logic {
 	private Storage store = null;
 	private ArrayList<Integer> currTaskIDs = new ArrayList<Integer>();
 	private ArrayList<String> currTaskDescs = new ArrayList<String>();
+	private ArrayList<String> tasksToDisplay = new ArrayList<String>();
+	private static int VIEW_CURRENT = 1;
+	private static String VIEW_CATEGORY = "";
+	public static final int VIEW_DEFAULT = 1;
+	public static final int VIEW_DONE = 2;
+	public static final int VIEW_CAT = 3;
 	private ArrayList<String> viewList = new ArrayList<String>();
 	private ArrayList<String> defaultList = new ArrayList<String>();
 	private final String EMPTY_LIST_MSG = "The list is empty";
@@ -177,7 +183,7 @@ public class Logic {
 	 * @return it will return successful when a task is marked as completed,
 	 *         else otherwise.
 	 */
-	public boolean doTask(int taskID) {
+	private boolean doTask(int taskID) {
 		int taskIndex = searchForTask(taskID);
 		if (taskIndex == TASK_NOT_FOUND) {
 			systemPrint(TASK_NOT_FOUND_MSG);
@@ -189,6 +195,17 @@ public class Logic {
 		task = formatTaskForStorage(taskInformation);
 		syncTaskToList(task, 0, taskIndex, COMMAND.COMPLETE);
 		return true;
+	}
+	
+	public boolean doTask(ArrayList<Integer> taskIds) {
+		boolean value = false;
+		for (int id : taskIds) {
+			if (doTask(id)) {
+				currTaskIDs.add(id);
+				value = true;
+			}
+		}
+		return value;
 	}
 	
 	public boolean sortTask(String sortType) {
@@ -376,6 +393,17 @@ public class Logic {
 	    currTaskDescs.clear();
 	}
 	
+	public int getNoOfUncompletedTasks(){
+		ArrayList<String> temp = store.getStoreFormattedToDos();
+		int count = 0;
+		for(String toDo : temp){
+			if(Integer.parseInt(formatTaskForDisplay(toDo).get(TASK_ISCOMPLETE))==0){
+				count++;
+			}
+		}
+		return count;
+	}
+	
 	public ArrayList<String> getCategoryOfToDo(String toDo){
 		return separateCats(formatTaskForDisplay(toDo).get(TASK_CATEGORIES));
 	}
@@ -391,7 +419,7 @@ public class Logic {
 								int currentCount = store.getCountForEachCat(cat);
 								currentCount++;
 								store.addToHashMap(cat, currentCount);
-						}
+							}
 					}
 			}
 		}
@@ -402,6 +430,7 @@ public class Logic {
 			int count = countCatTasksNo.get(category);
 			temp.add(category+SPACE_STRING+"("+count+")");
 		}
+		temp.add("@uncompleted ("+getNoOfUncompletedTasks()+")");
 		store.clearHashMap();
 		return temp;
 	}
@@ -421,7 +450,9 @@ public class Logic {
 	public ArrayList<String> getTasksByCat(String input) {
 		ArrayList<String> tasks = new ArrayList<String>();
 		for (String s : store.getIDByCat(input)) {
+			if (isNotDone(s)) {
 			tasks.add(formatToUserFormat(s));
+			}
 		}
 		return tasks;
 	}
@@ -596,6 +627,15 @@ public class Logic {
 		System.out.println(toPrint);
 	}
 	
-	//============================== START OF TEST FUNCTIONS ==============================
+	private boolean isNotDone(String task) {
+		String status = task.split(DELIMITER)[TASK_ISCOMPLETE];
+		if (status.equals(NOT_COMPLETED)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	//============================== END OF TEST FUNCTIONS ==============================
 	
 }

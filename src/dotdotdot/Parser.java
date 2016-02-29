@@ -153,11 +153,10 @@ public class Parser {
 	 * @return true if taskID exists, false otherwise
 	 */
 	private boolean doTask(String rawInput) {
-		int taskID = convertToInt(getTaskName(rawInput));
-		if (isInvalidID(taskID)) {
-			return false;
-		}
-		return logic.doTask(taskID);
+		String taskName = getTaskName(rawInput);
+		ArrayList<Integer> ids = new ArrayList<Integer>();
+		ids = convertToIds(taskName);
+		return logic.doTask(ids);
 	}
 
 	/**
