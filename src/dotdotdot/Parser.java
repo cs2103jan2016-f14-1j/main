@@ -16,6 +16,7 @@ public class Parser {
 	public static String CMD_DELETE = "delete";
 	public static String CMD_EDIT = "edit";
 	public static String CMD_INVALID = "invalid";
+	public static String CMD_SORT = "sort";
 	public static String CMD_VIEW = "view";
 
 	public final String NOT_DONE = "not done";
@@ -39,7 +40,7 @@ public class Parser {
 	private final int TASK_BOTH = -2;
 
 	enum COMMAND_TYPE {
-		ADD, EDIT, DO, DELETE, INVALID, VIEW
+		ADD, DO, DELETE, EDIT, INVALID, SORT, VIEW
 	};
 
 	public Parser() {
@@ -66,6 +67,9 @@ public class Parser {
 			break;
 		case DELETE:
 			deleteTask(rawInput);
+			break;
+		case SORT:
+			sortTask(rawInput);
 			break;
 		case VIEW:			
 			break;
@@ -107,6 +111,9 @@ public class Parser {
 		case DELETE:
 			result = deleteTask(rawInput);
 			break;
+		case SORT:
+			result = sortTask(rawInput);
+			break;
 		case VIEW:
 			result = viewTask(rawInput);
 			break;
@@ -120,14 +127,14 @@ public class Parser {
 		return COMMAND_SUCCESS;
 	}
 
-	public int isCompleted(String rawInput) {
+	public boolean isCompleted(String rawInput) {
 		if (rawInput.contains(ALL)) {
-			return TASK_BOTH;
+			return false;
 		}
 		return 	(rawInput.contains(NOT_DONE) || 
 				(!rawInput.contains(DONE) && !rawInput.contains(NOT_DONE))) ? 
-				INT_NOT_DONE : 
-				INT_DONE;
+				false : 
+				true;
 	}
 
 	private boolean addTask(String rawInput) {
@@ -166,11 +173,10 @@ public class Parser {
 	 * @return true if taskID exists, false otherwise
 	 */
 	private boolean doTask(String rawInput) {
-		int taskID = convertToInt(getTaskName(rawInput));
-		if (isInvalidID(taskID)) {
-			return false;
-		}
-		return logic.doTask(taskID);
+		String taskName = getTaskName(rawInput);
+		ArrayList<Integer> ids = new ArrayList<Integer>();
+		ids = convertToIds(taskName);
+		return logic.doTask(ids);
 	}
 
 	/**
@@ -190,22 +196,37 @@ public class Parser {
 		return logic.deleteTask(ids);
 	}
 	
-	// let's keep this first in case required in the future as there will be changes
-	private boolean viewTask(String rawInput) {
-		ArrayList<String> inputParts = breakString(rawInput);
-		/*if (isDefaultView(inputParts)) {
-			// TODO: show todos that are not completed
-		} else {
-			// TODO: show by category/all
-		}*/
-		
-		return true;
+	private boolean sortTask(String rawInput) {
+		return logic.sortTask(rawInput);
 	}
-	/*
-	private boolean isDefaultView(ArrayList<String> ip) {
-		return ip.size() == DEFAULT_VIEW;
-	}*/
-
+	
+	private boolean viewTask(String rawInput) {
+		String viewType = removeCommand(rawInput);
+		if (isDefaultView(viewType)) {
+			return logic.viewTasks(NOT_DONE);
+		} else if (isCompleted(viewType)){
+			return logic.viewTasks(DONE);
+		} else if (isCategory(viewType)) {
+			return logic.viewTasks(viewType);
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean isDefaultView(String viewType) {
+		if (viewType.isEmpty()) {
+			return true;
+		} else if (viewType.equalsIgnoreCase(NOT_DONE)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private String removeCommand(String rawInput) {
+		return rawInput.replace(getCommand(rawInput), EMPTY_STRING).trim();
+	}
+	
 	/**
 	 * @param rawInput:
 	 *            taskID as a String
@@ -430,6 +451,9 @@ public class Parser {
 		} else if (commandTypeString.equalsIgnoreCase("edit")) {
 			lastCommand = CMD_EDIT;
 			return COMMAND_TYPE.EDIT;
+		} else if (commandTypeString.equalsIgnoreCase("sort")) {
+			lastCommand = CMD_SORT;
+			return COMMAND_TYPE.SORT;
 		} else if (commandTypeString.equalsIgnoreCase("view")) {
 			lastCommand = CMD_VIEW;
 			return COMMAND_TYPE.VIEW;
@@ -474,6 +498,22 @@ public class Parser {
 	 */
 	public Logic getLogic() {
 		return logic;
+	}
+	
+	public ArrayList<String> getViewList() {
+		return logic.getViewList();
+	}
+	
+	public ArrayList<String> getDefaultList() {
+		return logic.getDefaultList();
+	}
+	
+	public String getNotifyTitle(){
+		return "";
+	}
+	
+	public String getNotifyMsg(){
+		return "";
 	}
 
 }

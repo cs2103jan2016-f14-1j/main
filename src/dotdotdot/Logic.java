@@ -10,14 +10,14 @@ public class Logic {
 	private Storage store = null;
 	private ArrayList<Integer> currTaskIDs = new ArrayList<Integer>();
 	private ArrayList<String> currTaskDescs = new ArrayList<String>();
-	
 	private ArrayList<String> tasksToDisplay = new ArrayList<String>();
 	private static int VIEW_CURRENT = 1;
 	private static String VIEW_CATEGORY = "";
 	public static final int VIEW_DEFAULT = 1;
 	public static final int VIEW_DONE = 2;
 	public static final int VIEW_CAT = 3;
-	
+	private ArrayList<String> viewList = new ArrayList<String>();
+	private ArrayList<String> defaultList = new ArrayList<String>();
 	private final String EMPTY_LIST_MSG = "The list is empty";
 	private final String TASK_NOT_FOUND_MSG = "The task is not found";
 	private final String PREP_BY_PREPEND = "by ";
@@ -39,6 +39,12 @@ public class Logic {
 	private final String EMPTY_STRING = "";
 	private final String SPACE_STRING = " ";
 	private final String PREP_BY = "by";
+	private final String CATEGORIES = "@";
+	
+	public final String NOT_DONE = "not done";
+	public final String DONE = "done";
+	public final String ALL = "all";
+	public final String SORT = "sort";
 	
 	private final ArrayList<String> EMPTY_ARRAYLIST = new ArrayList<String>();
 
@@ -177,7 +183,7 @@ public class Logic {
 	 * @return it will return successful when a task is marked as completed,
 	 *         else otherwise.
 	 */
-	public boolean doTask(int taskID) {
+	private boolean doTask(int taskID) {
 		int taskIndex = searchForTask(taskID);
 		if (taskIndex == TASK_NOT_FOUND) {
 			systemPrint(TASK_NOT_FOUND_MSG);
@@ -191,17 +197,59 @@ public class Logic {
 		return true;
 	}
 	
-	public ArrayList<String> viewTasks(int completed) {
-		ArrayList<String> filterList = (ArrayList<String>) store.getStoreFormattedToDos().clone();
-		for (int index = 0; index < filterList.size(); index++) {
-			if (Integer.parseInt(formatTaskForDisplay(filterList.get(index)).get(TASK_ISCOMPLETE)) != completed && completed!=TASK_BOTH) {
-				filterList.remove(index);
-				index--;
-			}else{
-				filterList.set(index, formatToUserFormat(filterList.get(index)));
+	public boolean doTask(ArrayList<Integer> taskIds) {
+		boolean value = false;
+		for (int id : taskIds) {
+			if (doTask(id)) {
+				currTaskIDs.add(id);
+				value = true;
 			}
 		}
-		return filterList;
+		return value;
+	}
+	
+	public boolean sortTask(String sortType) {
+		viewTasks(sortType);
+		viewList.sort(null);
+		return true;
+	}
+	
+	public boolean viewTasks(String input) {
+		defaultList.clear();
+		viewList.clear();
+		for (String task : store.getStoreFormattedToDos()) {
+			defaultList.add(formatToUserFormat(task));
+		}
+		if (input.equalsIgnoreCase(DONE)) {
+			viewList = view(Integer.parseInt(COMPLETED));
+			return true;
+		} else if (input.equalsIgnoreCase(NOT_DONE) || input.equalsIgnoreCase(SORT)) {
+			viewList = view(Integer.parseInt(NOT_COMPLETED));
+			return true;
+		} else if (input.contains(CATEGORIES)) {
+			viewList = viewByCat(input);
+			if (viewList.isEmpty()) {
+				return false;
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private ArrayList<String> view(int status) {
+		ArrayList<String> tempList = new ArrayList<String>();
+		for (String task : store.getStoreFormattedToDos()) {
+			int taskStatus = Integer.parseInt(task.split(DELIMITER)[TASK_ISCOMPLETE]);
+			if (taskStatus == status) {
+				tempList.add(formatToUserFormat(task));
+			}
+		}
+		return tempList;
+	}
+	
+	private ArrayList<String> viewByCat(String input) {
+		return getTasksByCat(input);
 	}
 	
 	//============================== END OF USER FUNCTIONS ==============================
@@ -371,6 +419,7 @@ public class Logic {
 			int count = countCatTasksNo.get(category);
 			temp.add(category+SPACE_STRING+"("+count+")");
 		}
+		store.clearHashMap();
 		return temp;
 	}
 	
@@ -384,6 +433,33 @@ public class Logic {
 			iDs.add(Integer.parseInt(task.split(DELIMITER)[TASK_ID]));
 		}
 		return iDs;
+	}
+	
+	public ArrayList<String> getTasksByCat(String input) {
+		ArrayList<String> tasks = new ArrayList<String>();
+		for (String s : store.getIDByCat(input)) {
+			tasks.add(formatToUserFormat(s));
+		}
+		return tasks;
+	}
+	
+	public ArrayList<String> getSortedList() {
+		return viewList;
+	}
+	
+	public ArrayList<String> getViewList() {
+		return viewList;
+	}
+	
+	public ArrayList<String> getDefaultList() {
+		defaultList.clear();
+		ArrayList<String> tempList = store.getStoreFormattedToDos();
+		for (String task : tempList) {
+			if (task.split(DELIMITER)[TASK_ISCOMPLETE].equals(NOT_COMPLETED)) {
+				defaultList.add(formatToUserFormat(task));
+			}
+		}
+		return defaultList;
 	}
 	//============================== END OF GETTER FUNCTIONS ==============================
 	

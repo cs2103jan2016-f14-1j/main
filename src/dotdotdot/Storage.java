@@ -187,6 +187,10 @@ public class Storage {
 		tasksPerCat.put(categoryName, noOfTasks);
 	}
 	
+	public void clearHashMap(){
+		tasksPerCat.clear();
+	}
+	
 	public int getCountForEachCat(String categoryName) {
 		return (tasksPerCat.get(categoryName)==null)? 0:tasksPerCat.get(categoryName);
 	}
