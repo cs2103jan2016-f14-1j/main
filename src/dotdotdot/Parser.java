@@ -180,8 +180,13 @@ public class Parser {
 	 */
 	private boolean deleteTask(String rawInput) {
 		String taskName = getTaskName(rawInput);
-		ArrayList<Integer> ids = convertToIds(taskName);
-
+		ArrayList<String> inputParts = breakString(rawInput);
+		ArrayList<String> categories = new ArrayList<String>();
+		ArrayList<Integer> ids = new ArrayList<Integer>();
+		if (getCategories(categories, inputParts)) {
+			return logic.deleteByCat(categories);
+		}
+		ids = convertToIds(taskName);
 		return logic.deleteTask(ids);
 	}
 	

@@ -2,6 +2,7 @@ package dotdotdot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class Logic {
@@ -48,6 +49,8 @@ public class Logic {
 	public Logic() {
 		store = new Storage();
 	}
+	
+	//============================== START OF USER FUNCTIONS ==============================
 
 	/**
 	 * add task with taskName only
@@ -57,35 +60,7 @@ public class Logic {
 		commitToStore(formatted);
 		return true;
 	}
-	private String formatToDo(	String taskName, String date, 
-								ArrayList<String> cats, String completeStatus) {
-		int forNewTaskId = store.getNextTaskId();
-		String allCats = concatCats(cats);
-		ArrayList<String> finalTodo = putStringsTogetherForStorage(forNewTaskId, taskName,
-				date, allCats, completeStatus);
-		return formatTaskForStorage(finalTodo);
-	}
-	private String concatCats(ArrayList<String> cats) {
-		String out = EMPTY_STRING;
-		for(String s : cats) {
-			out += s + SPACE_STRING;
-		}
-		return out.trim();
-	}
-	/** takes in int, Str, Str, Str, Str
-	 * @return ArrayList<String> of size 5 of the above variables
-	 */
-	private ArrayList<String> putStringsTogetherForStorage(
-			int a, String b, String c, String d, String e) {
-		ArrayList<String> out = new ArrayList<String>();
-		out.add(String.valueOf(a));
-		out.add(b);
-		out.add(c);
-		out.add(d);
-		out.add(e);
-		return out;
-	}
-
+	
 	/**
 	 * add task with taskName and categories only
 	 */
@@ -109,23 +84,7 @@ public class Logic {
 		commitToStore(formatted);
 		return true;
 	}
-
-	/**
-	 * helper methods used by addTask(String,String,String[,ArrayList<String>]):
-	 * isBy(String), concatDateToTask(By|On)(String,String)
-	 */
-	private boolean isBy(String p) {
-		return p.equals(PREP_BY);
-	}
-
-	private String concatBy(String date) {
-		return PREP_BY_PREPEND + date;
-	}
-
-	private String concatOn(String date) {
-		return PREP_ON_PREPEND + date;
-	}
-
+	
 	/**
 	 * add task with taskName, date, and categories
 	 */
@@ -134,14 +93,8 @@ public class Logic {
 		commitToStore(formatted);
 		return true;
 	}
-	private void commitToStore(String formatted) {
-		store.addStoreFormattedToDo(formatted);
-		store.writeToFile();
-	}
-
-	/**
-	 * This method allows the user to edit a task
-	 * 
+	
+	/** This method allows the user to edit a task
 	 * @param taskID
 	 *            the taskID is used to search for the task in the storage
 	 * @param date
@@ -165,9 +118,7 @@ public class Logic {
 		return true;
 	}
 
-	/**
-	 * The following deleteTask() methods allow the user to delete task(s)
-	 * 
+	/** The following deleteTask() methods allow the user to delete task(s)
 	 * @param int
 	 *            taskID or a list of integers(taskIDs) the taskID is used to
 	 *            search for the task in the storage
@@ -183,6 +134,31 @@ public class Logic {
 		}
 		return value;
 	}
+	
+	/**
+	 * This method allows user to delete all tasks under a category.
+	 * Finds all taskIDs of tasks under category and call the 
+	 * deleteTask method
+	 */
+	public boolean deleteByCat(ArrayList<String> categories) {
+		ArrayList<Integer> iDs = new ArrayList<Integer>();
+		iDs = getTaskIDsByCat(categories);
+		if (iDs.isEmpty()) {
+			return false;
+		}
+		
+		for (int taskID : iDs) {
+			deleteTask(taskID);
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param taskId
+	 * @return
+	 */
 	private boolean deleteTask(int taskId) {
 		int taskIndex = searchForTask(taskId);
 		if (taskIndex == TASK_NOT_FOUND) {
@@ -195,20 +171,7 @@ public class Logic {
 		return true;
 	}
 	
-	// Dummy method for JUnit testing
-	public static boolean delete(int taskID) {
-		Logic lg = new Logic();
-		return lg.deleteTask(taskID);
-	}
-	// Dummy method for JUnit testing
-	public static boolean delete(ArrayList<Integer> taskIDs) {
-		Logic lg = new Logic();
-		return lg.deleteTask(taskIDs);
-	}
-	
-	/**
-	 * This method allows the user to mark task as completed
-	 * 
+	/** This method allows the user to mark task as completed
 	 * @param taskID
 	 *            the taskID is used to search for the task in the storage
 	 * @return it will return successful when a task is marked as completed,
@@ -227,7 +190,7 @@ public class Logic {
 		syncTaskToList(task, 0, taskIndex, COMMAND.COMPLETE);
 		return true;
 	}
-
+	
 	public ArrayList<String> viewTasks(int completed) {
 		ArrayList<String> filterList = (ArrayList<String>) store.getStoreFormattedToDos().clone();
 		for (int index = 0; index < filterList.size(); index++) {
@@ -240,6 +203,64 @@ public class Logic {
 		}
 		return filterList;
 	}
+	
+	//============================== END OF USER FUNCTIONS ==============================
+	
+	
+	//============================== START OF SYNC FUNCTIONS ==============================
+	/**
+	 * 
+	 * @param formatted
+	 */
+	private void commitToStore(String formatted) {
+		store.addStoreFormattedToDo(formatted);
+		store.writeToFile();
+	}
+	
+	/**
+	 * This method is used to synchronize between the arrayList and the data in
+	 * the file It will differentiate and run different type of code depends on
+	 * the command it receives
+	 * 
+	 * @param taskToSync
+	 *            the task in concatenated form
+	 * @param taskIndex
+	 *            the index that is currently refer to the task in the arrayList
+	 * @param command
+	 *            the action to be performed
+	 * @return return the result, true being successful, false is fail
+	 */
+	private boolean syncTaskToList(String taskToSync, int taskId, int taskIndex, COMMAND command) {
+		switch(command){
+		case ADD:
+			break;
+		case DELETE:
+			store.removeStoreFormattedToDo(taskId, taskIndex);
+			break;
+		case EDIT:
+			store.setTaskByIndex(taskIndex, taskToSync);
+			writeToFile();
+			break;
+		case COMPLETE:
+			store.setTaskByIndex(taskIndex, taskToSync);
+			writeToFile();
+		}
+		return true;
+	}
+
+	/**
+	 * This method will initiate the writeToFile method in the Storage class
+	 * 
+	 * @return
+	 */
+	private boolean writeToFile() {
+		store.writeToFile();
+		return true;
+	}
+	
+	//============================== END OF SYNC FUNCTIONS ==============================
+	
+	//============================== START OF GETTER FUNCTIONS ==============================
 
 	/**
 	 * This method is used to search for the task in the list, after which if
@@ -292,6 +313,83 @@ public class Logic {
 	}
 	
 	/**
+	 * Converts todos into user-readable format
+	 * @return
+	 */
+	public ArrayList<String> getUserFormattedToDos() {
+		ArrayList<String> out = new ArrayList<String>();
+		for (String s : store.getStoreFormattedToDos()) {
+			out.add(formatToUserFormat(s));
+		}
+		return out;
+	}
+	
+	/**
+	 * This method is to link GUI class to the storage class through logic class
+	 * 
+	 * @return return storage created in this class
+	 */
+	public Storage getStorage() {
+		return store;
+	}
+	
+	public ArrayList<Integer> getCurrTaskIDs(){
+		return currTaskIDs;
+	}
+	public ArrayList<String> getCurrTaskDescs(){
+		return currTaskDescs;
+	}
+	
+	public void clearCurrTasks(){
+	    currTaskIDs.clear();
+	    currTaskDescs.clear();
+	}
+	
+	public ArrayList<String> getCategoryOfToDo(String toDo){
+		return separateCats(formatTaskForDisplay(toDo).get(TASK_CATEGORIES));
+	}
+	
+	public ArrayList<String> getListOfCategoriesWithCount(){
+		ArrayList<String> temp = store.getStoreFormattedToDos();
+		
+		for(String toDo : temp){
+			if(Integer.parseInt(formatTaskForDisplay(toDo).get(TASK_ISCOMPLETE))==0){
+				ArrayList<String> listOfCat = getCategoryOfToDo(toDo);
+					for(String cat: listOfCat){
+							if(!cat.equals(EMPTY_STRING)){
+								int currentCount = store.getCountForEachCat(cat);
+								currentCount++;
+								store.addToHashMap(cat, currentCount);
+						}
+					}
+			}
+		}
+		//format the list to be displayed
+		HashMap<String, Integer> countCatTasksNo = store.getTasksCountPerCat();
+		temp = new ArrayList<>();
+		for(String category:countCatTasksNo.keySet()){
+			int count = countCatTasksNo.get(category);
+			temp.add(category+SPACE_STRING+"("+count+")");
+		}
+		return temp;
+	}
+	
+	public ArrayList<Integer> getTaskIDsByCat(ArrayList<String> categories) {
+		ArrayList<String> tasks = new ArrayList<String>();
+		ArrayList<Integer> iDs = new ArrayList<Integer>();
+		for (String cat : categories) {
+			tasks.addAll(store.getIDByCat(cat));
+		}
+		for (String task : tasks) {
+			iDs.add(Integer.parseInt(task.split(DELIMITER)[TASK_ID]));
+		}
+		return iDs;
+	}
+	//============================== END OF GETTER FUNCTIONS ==============================
+	
+	//============================== START OF FORMAT FUNCTIONS ==============================
+	
+	/**
 	 * This method is used to format the task information, which is in String[],
 	 * for storing into the storage by concatenating the information into a
 	 * string with delimiters
@@ -319,59 +417,12 @@ public class Logic {
 	private ArrayList<String> formatTaskForDisplay(String task) {
 		return new ArrayList<String>(Arrays.asList(task.split(DELIMITER)));
 	}
-
-	/**
-	 * This method is used to synchronize between the arrayList and the data in
-	 * the file It will differentiate and run different type of code depends on
-	 * the command it receives
-	 * 
-	 * @param taskToSync
-	 *            the task in concatenated form
-	 * @param taskIndex
-	 *            the index that is currently refer to the task in the arrayList
-	 * @param command
-	 *            the action to be performed
-	 * @return return the result, true being successful, false is fail
-	 */
-	private boolean syncTaskToList(String taskToSync, int taskId, int taskIndex, COMMAND command) {
-		switch(command){
-		case ADD:
-			break;
-		case DELETE:
-			store.removeStoreFormattedToDo(taskId, taskIndex);
-			break;
-		case EDIT:
-			store.setTaskByIndex(taskIndex, taskToSync);
-			writeToFile();
-			break;
-		case COMPLETE:
-			store.setTaskByIndex(taskIndex, taskToSync);
-			writeToFile();
-		}
-		return true;
-	}
-
-	/**
-	 * This method will initiate the writeToFile method in the Storage class
-	 * 
-	 * @return
-	 */
-	private boolean writeToFile() {
-		store.writeToFile();
-		return true;
-	}
 	
 	/**
-	 * Converts todos into user-readable format
+	 * 
+	 * @param s
 	 * @return
 	 */
-	public ArrayList<String> getUserFormattedToDos() {
-		ArrayList<String> out = new ArrayList<String>();
-		for (String s : store.getStoreFormattedToDos()) {
-			out.add(formatToUserFormat(s));
-		}
-		return out;
-	}
 	private String formatToUserFormat(String s) {
 		ArrayList<String> as = formatTaskForDisplay(s);
 		String 	id = as.get(TASK_ID),
@@ -387,12 +438,93 @@ public class Logic {
 	}
 	
 	/**
-	 * This method is to link GUI class to the storage class through logic class
 	 * 
-	 * @return return storage created in this class
+	 * @param taskName
+	 * @param date
+	 * @param cats
+	 * @param completeStatus
+	 * @return
 	 */
-	public Storage getStorage() {
-		return store;
+	private String formatToDo(	String taskName, String date, 
+								ArrayList<String> cats, String completeStatus) {
+		int forNewTaskId = store.getNextTaskId();
+		String allCats = concatCats(cats);
+		ArrayList<String> finalTodo = putStringsTogetherForStorage(forNewTaskId, taskName,
+				date, allCats, completeStatus);
+		return formatTaskForStorage(finalTodo);
+	}
+	
+	/**
+	 * 
+	 * @param cats
+	 * @return
+	 */
+	private String concatCats(ArrayList<String> cats) {
+		String out = EMPTY_STRING;
+		for(String s : cats) {
+			out += s + SPACE_STRING;
+		}
+		return out.trim();
+	}
+	
+	/** takes in int, Str, Str, Str, Str
+	 * @return ArrayList<String> of size 5 of the above variables
+	 */
+	private ArrayList<String> putStringsTogetherForStorage(
+			int a, String b, String c, String d, String e) {
+		ArrayList<String> out = new ArrayList<String>();
+		out.add(String.valueOf(a));
+		out.add(b);
+		out.add(c);
+		out.add(d);
+		out.add(e);
+		return out;
+	}
+
+	/**
+	 * helper methods used by addTask(String,String,String[,ArrayList<String>]):
+	 * isBy(String), concatDateToTask(By|On)(String,String)
+	 */
+	private boolean isBy(String p) {
+		return p.equals(PREP_BY);
+	}
+
+	/**
+	 * 
+	 * @param date
+	 * @return
+	 */
+	private String concatBy(String date) {
+		return PREP_BY_PREPEND + date;
+	}
+
+	/**
+	 * 
+	 * @param date
+	 * @return
+	 */
+	private String concatOn(String date) {
+		return PREP_ON_PREPEND + date;
+	}
+	
+	private ArrayList<String> separateCats(String categories){
+		return new ArrayList<String>(Arrays.asList(categories.split(SPACE_STRING)));
+	}
+	
+	//============================== END OF FORMAT FUNCTIONS ==============================
+	
+	
+	//============================== BEGIN OF TEST FUNCTIONS ==============================
+	
+	// Dummy method for JUnit testing
+	public static boolean delete(int taskID) {
+		Logic lg = new Logic();
+		return lg.deleteTask(taskID);
+	}
+	// Dummy method for JUnit testing
+	public static boolean delete(ArrayList<Integer> taskIDs) {
+		Logic lg = new Logic();
+		return lg.deleteTask(taskIDs);
 	}
 
 	/**
@@ -405,37 +537,6 @@ public class Logic {
 		System.out.println(toPrint);
 	}
 	
-	public void clearCurrTasks(){
-	    currTaskIDs.clear();
-	    currTaskDescs.clear();
-	}
+	//============================== START OF TEST FUNCTIONS ==============================
 	
-	public ArrayList<Integer> getCurrTaskIDs() {
-		return currTaskIDs;
-	}
-	public ArrayList<String> getCurrTaskDescs() {
-		return currTaskDescs;
-	}
-	public ArrayList<String> getTasksToDisplay() {
-		return tasksToDisplay;
-	}
-	public void clearTasksToDisplay() {
-		tasksToDisplay.clear();
-	}
-
-	public static String getViewCategory() {
-		return VIEW_CATEGORY;
-	}
-
-	public static void setViewCategory(String vIEW_CATEGORY) {
-		VIEW_CATEGORY = vIEW_CATEGORY;
-	}
-
-	public static int getViewCurrent() {
-		return VIEW_CURRENT;
-	}
-
-	public static void setViewCurrent(int vIEW_CURRENT) {
-		VIEW_CURRENT = vIEW_CURRENT;
-	}
 }
