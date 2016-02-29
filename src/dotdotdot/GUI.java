@@ -33,7 +33,6 @@ public class GUI {
 	private static final String GUI_TITLE = "Dotdotdot";
 	private static final String GUI_HINT = "< Input ? or help to show available commands >";
 	private static final String HELP_REGEX = "(h|H|help|HELP|\\?)";
-	private static final String VIEW_REGEX = "(view|v|V|VIEW)(.*)";
 	private static final String EMPTY_STRING = "";
 	private static final String SPACE_STRING = " ";
 	private static final String SUCCESS_CONTENT_MESSAGE = "(%1$s) %2$s";
@@ -219,55 +218,24 @@ public class GUI {
 					if (isHelp(tempInput)) {
 						displayHelp();
 					} else {
-						int returnCode = parser.input(tempInput);
 						tip.setMessage(EMPTY_STRING);
-						String longestString = EMPTY_STRING;
+						parser.input(tempInput);
 						
-						if (returnCode == Parser.COMMAND_SUCCESS) {
-							if (isView(tempInput)) {
-								list = parser.getViewList();
-								System.out.println("Size of list for view is: " + list.size());
-							} else {
-								list = parser.getDefaultList();
-								System.out.println("It is not a view command, get all not done to do list");
-							}
-							
-							tip.setText(String.format(SUCCESS_TITLE_MESSAGE, setFirstCharToUpper(parser.getLastCommand())));
-							
-							if(parser.getLastCommand().equals(Parser.CMD_DELETE)){
-								ArrayList <Integer> deletedIDS = parser.getLogic().getCurrTaskIDs();
-								String outputStatus = EMPTY_STRING;
-								for(int i = 0; i < deletedIDS.size(); i++){
-									String temp = parser.getLogic().getCurrTaskDescs().get(i);
-									outputStatus += String.format(SUCCESS_CONTENT_MESSAGE,deletedIDS.get(i), temp) + "\n";
-									if(temp.length() > longestString.length()){
-										longestString = temp;
-									}
-								}
-								tip.setMessage(outputStatus);
-								parser.getLogic().clearCurrTasks();
-							} else if (parser.getLastCommand().equals(Parser.CMD_SORT)) {
-								// Call parse to get logic to sort list
-								list = parser.getLogic().getSortedList();
-							}
-							
-						} else if (returnCode == Parser.COMMAND_FAIL) {
-							tip.setText(FAIL_MESSAGE);
-						} else if (returnCode == Parser.COMMAND_UNRECOGNISED) {
-							tip.setText(UNRECOGNISED_MESSAGE);
-						} else {
-							tip.setText(ERROR_MESSAGE);
+						list = parser.getList();
+						tip.setText(parser.getNotifyTitle());
+						
+						String notifyMsg = parser.getNotifyMsg();
+
+						if(!notifyMsg.equals(EMPTY_STRING)){
+							tip.setMessage(notifyMsg);
 						}
-					    
-						if (tip.getText().length() > longestString.length()) {
-							longestString = tip.getText();
-						} 
-						tip.setLocation(new Point(shell.getLocation().x + shell.getSize().x - longestString.length() * 15 ,
+						tip.setLocation(new Point(shell.getLocation().x + shell.getSize().x - parser.getMsgSize() ,
 								shell.getLocation().y + borderSize));
 						tip.setVisible(true);
 						displayList();
 						displayCategory();
 					}
+					
 					break;
 				case SWT.ARROW_UP:
 					mainTable.setTopIndex(mainTable.getTopIndex() - SCROLL_AMOUNT);
@@ -297,7 +265,7 @@ public class GUI {
 			}
 		});
 		
-		list = parser.getDefaultList();
+		list = parser.getList();
 		displayCategory();
 		displayList();
 
@@ -316,16 +284,8 @@ public class GUI {
 		return s.matches(HELP_REGEX);
 	}
 
-	private static boolean isView(String s) {
-		return s.matches(VIEW_REGEX);
-	}
-
 	private static boolean isTextEmpty(Text t) {
 		return t.getText().length() == 1;
-	}
-	
-	private static String setFirstCharToUpper(String s){
-		return Character.toUpperCase(s.charAt(0)) + s.substring(1);
 	}
 	
 	private static void initBorderSize() {

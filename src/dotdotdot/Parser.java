@@ -11,14 +11,15 @@ public class Parser {
 	public static final int COMMAND_SUCCESS = 0;
 	public static final int COMMAND_FAIL = 1;
 	public static final int COMMAND_UNRECOGNISED = 2;
-	public static final String CMD_ADD = "add";
-	public static final String CMD_DO = "do";
-	public static String CMD_DELETE = "delete";
-	public static String CMD_EDIT = "edit";
-	public static String CMD_INVALID = "invalid";
-	public static String CMD_SORT = "sort";
-	public static String CMD_VIEW = "view";
-
+	public static final String CMD_ADD = "Add";
+	public static final String CMD_DO = "Do";
+	public static final String CMD_DELETE = "Delete";
+	public static final String CMD_EDIT = "Edit";
+	public static final String CMD_INVALID = "Invalid";
+	public static final String CMD_SORT = "Sort";
+	public static final String CMD_VIEW = "View";
+	private static final String VIEW_REGEX = "(view|v|V|VIEW)(.*)";
+	
 	public final String NOT_DONE = "not done";
 	public final String DONE = "done";
 	public final String ALL = "all";
@@ -38,49 +39,24 @@ public class Parser {
 	private final int INVALID_ID = -1; // taskID can only be +ve
 	private final int SINGLE_DIGIT_DAY = 4; // 4 chars long; i.e. 9Jan
 	private final int TASK_BOTH = -2;
-
+	private final int MSG_SIZE = 13;
+	
+	private int currCommandStatus = -1;
+	private int msgSize = -1;
+	private boolean isView = false;
+	
+	private static final String SUCCESS_CONTENT_MESSAGE = "(%1$s) %2$s";
+	private static final String SUCCESS_TITLE_MESSAGE = "%1$s Successful";
+	private static final String FAIL_MESSAGE = "Invalid command";
+	private static final String UNRECOGNISED_MESSAGE = "Unknown command";
+	private static final String ERROR_MESSAGE = "An error has occured.";
+	
 	enum COMMAND_TYPE {
 		ADD, DO, DELETE, EDIT, INVALID, SORT, VIEW
 	};
 
 	public Parser() {
 		logic = new Logic();
-	}
-
-	/**
-	 * DUMMY METHOD SOLELY USED FOR JUNIT TESTING
-	 */
-	public String inputTest(String rawInput) {
-		String commandTypeString = getCommand(rawInput);
-
-		COMMAND_TYPE commandType = determineCommandType(commandTypeString);
-
-		switch (commandType) {
-		case ADD:
-			addTask(rawInput);
-			break;
-		case DO:
-			doTask(rawInput);
-			break;
-		case EDIT:
-			editTask(rawInput);
-			break;
-		case DELETE:
-			deleteTask(rawInput);
-			break;
-		case SORT:
-			sortTask(rawInput);
-			break;
-		case VIEW:			
-			break;
-		default:
-			// TODO: DOESN'T FIT INTO ANY OF THE ABOVE!!!
-			return "f";
-		}
-
-		String t = logic.getStorage().getTaskByIndex(0);
-		deleteTask("delete 1");
-		return t;
 	}
 
 	/*
@@ -91,8 +67,12 @@ public class Parser {
 	 * true if user command is executed successfully false otherwise (or
 	 * unrecognised command)
 	 */
-	public int input(String rawInput) {
-		boolean result;
+	public void input(String rawInput) {
+		boolean result = false;
+		
+		if(isViewMethod(rawInput)){
+			isView = true;
+		}
 		
 		String commandTypeString = getCommand(rawInput);
 		
@@ -119,12 +99,12 @@ public class Parser {
 			break;
 		default:
 			// TODO: DOESN'T FIT INTO ANY OF THE ABOVE!!!
-			return COMMAND_UNRECOGNISED;
+			currCommandStatus = COMMAND_UNRECOGNISED;
 		}
 		if (result == false) {
-			return COMMAND_FAIL;
+			currCommandStatus = COMMAND_FAIL;
 		}
-		return COMMAND_SUCCESS;
+		currCommandStatus = COMMAND_SUCCESS;
 	}
 
 	public boolean isCompleted(String rawInput) {
@@ -463,10 +443,6 @@ public class Parser {
 			return COMMAND_TYPE.INVALID;
 		}
 	}
-
-	public String getLastCommand(){
-		return lastCommand;
-	}
 	
 	private boolean isCategory(String s) {
 		return s.startsWith(CATEGORIES);
@@ -501,20 +477,62 @@ public class Parser {
 		return logic;
 	}
 	
-	public ArrayList<String> getViewList() {
-		return logic.getViewList();
+	public ArrayList<String> getList() {
+		if(isView){
+			return logic.getViewList();
+		} else {
+			return logic.getDefaultList();
+		}
 	}
 	
-	public ArrayList<String> getDefaultList() {
-		return logic.getDefaultList();
-	}
-	
-	public String getNotifyTitle(){
-		return "";
+	public String getNotifyTitle() {
+		String toReturn = "";
+
+		if(currCommandStatus == COMMAND_SUCCESS){
+			toReturn = String.format(SUCCESS_TITLE_MESSAGE, lastCommand);
+		} else if (currCommandStatus == COMMAND_FAIL) {
+			toReturn = FAIL_MESSAGE;
+		} else if (currCommandStatus == COMMAND_UNRECOGNISED) {
+			toReturn = UNRECOGNISED_MESSAGE;
+		} else {
+			toReturn = ERROR_MESSAGE;
+		}
+		currCommandStatus = -1;
+		msgSize = toReturn.length();
+		return toReturn;
 	}
 	
 	public String getNotifyMsg(){
-		return "";
+		
+			String longestString = EMPTY_STRING;
+			String outputStatus = EMPTY_STRING;
+			
+			if(lastCommand.equals(CMD_DELETE)){
+				ArrayList <Integer> deletedIDS = logic.getCurrTaskIDs();
+			
+				for(int i = 0; i < deletedIDS.size(); i++){
+					String temp = logic.getCurrTaskDescs().get(i);
+					outputStatus += String.format(SUCCESS_CONTENT_MESSAGE, deletedIDS.get(i), temp) + "\n";
+					if(temp.length() > longestString.length()){
+						longestString = temp;
+					}
+				}
+				logic.clearCurrTasks();
+			} 
+		    
+			if (msgSize < longestString.length()) {
+				msgSize = longestString.length();
+			} 
+			
+			return outputStatus;
+
+	}
+	
+	public int getMsgSize(){
+		return msgSize*MSG_SIZE;
 	}
 
+	private static boolean isViewMethod(String s) {
+		return s.matches(VIEW_REGEX);
+	}
 }
