@@ -508,5 +508,13 @@ public class Parser {
 	public ArrayList<String> getDefaultList() {
 		return logic.getDefaultList();
 	}
+	
+	public String getNotifyTitle(){
+		return "";
+	}
+	
+	public String getNotifyMsg(){
+		return "";
+	}
 
 }
