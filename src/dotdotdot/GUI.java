@@ -266,6 +266,7 @@ public class GUI {
 								shell.getLocation().y + borderSize));
 						tip.setVisible(true);
 						displayList();
+						displayCategory();
 					}
 					break;
 				case SWT.ARROW_UP:

@@ -402,6 +402,7 @@ public class Logic {
 			int count = countCatTasksNo.get(category);
 			temp.add(category+SPACE_STRING+"("+count+")");
 		}
+		store.clearHashMap();
 		return temp;
 	}
 	
