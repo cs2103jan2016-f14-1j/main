@@ -393,6 +393,17 @@ public class Logic {
 	    currTaskDescs.clear();
 	}
 	
+	public int getNoOfUncompletedTasks(){
+		ArrayList<String> temp = store.getStoreFormattedToDos();
+		int count = 0;
+		for(String toDo : temp){
+			if(Integer.parseInt(formatTaskForDisplay(toDo).get(TASK_ISCOMPLETE))==0){
+				count++;
+			}
+		}
+		return count;
+	}
+	
 	public ArrayList<String> getCategoryOfToDo(String toDo){
 		return separateCats(formatTaskForDisplay(toDo).get(TASK_CATEGORIES));
 	}
@@ -408,7 +419,7 @@ public class Logic {
 								int currentCount = store.getCountForEachCat(cat);
 								currentCount++;
 								store.addToHashMap(cat, currentCount);
-						}
+							}
 					}
 			}
 		}
@@ -419,6 +430,7 @@ public class Logic {
 			int count = countCatTasksNo.get(category);
 			temp.add(category+SPACE_STRING+"("+count+")");
 		}
+		temp.add("@uncompleted ("+getNoOfUncompletedTasks()+")");
 		store.clearHashMap();
 		return temp;
 	}
@@ -438,7 +450,9 @@ public class Logic {
 	public ArrayList<String> getTasksByCat(String input) {
 		ArrayList<String> tasks = new ArrayList<String>();
 		for (String s : store.getIDByCat(input)) {
+			if (isNotDone(s)) {
 			tasks.add(formatToUserFormat(s));
+			}
 		}
 		return tasks;
 	}
@@ -613,6 +627,15 @@ public class Logic {
 		System.out.println(toPrint);
 	}
 	
-	//============================== START OF TEST FUNCTIONS ==============================
+	private boolean isNotDone(String task) {
+		String status = task.split(DELIMITER)[TASK_ISCOMPLETE];
+		if (status.equals(NOT_COMPLETED)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	//============================== END OF TEST FUNCTIONS ==============================
 	
 }
