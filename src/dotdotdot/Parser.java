@@ -19,6 +19,7 @@ public class Parser {
 	public static final String CMD_SORT = "Sort";
 	public static final String CMD_VIEW = "View";
 	private static final String VIEW_REGEX = "(view|v|V|VIEW)(.*)";
+	private static final String HELP_REGEX = "(h|H|help|HELP|\\?)";
 	
 	public final String NOT_DONE = "not done";
 	public final String DONE = "done";
@@ -33,6 +34,8 @@ public class Parser {
 	private final String SPACE_STRING = " ";
 
 	private final int DEFAULT_VIEW = 1;
+	private final int LIST_VIEW = 2;
+	public static final int HELP_VIEW = 3;
 	private final int FIRST_ELEMENT = 0;
 	private final int SECOND_ELEMENT = 1;
 	private final int AFTER_PREPOSITION = 3;
@@ -43,8 +46,7 @@ public class Parser {
 	
 	private int currCommandStatus = -1;
 	private int msgSize = -1;
-	private boolean isView = false;
-	private boolean isSort = false;
+	private int isViewOrHelp = -1;
 	
 	private static final String SUCCESS_CONTENT_MESSAGE = "(%1$s) %2$s";
 	private static final String SUCCESS_TITLE_MESSAGE = "%1$s Successful";
@@ -70,13 +72,13 @@ public class Parser {
 	 */
 	public void input(String rawInput) {
 		boolean result = false;
-		isView = false;
-		isSort = false;
 		
-		if(isViewMethod(rawInput)){
-			isView = true;
-		} else if (isSortMethod(rawInput)) {
-			isSort = true;
+		if(isHelp(rawInput)){
+			isViewOrHelp = HELP_VIEW;
+		} else if(isViewMethod(rawInput)|| isSortMethod(rawInput)){
+			isViewOrHelp = LIST_VIEW;
+		} else {
+			isViewOrHelp = DEFAULT_VIEW;
 		}
 		
 		String commandTypeString = getCommand(rawInput);
@@ -482,12 +484,16 @@ public class Parser {
 		return logic;
 	}
 	
+	public int getIsViewOrHelp(){
+		return isViewOrHelp;
+	}
+	
 	public ArrayList<String> getList() {
-		if(isView || isSort){
+		if(isViewOrHelp == LIST_VIEW){
 			return logic.getViewList();
 		} else {
 			return logic.getDefaultList();
-		}
+		} 
 	}
 	
 	public String getNotifyTitle() {
@@ -545,4 +551,8 @@ public class Parser {
 		return getCommand(s).equalsIgnoreCase(CMD_SORT);
 	}
 	
+	private static boolean isHelp(String s) {
+		return s.matches(HELP_REGEX);
+	}
+
 }

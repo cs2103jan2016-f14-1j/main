@@ -430,7 +430,7 @@ public class Logic {
 			int count = countCatTasksNo.get(category);
 			temp.add(category+SPACE_STRING+"("+count+")");
 		}
-		temp.add("@uncompleted ("+getNoOfUncompletedTasks()+")");
+		temp.add("@Uncompleted ("+getNoOfUncompletedTasks()+")");
 		store.clearHashMap();
 		return temp;
 	}
