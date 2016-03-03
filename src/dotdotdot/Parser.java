@@ -75,7 +75,7 @@ public class Parser {
 		
 		if(isHelp(rawInput)){
 			isViewOrHelp = HELP_VIEW;
-		} else if(isViewMethod(rawInput)|| isSortMethod(rawInput)){
+		} else if(isViewOrHelp != -1){
 			isViewOrHelp = LIST_VIEW;
 		} else {
 			isViewOrHelp = DEFAULT_VIEW;
