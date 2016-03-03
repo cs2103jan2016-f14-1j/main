@@ -518,7 +518,7 @@ public class Parser {
 			String longestString = EMPTY_STRING;
 			String outputStatus = EMPTY_STRING;
 			
-			if(lastCommand.equals(CMD_DELETE)){
+			if(lastCommand.equals(CMD_DELETE) || lastCommand.equals(CMD_DO)){
 				ArrayList <Integer> deletedIDS = logic.getCurrTaskIDs();
 			
 				for(int i = 0; i < deletedIDS.size(); i++){

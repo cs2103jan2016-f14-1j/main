@@ -193,6 +193,7 @@ public class Logic {
 		ArrayList<String> taskInformation = formatTaskForDisplay(task);
 		taskInformation.set(TASK_ISCOMPLETE, COMPLETED);
 		task = formatTaskForStorage(taskInformation);
+		currTaskDescs.add(getTaskDesc(store.getStoreFormattedToDos().get(taskIndex)));
 		syncTaskToList(task, 0, taskIndex, COMMAND.COMPLETE);
 		return true;
 	}
