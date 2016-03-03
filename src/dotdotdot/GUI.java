@@ -5,7 +5,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolTip;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.swt.SWT;
@@ -18,6 +21,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.widgets.Label;
 
 public class GUI {
 	private static Text input;
@@ -32,7 +36,6 @@ public class GUI {
 
 	private static final String GUI_TITLE = "Dotdotdot";
 	private static final String GUI_HINT = "< Input ? or help to show available commands >";
-	private static final String HELP_REGEX = "(h|H|help|HELP|\\?)";
 	private static final String EMPTY_STRING = "";
 	private static final String SPACE_STRING = " ";
 	private static final String SUCCESS_CONTENT_MESSAGE = "(%1$s) %2$s";
@@ -50,6 +53,7 @@ public class GUI {
 	
 	private static Color hintColor;
 	private static Color normalColor;
+	private static Label timeLabel;
 
 	private static void inputToHint() {
 		input.setText(GUI_HINT);
@@ -185,24 +189,48 @@ public class GUI {
 
 		Display display = Display.getDefault();
 		Shell shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
-		shell.setSize(685, 605);
+		shell.setSize(725, 605);
 		shell.setText(GUI_TITLE);
 			
 		hintColor = display.getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
 		normalColor = display.getSystemColor(SWT.COLOR_BLACK);
 
 		categoryTable = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
-		categoryTable.setBounds(10, 10, 155, 500);
+		categoryTable.setBounds(10, 102, 180, 408);
 
 		mainTable = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
-		mainTable.setBounds(179, 10, 490, 500);
+		mainTable.setBounds(203, 10, 506, 500);
 
 		input = new Text(shell, SWT.BORDER);
 		inputToHint();
-		input.setBounds(10, 522, 659, 31);
+		input.setBounds(10, 522, 699, 31);
 		input.setFocus();
 
 		final ToolTip tip = new ToolTip(shell, SWT.TOOL | SWT.ICON_INFORMATION | SWT.RIGHT);
+		
+		Date date = new Date();
+		
+		DateFormat dateFormat = new SimpleDateFormat("EEEEEEE");
+		
+		Label dayLabel = new Label(shell, SWT.NONE);
+		dayLabel.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.BOLD));
+		dayLabel.setAlignment(SWT.CENTER);
+		dayLabel.setBounds(10, 10, 180, 31);
+		dayLabel.setText(dateFormat.format(date));
+		
+		dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		
+		Label dateLabel = new Label(shell, SWT.NONE);
+		dateLabel.setAlignment(SWT.CENTER);
+		dateLabel.setBounds(10, 41, 180, 31);
+		dateLabel.setText(dateFormat.format(date));
+		
+		dateFormat = new SimpleDateFormat("hh:mm a");
+		
+		timeLabel = new Label(shell, SWT.NONE);
+		timeLabel.setAlignment(SWT.CENTER);
+		timeLabel.setBounds(10, 67, 180, 29);
+		timeLabel.setText(dateFormat.format(date));
 	
 		input.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent event) {
@@ -214,29 +242,27 @@ public class GUI {
 					String tempInput = input.getText();
 					inputToHint();
 					tip.setVisible(false);
-
-					if (isHelp(tempInput)) {
+					tip.setMessage(EMPTY_STRING);
+					parser.input(tempInput);
+				
+					if(parser.getIsViewOrHelp()==Parser.HELP_VIEW){
 						displayHelp();
 					} else {
-						tip.setMessage(EMPTY_STRING);
-						parser.input(tempInput);
-				
 						list = parser.getList();
 						tip.setText(parser.getNotifyTitle());
-						
+							
 						String notifyMsg = parser.getNotifyMsg();
-
+	
 						if(!notifyMsg.equals(EMPTY_STRING)){
-							tip.setMessage(notifyMsg);
-
+								tip.setMessage(notifyMsg);
+	
 						}
 						tip.setLocation(new Point(shell.getLocation().x + shell.getSize().x - parser.getMsgSize() ,
-								shell.getLocation().y + borderSize));
+									shell.getLocation().y + borderSize));
 						tip.setVisible(true);
 						displayList();
 						displayCategory();
 					}
-					
 					break;
 				case SWT.ARROW_UP:
 					mainTable.setTopIndex(mainTable.getTopIndex() - SCROLL_AMOUNT);
@@ -279,10 +305,6 @@ public class GUI {
 				display.sleep();
 			}
 		}
-	}
-
-	private static boolean isHelp(String s) {
-		return s.matches(HELP_REGEX);
 	}
 
 	private static boolean isTextEmpty(Text t) {
