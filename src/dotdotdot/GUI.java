@@ -17,7 +17,6 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -30,7 +29,6 @@ public class GUI {
 	private static TableItem categoryItem;
 	private static TableItem mainItem;
 	private static Parser parser = new Parser();
-	private static Logic logic = new Logic();
 	private static ArrayList<String> list;
 	private static int borderSize;
 
@@ -38,12 +36,6 @@ public class GUI {
 	private static final String GUI_HINT = "< Input ? or help to show available commands >";
 	private static final String EMPTY_STRING = "";
 	private static final String SPACE_STRING = " ";
-	private static final String SUCCESS_CONTENT_MESSAGE = "(%1$s) %2$s";
-	private static final String SUCCESS_TITLE_MESSAGE = "%1$s Successful";
-	private static final String FAIL_MESSAGE = "Invalid command";
-	private static final String UNRECOGNISED_MESSAGE = "Unknown command";
-	private static final String ERROR_MESSAGE = "An error has occured.";
-	private static final String NOT_DONE = "NOT DONE";
 	private static final int SCROLL_AMOUNT = 5;
 	private static final int WRAP_AROUND = 45;
 	private static final int BORDER_WIDTH = 2;
@@ -70,8 +62,8 @@ public class GUI {
 		// Call logic for list
 		ArrayList<String> categories = parser.getLogic().getListOfCategoriesWithCount();
 		for(int i =0 ; i < categories.size(); i++){
-			mainItem = new TableItem(categoryTable, SWT.NONE);
-			mainItem.setText(categories.get(i));
+			categoryItem = new TableItem(categoryTable, SWT.NONE);
+			categoryItem.setText(categories.get(i));
 		}
 	}
 
@@ -254,8 +246,7 @@ public class GUI {
 						String notifyMsg = parser.getNotifyMsg();
 	
 						if(!notifyMsg.equals(EMPTY_STRING)){
-								tip.setMessage(notifyMsg);
-	
+							tip.setMessage(notifyMsg);
 						}
 						tip.setLocation(new Point(shell.getLocation().x + shell.getSize().x - parser.getMsgSize() ,
 									shell.getLocation().y + borderSize));
