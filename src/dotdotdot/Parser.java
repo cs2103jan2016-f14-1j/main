@@ -44,6 +44,7 @@ public class Parser {
 	private int currCommandStatus = -1;
 	private int msgSize = -1;
 	private boolean isView = false;
+	private boolean isSort = false;
 	
 	private static final String SUCCESS_CONTENT_MESSAGE = "(%1$s) %2$s";
 	private static final String SUCCESS_TITLE_MESSAGE = "%1$s Successful";
@@ -69,9 +70,13 @@ public class Parser {
 	 */
 	public void input(String rawInput) {
 		boolean result = false;
+		isView = false;
+		isSort = false;
 		
 		if(isViewMethod(rawInput)){
 			isView = true;
+		} else if (isSortMethod(rawInput)) {
+			isSort = true;
 		}
 		
 		String commandTypeString = getCommand(rawInput);
@@ -478,7 +483,7 @@ public class Parser {
 	}
 	
 	public ArrayList<String> getList() {
-		if(isView){
+		if(isView || isSort){
 			return logic.getViewList();
 		} else {
 			return logic.getDefaultList();
@@ -535,4 +540,9 @@ public class Parser {
 	private static boolean isViewMethod(String s) {
 		return s.matches(VIEW_REGEX);
 	}
+	
+	private boolean isSortMethod(String s) {
+		return getCommand(s).equalsIgnoreCase(CMD_SORT);
+	}
+	
 }
