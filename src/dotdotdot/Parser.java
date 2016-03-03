@@ -103,8 +103,9 @@ public class Parser {
 		}
 		if (result == false) {
 			currCommandStatus = COMMAND_FAIL;
+		} else {
+			currCommandStatus = COMMAND_SUCCESS;
 		}
-		currCommandStatus = COMMAND_SUCCESS;
 	}
 
 	public boolean isCompleted(String rawInput) {
