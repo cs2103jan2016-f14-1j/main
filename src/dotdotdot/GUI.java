@@ -5,10 +5,15 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolTip;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.swt.SWT;
@@ -28,6 +33,7 @@ public class GUI {
 	private static Table mainTable;
 	private static TableItem categoryItem;
 	private static TableItem mainItem;
+	private static Label timeLabel;
 	private static Parser parser = new Parser();
 	private static ArrayList<String> list;
 	private static int borderSize;
@@ -37,7 +43,7 @@ public class GUI {
 	private static final String EMPTY_STRING = "";
 	private static final String SPACE_STRING = " ";
 	private static final int SCROLL_AMOUNT = 5;
-	private static final int WRAP_AROUND = 45;
+	private static final int WRAP_AROUND = 40;
 	private static final int BORDER_WIDTH = 2;
 	private static final int TASK_ID = 0;
 	private static final int TASK_DESC = 1;
@@ -45,7 +51,6 @@ public class GUI {
 	
 	private static Color hintColor;
 	private static Color normalColor;
-	private static Label timeLabel;
 
 	private static void inputToHint() {
 		input.setText(GUI_HINT);
@@ -73,7 +78,7 @@ public class GUI {
 		for (int i = 0; i < list.size(); i++) {
 	
 			String[] taskIDandDesc = getTaskIdAndDesc(list.get(i));
-			String formattedOutput = WordUtils.wrap(taskIDandDesc[TASK_DESC], WRAP_AROUND);
+			String formattedOutput = WordUtils.wrap(taskIDandDesc[TASK_DESC], WRAP_AROUND, "\n", true);
 			String outputArray[] = formattedOutput.split("\n");
 			for (int j = 0; j < outputArray.length; j++) {
 
@@ -217,13 +222,12 @@ public class GUI {
 		dateLabel.setBounds(10, 41, 180, 31);
 		dateLabel.setText(dateFormat.format(date));
 		
-		dateFormat = new SimpleDateFormat("hh:mm a");
-		
 		timeLabel = new Label(shell, SWT.NONE);
 		timeLabel.setAlignment(SWT.CENTER);
 		timeLabel.setBounds(10, 67, 180, 29);
-		timeLabel.setText(dateFormat.format(date));
-	
+		updateTime();
+		timer();
+			
 		input.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent event) {
 
@@ -306,6 +310,43 @@ public class GUI {
 		Rectangle outer = Display.getCurrent().getActiveShell().getBounds();
         Rectangle inner = Display.getCurrent().getActiveShell().getClientArea();
         borderSize = outer.height - inner.height - BORDER_WIDTH;
+	}
+	
+	private static void timer(){
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask() {
+		    @Override
+		    public void run() {
+		        // Task to be executed every second
+		        try {
+		            SwingUtilities.invokeAndWait(new Runnable() {
+
+		                @Override
+		                public void run() {
+		                	Display.getDefault().asyncExec(new Runnable() {
+		                	    public void run() {
+		                	    	updateTime();
+		                	    }
+		                	});
+		                }
+		            });
+		        } catch (InterruptedException e) {
+		          
+		        } catch (InvocationTargetException e) {
+					
+				}
+
+		    }
+		};
+
+		// This will invoke the timer every second
+		timer.scheduleAtFixedRate(task, 1000, 1000);
+	}
+	
+	private static void updateTime(){
+    	Date date = new Date();
+        DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+        timeLabel.setText(timeFormat.format(date));
 	}
 	
 	private static String [] getTaskIdAndDesc(String rawInput) {
