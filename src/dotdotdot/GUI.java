@@ -219,7 +219,7 @@ public class GUI {
 		
 		Label dateLabel = new Label(shell, SWT.NONE);
 		dateLabel.setAlignment(SWT.CENTER);
-		dateLabel.setBounds(10, 41, 180, 31);
+		dateLabel.setBounds(10, 41, 180, 25);
 		dateLabel.setText(dateFormat.format(date));
 		
 		timeLabel = new Label(shell, SWT.NONE);
