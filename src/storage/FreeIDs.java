@@ -40,7 +40,7 @@ public class FreeIDs {
 	}
 	
 	protected static void convertIDStringToList(String s) {
-		ArrayList<String> stringOfIds = (ArrayList<String>) Arrays.asList(s.split(Keywords.SPACE_STRING));
+		ArrayList<String> stringOfIds = new ArrayList<String>(Arrays.asList(s.split(Keywords.SPACE_STRING)));
 		for (String id : stringOfIds) {
 			Storage.getFreeIDs().offerFirst(Integer.parseInt(id));
 		}
