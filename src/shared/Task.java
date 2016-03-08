@@ -4,11 +4,13 @@ import parser.*;
 import java.util.ArrayList;
 
 public class Task {
+	
+	private final String USER_FORMAT = "%s (#%s) %s %s %s";
+	private final String STORAGE_FORMAT = "%d|%s|%s|%s|%d|";
 
 	private int id = 0;
 	private String task;
 	private String date; 
-	private String cmd = "";
 	private ArrayList<String> categories;
 	private int isCompleted = 0;
 	private int intDate = 999; // for sorting purposes
@@ -21,7 +23,16 @@ public class Task {
 		initIntDate(date);
 	}
 	
-	public void initIntDate(String date) {
+	public String getUserFormat() {
+		return String.format(USER_FORMAT,
+				date, id, task, categories, Formatter.fromIntToDDMMM(date));
+	}
+	public String getStorageFormat() {
+		return String.format(STORAGE_FORMAT,
+				id, task, date, categories, isCompleted);
+	}
+	
+	private void initIntDate(String date) {
 		setIntDate(Formatter.fromDDMMMToInt(date));
 	}
 	
@@ -71,14 +82,6 @@ public class Task {
 
 	public void setIntDate(int intDate) {
 		this.intDate = intDate;
-	}
-
-	public String getCmd() {
-		return cmd;
-	}
-
-	public void setCmd(String cmd) {
-		this.cmd = cmd;
 	}
 
 }

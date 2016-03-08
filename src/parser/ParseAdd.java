@@ -1,6 +1,7 @@
 package parser;
 
 import shared.*;
+import logic.*;
 import java.util.ArrayList;
 
 public class ParseAdd {
@@ -21,7 +22,7 @@ public class ParseAdd {
 		
 		Task task = new Task(date, taskName, categories); 
 		
-		// TODO: AddTask.addTask(task);
+		Logic.addTask(task);
 		
 		/*
 		if (!hasCategory && !hasPreposition) {

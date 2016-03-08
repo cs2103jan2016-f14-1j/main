@@ -1,6 +1,7 @@
 package shared;
 
 public class Keywords {
+	// class to store global final variables
     
 	protected static final String REGEX_HELP = "(h|H|help|HELP|\\?)";
 	protected static final String REGEX_VIEW = "(view|v|V|VIEW)(.*)";
@@ -11,6 +12,7 @@ public class Keywords {
 	public static final String SPACE_STRING = " ";
 	
 	public static final String MESSAGE_DELETE_SUCCESS = "success delete";
+	public static final String TASKID_PREPEND = "-";
 	
 	public static final int FIRST_ELEMENT = 0;
 	
