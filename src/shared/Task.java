@@ -1,26 +1,35 @@
 package shared;
 
+import parser.*;
 import java.util.ArrayList;
 
 public class Task {
 
-	private int ID = 0;
-	private String task = "";
-	private String date = "";
+	private int id = 0;
+	private String task;
+	private String date; 
 	private ArrayList<String> categories;
 	private int isCompleted = 0;
-	private int intDate = 0;
+	private int intDate = 999; // for sorting purposes
+
+	public Task(String date, String taskName, ArrayList<String> cats){
+		setDate(date);
+		setTask(taskName);
+		setCategories(cats);
+		
+		initIntDate(date);
+	}
 	
-	public Task(){
-		categories = new ArrayList<String>();
+	public void initIntDate(String date) {
+		setIntDate(Formatter.fromDDMMMToInt(date));
+	}
+	
+	public int getId() {
+		return id;
 	}
 
-	public int getID() {
-		return ID;
-	}
-
-	public void setID(int ID) {
-		this.ID = ID;
+	public void setId(int ID) {
+		this.id = ID;
 	}
 
 	public String getTask() {

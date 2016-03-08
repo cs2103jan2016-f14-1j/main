@@ -489,11 +489,13 @@ public class Parser {
 	}
 	
 	public ArrayList<String> getList() {
-		if(isViewOrHelp == LIST_VIEW){
+		return logic.getDisplayList();
+		/*if(isViewOrHelp == LIST_VIEW){
 			return logic.getViewList();
 		} else {
 			return logic.getDefaultList();
 		} 
+		*/
 	}
 	
 	public String getNotifyTitle() {

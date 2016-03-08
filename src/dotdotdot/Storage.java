@@ -15,6 +15,7 @@ import java.util.LinkedList;
 public class Storage {
 
 	// FORMAT OF EACH TASK: [taskID]|[task]|[date]|[categories]|[isComplete]|
+	// SAMEDIT FORMAT OF EACH TASK: [date]|[taskID]|[task]|[categories]|[isComplete]|
 	private ArrayList<String> toDos = new ArrayList<String>();
 	private LinkedList<Integer> freedIds = new LinkedList<Integer>();
 	private HashMap<String, Integer> tasksPerCat = new HashMap<>();
