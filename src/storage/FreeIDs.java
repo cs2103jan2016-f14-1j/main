@@ -1,41 +1,44 @@
 package storage;
 
 import java.util.Collections;
-import java.util.LinkedList;
+
+import shared.Keywords;
 
 public class FreeIDs {
-	protected static LinkedList<Integer> freeIDs;
-	private static int currentTaskId = 0;
 
-	public FreeIDs() {
-		freeIDs = new LinkedList<Integer>();
-	}
-
-	public int getNextAvailableID() {
+	protected static int getNextAvailableID() {
 		if (isListEmpty()) {
 			generateID();
 		}
-		return freeIDs.poll();
+		return Storage.getFreeIDs().poll();
 	}
 
 	protected static void sortIDs() {
-		Collections.sort(freeIDs);
+		Collections.sort(Storage.getFreeIDs());
 	}
 
 	protected static void addIDs(int id) {
-		freeIDs.offerFirst(id);
+		Storage.getFreeIDs().offerFirst(id);
 	}
 
 	protected static void setCurrentID(int id) {
-		currentTaskId = id;
+		Storage.currentTaskId = id;
+	}
+	
+	protected static String formatIDToString(){
+		String stringID = Keywords.EMPTY_STRING;
+		for(int id:Storage.getFreeIDs()){
+			stringID+=id+Keywords.EMPTY_STRING;
+		}
+		return stringID;
 	}
 
-	private boolean isListEmpty() {
-		return freeIDs.isEmpty();
+	private static boolean isListEmpty() {
+		return Storage.getFreeIDs().isEmpty();
 	}
 
-	private void generateID() {
-		freeIDs.offer(currentTaskId++);
+	private static void generateID() {
+		Storage.getFreeIDs().offer(Storage.currentTaskId++);
 	}
 
 }

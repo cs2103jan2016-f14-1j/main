@@ -1,18 +1,21 @@
 package storage;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+
 import shared.Task;
 
 public class Storage {
 
 	private static ArrayList<Task> tasks;//still in development: transitioning to OOP
+	private static LinkedList<Integer> freeIDs;
+	protected static int currentTaskId = 0;
 	private ReadWrite rw;
-	private FreeIDs fID;
 	
 	public Storage(){
 		tasks = new ArrayList<Task>();
+		freeIDs = new LinkedList<Integer>();
 		rw = new ReadWrite();
-		fID = new FreeIDs();
 		rw.readTasksFromFile();
 	}
 	
@@ -21,23 +24,27 @@ public class Storage {
 	}
 	
 	public static void addTaskToList(Task task){
-		
+		tasks.add(task);
 	}
 	
-	public void removeTasksFromList(int taskID, int taskIndex){
-		
+	public void removeTasksFromList(int taskIndex){
+		tasks.remove(taskIndex);
 	}
 	
 	public Task getTask(int index){
 		return tasks.get(index);
 	}
 	
-	public boolean isListEmpty(){
+	public void writeTasksToFile(){
+		rw.writeTasksToFile();
+	}
+	
+	private boolean isListEmpty(){
 		return tasks.isEmpty();
 	}
 	
-	public void writeTasksToFile(){
-		rw.writeTasksToFile();
-		rw.writeIDsToFile();
+	protected static LinkedList<Integer> getFreeIDs(){
+		return freeIDs;
 	}
+	
 }
