@@ -26,14 +26,19 @@ import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import logic.Logic;
-import parser.Parser;;
+import parser.Parser;
+import shared.Task;
+import storage.Storage;
 
 public class Controller {
+	
+	private static final int WRAP_AROUND = 40;
 	
 	private View view;
 	private int borderSize;
     private Parser parser = new Parser();
     private Logic logic = new Logic();
+    private Storage storage = new Storage();
     
 	public Controller(){
 		view = new View();
@@ -64,30 +69,32 @@ public class Controller {
 
 		view.getMainTable().removeAll();
 		TableItem mainItem;
-		ArrayList<String> list = null;
-		/*
-		for (int i = 0; i < list.size(); i++) {
+		ArrayList<Task> list = Storage.getTasks();
+
+		for (Task task : list) {
 	
-			String[] taskIDandDesc = getTaskIdAndDesc(list.get(i));
-			String formattedOutput = WordUtils.wrap(taskIDandDesc[TASK_DESC], WRAP_AROUND, "\n", true);
+			String taskIDandDesc = task.getUserFormat();
+			String formattedOutput = WordUtils.wrap(taskIDandDesc, WRAP_AROUND, "\n", true);
 			String outputArray[] = formattedOutput.split("\n");
 			for (int j = 0; j < outputArray.length; j++) {
 
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-
+				
 				if (j == 0) {
-					mainItem.setText(taskIDandDesc[TASK_ID] + " " +outputArray[j]);
+					mainItem.setText(taskIDandDesc + " " +outputArray[j]);
 				} else {
 					String whiteSpaces = "";
+					/*
 					for(int z = 0 ; z < taskIDandDesc[TASK_ID].length() + DEFAULT_WHITESPACES; z++){
 						whiteSpaces += " ";
-					}
+					}					
 					mainItem.setText(whiteSpaces + outputArray[j]);
+					*/
+					mainItem.setText(taskIDandDesc + " " +outputArray[j]);
 				}
 			}
 			
 		}
-		*/
 
 	}
 	
@@ -186,10 +193,14 @@ public class Controller {
 					inputToHint();
 					tip.setVisible(false);
 					tip.setMessage(View.EMPTY_STRING);
+					
+					parser.parse(tempInput);
+					
+					displayList();
 					/*
-					parser.input(tempInput);
+					
 				
-					if(parser.getIsViewOrHelp()==Parser.HELP_VIEW){
+					if(parser.getIsViewOrHelp() == Parser.HELP_VIEW){
 						displayHelp();
 					} else {
 						list = parser.getList();
