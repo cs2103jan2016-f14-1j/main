@@ -7,7 +7,7 @@ import shared.Task;
 
 public class Storage {
 
-	private static ArrayList<Task> tasks;//still in development: transitioning to OOP
+	private static ArrayList<Task> tasks; //still in development: transitioning to OOP
 	private static LinkedList<Integer> freeIDs;
 	protected static int currentTaskId = 0;
 	private ReadWrite rw;
