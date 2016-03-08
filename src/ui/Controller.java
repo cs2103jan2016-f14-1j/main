@@ -1,9 +1,4 @@
-package dotdotdot;
-
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.ToolTip;
+package ui;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
@@ -19,73 +14,58 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import ui.View;
+import dotdotdot.Parser;
 
-import org.eclipse.swt.widgets.Label;
-
-public class GUI {
-	private static Text input;
-	private static Table categoryTable;
-	private static Table mainTable;
-	private static TableItem categoryItem;
-	private static TableItem mainItem;
-	private static Label timeLabel;
-	private static Parser parser = new Parser();
-	private static ArrayList<String> list;
-	private static int borderSize;
-
-	private static final String GUI_TITLE = "Dotdotdot";
-	private static final String GUI_HINT = "< Input ? or help to show available commands >";
-	private static final String EMPTY_STRING = "";
-	private static final String SPACE_STRING = " ";
-	private static final int SCROLL_AMOUNT = 5;
-	private static final int WRAP_AROUND = 40;
-	private static final int BORDER_WIDTH = 2;
-	private static final int TASK_ID = 0;
-	private static final int TASK_DESC = 1;
-	private static final int DEFAULT_WHITESPACES = 3;
+public class Controller {
 	
-	private static Color hintColor;
-	private static Color normalColor;
-
-	private static void inputToHint() {
-		input.setText(GUI_HINT);
-		input.setForeground(hintColor);
-	}
-
-	private static void inputToNormal() {
-		input.setText(EMPTY_STRING);
-		input.setForeground(normalColor);
+	private View view;
+	private int borderSize;
+	
+	public Controller(){
+		view = new View();
+		timer(view.getTimeLabel());
+		inputToHint();
+		addKeyListener();
+		displayCategory();
+		//displayList();
 	}
 	
-	private static void displayCategory(){
-		categoryTable.removeAll();
+	private void displayCategory(){
+		view.getCategoryTable().removeAll();
 		// Call logic for list
+		/*
 		ArrayList<String> categories = parser.getLogic().getListOfCategoriesWithCount();
 		for(int i =0 ; i < categories.size(); i++){
 			categoryItem = new TableItem(categoryTable, SWT.NONE);
 			categoryItem.setText(categories.get(i));
 		}
+		*/
 	}
+	
+	private void displayList() {
 
-	private static void displayList() {
-
-		mainTable.removeAll();
-		for (int i = 0; i < list.size(); i++) {
+		view.getMainTable().removeAll();
+		TableItem mainItem;
+		
+		/*for (int i = 0; i < list.size(); i++) {
 	
 			String[] taskIDandDesc = getTaskIdAndDesc(list.get(i));
 			String formattedOutput = WordUtils.wrap(taskIDandDesc[TASK_DESC], WRAP_AROUND, "\n", true);
 			String outputArray[] = formattedOutput.split("\n");
 			for (int j = 0; j < outputArray.length; j++) {
 
-				mainItem = new TableItem(mainTable, SWT.NONE);
+				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 
 				if (j == 0) {
 					mainItem.setText(taskIDandDesc[TASK_ID] + " " +outputArray[j]);
@@ -97,15 +77,17 @@ public class GUI {
 					mainItem.setText(whiteSpaces + outputArray[j]);
 				}
 			}
+			
 		}
-
+*/
 	}
+	
+	private void displayHelp() {
 
-	private static void displayHelp() {
-
+		Table mainTable = view.getMainTable();
 		mainTable.removeAll();
 
-		mainItem = new TableItem(mainTable, SWT.NONE);
+		TableItem mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		mainItem.setText("Adding tasks");
 		mainItem = new TableItem(mainTable, SWT.NONE);
@@ -179,57 +161,11 @@ public class GUI {
 		mainItem.setText("Scroll through command history: \u2191 or \u2193");
 
 	}
-
-	/**
-	 * Launch the application.
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-
-		Display display = Display.getDefault();
-		View view = new View();
-		Shell shell = view.getShell();
-			
-		hintColor = display.getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
-		normalColor = display.getSystemColor(SWT.COLOR_BLACK);
-
-		categoryTable = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
-		categoryTable.setBounds(10, 102, 180, 408);
-
-		mainTable = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
-		mainTable.setBounds(203, 10, 506, 500);
-
-		input = new Text(shell, SWT.BORDER);
-		inputToHint();
-		input.setBounds(10, 522, 699, 31);
-		input.setFocus();
-
-		final ToolTip tip = new ToolTip(shell, SWT.TOOL | SWT.ICON_INFORMATION | SWT.RIGHT);
+	
+	private void addKeyListener(){
 		
-		Date date = new Date();
-		
-		DateFormat dateFormat = new SimpleDateFormat("EEEEEEE");
-		
-		Label dayLabel = new Label(shell, SWT.NONE);
-		dayLabel.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.BOLD));
-		dayLabel.setAlignment(SWT.CENTER);
-		dayLabel.setBounds(10, 10, 180, 31);
-		dayLabel.setText(dateFormat.format(date));
-		
-		dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		
-		Label dateLabel = new Label(shell, SWT.NONE);
-		dateLabel.setAlignment(SWT.CENTER);
-		dateLabel.setBounds(10, 41, 180, 25);
-		dateLabel.setText(dateFormat.format(date));
-		
-		timeLabel = new Label(shell, SWT.NONE);
-		timeLabel.setAlignment(SWT.CENTER);
-		timeLabel.setBounds(10, 67, 180, 29);
-		updateTime();
-		timer();
-			
+		Text input = view.getInput();
+		ToolTip tip = view.getNotification();
 		input.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent event) {
 
@@ -240,7 +176,8 @@ public class GUI {
 					String tempInput = input.getText();
 					inputToHint();
 					tip.setVisible(false);
-					tip.setMessage(EMPTY_STRING);
+					tip.setMessage(View.EMPTY_STRING);
+					/*
 					parser.input(tempInput);
 				
 					if(parser.getIsViewOrHelp()==Parser.HELP_VIEW){
@@ -260,13 +197,14 @@ public class GUI {
 						displayList();
 						displayCategory();
 					}
+					*/
 					break;
 				case SWT.ARROW_UP:
-					mainTable.setTopIndex(mainTable.getTopIndex() - SCROLL_AMOUNT);
+					view.getMainTable().setTopIndex(view.getMainTable().getTopIndex() - View.SCROLL_AMOUNT);
 					event.doit = false;
 					break;
 				case SWT.ARROW_DOWN:
-					mainTable.setTopIndex(mainTable.getTopIndex() + SCROLL_AMOUNT);
+					view.getMainTable().setTopIndex(view.getMainTable().getTopIndex() + View.SCROLL_AMOUNT);
 					event.doit = false;
 					break;
 				case SWT.ESC:
@@ -275,13 +213,13 @@ public class GUI {
 				case SWT.BS:
 					if (isTextEmpty(input)) {
 						inputToHint();
-					} else if (input.getForeground().equals(hintColor)) {
+					} else if (input.getForeground().equals(View.hintColor)) {
 						inputToNormal();
 					}
 					break;
 				default:
 					// removes hint and changes input back to normal
-					if (input.getForeground().equals(hintColor)) {
+					if (input.getForeground().equals(View.hintColor)) {
 						inputToNormal();
 					}
 					break;
@@ -289,32 +227,9 @@ public class GUI {
 			}
 		});
 		
-		list = parser.getList();
-		displayCategory();
-		displayList();
-
-		shell.open();
-		shell.layout();
-		initBorderSize();
-		
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-	}
-
-	private static boolean isTextEmpty(Text t) {
-		return t.getText().length() == 1;
 	}
 	
-	private static void initBorderSize() {
-		Rectangle outer = Display.getCurrent().getActiveShell().getBounds();
-        Rectangle inner = Display.getCurrent().getActiveShell().getClientArea();
-        borderSize = outer.height - inner.height - BORDER_WIDTH;
-	}
-	
-	private static void timer(){
+	private void timer(Label timeLabel){
 		Timer timer = new Timer();
 		TimerTask task = new TimerTask() {
 		    @Override
@@ -327,7 +242,7 @@ public class GUI {
 		                public void run() {
 		                	Display.getDefault().asyncExec(new Runnable() {
 		                	    public void run() {
-		                	    	updateTime();
+		                	    	timeLabel.setText(getCurrentTime());
 		                	    }
 		                	});
 		                }
@@ -345,14 +260,45 @@ public class GUI {
 		timer.scheduleAtFixedRate(task, 1000, 1000);
 	}
 	
-	private static void updateTime(){
-    	Date date = new Date();
-        DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
-        timeLabel.setText(timeFormat.format(date));
+	public String getCurrentDate(){
+	    Date date = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	    return dateFormat.format(date);
 	}
 	
-	private static String [] getTaskIdAndDesc(String rawInput) {
-		System.out.println(rawInput);
-		return rawInput.split(SPACE_STRING, 2);
+	public String getCurrentTime(){
+	    Date date = new Date();
+	    DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+	    return timeFormat.format(date);
+	}
+	
+	public String getCurrentDay(){
+	    Date date = new Date();
+		DateFormat dayFormat = new SimpleDateFormat("EEEEEEE");
+	    return dayFormat.format(date);
+	}
+	
+	private void inputToHint() {
+		view.getInput().setText(View.GUI_HINT);
+		view.getInput().setForeground(View.hintColor);
+	}
+
+	private void inputToNormal() {
+		view.getInput().setText(View.EMPTY_STRING);
+		view.getInput().setForeground(View.normalColor);
+	}
+	
+	public void initBorderSize() {
+		Rectangle outer = Display.getCurrent().getActiveShell().getBounds();
+        Rectangle inner = Display.getCurrent().getActiveShell().getClientArea();
+        borderSize = outer.height - inner.height - View.BORDER_WIDTH;
+	}
+	
+	private boolean isTextEmpty(Text t) {
+		return t.getText().length() == 1;
+	}
+	
+	public View getView(){
+		return view;
 	}
 }
