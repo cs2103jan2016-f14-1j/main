@@ -1,5 +1,8 @@
 package logic;
 
-public class DeleteTask {
+import shared.*;
 
+public class DeleteTask  {
+
+	
 }
