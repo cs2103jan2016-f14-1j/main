@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -21,6 +22,7 @@ public class Storage {
 	private int newTaskId = 0;
 
 	private final String STORE_DELIMITER = "|";
+	private final String DELIMITER = "\\|";
 	private final String FILENAME_FILEPATH = "./test.txt";
 	private final String EMPTY_STRING = "";
 	private final String SPACE_STRING = " ";
@@ -28,6 +30,15 @@ public class Storage {
 	private final String GENERAL_ERROR_MSG = "Error has occured: %1$s.";
 	private final String FILE_NOT_FOUND_ERROR_MSG = "The file is not found. Check the path of file";
 	private final String IO_ERROR_MSG = "Input/Output error.";
+	
+
+	//OOP IMPLEMENTATION
+	private ArrayList<Task> toDoTasks = new ArrayList<Task>();//still in development: transitioning to OOP
+	private final int TASK_ID = 0;
+	private final int TASK_DESC = 1;
+	private final int TASK_DATE = 2;
+	private final int TASK_CATEGORIES = 3;
+	private final int TASK_ISCOMPLETE = 4;
 
 	/**
 	 * Constructor method to initialize the values of the variables
@@ -51,6 +62,9 @@ public class Storage {
 	 */
 	public void addStoreFormattedToDo(String line) {
 		toDos.add(line);
+		//OOP implementation below
+		Task task = createNewTask(formatTaskForDisplay(line));
+		toDoTasks.add(task);
 	}
 
 	/**
@@ -208,6 +222,31 @@ public class Storage {
 			}
 		}
 		return taskByCat;
+	}
+	
+	//ALL NEW METHODS TO BE ADDED BELOW UNLESS YOU KNOW WHERE TO PUT THEM
+	//TRANSITIONING TO OOP
+	/**
+	 * This method is used to split the concatenated task into blocks of
+	 * information stored using ArrayList<String>
+	 * 
+	 * @param task
+	 *            the concatenated task to be split
+	 * @return return the task in blocks of information stored in ArrayList
+	 */
+	private ArrayList<String> formatTaskForDisplay(String task) {
+		return new ArrayList<String>(Arrays.asList(task.split(DELIMITER)));
+	}
+	
+	private Task createNewTask(ArrayList<String> properties){
+		Task temp = new Task();
+		temp.setID(Integer.parseInt(properties.get(TASK_ID)));
+		temp.setDate(properties.get(TASK_DATE));
+		temp.setIntDate(0);//have not set what position is this intDate supposed to be
+		temp.setIsCompleted(Integer.parseInt(properties.get(TASK_ISCOMPLETE)));
+		temp.setTask(properties.get(TASK_DESC));
+		return temp;
+		
 	}
 
 }

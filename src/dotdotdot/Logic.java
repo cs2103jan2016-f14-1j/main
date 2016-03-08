@@ -330,7 +330,7 @@ public class Logic {
 	 *            the task ID to be searched
 	 * @return the task if it is found, otherwise -1 to represent not found
 	 */
-	public int searchForTask(int taskID) {
+	private int searchForTask(int taskID) {
 		if (store.isListEmpty()) {
 			systemPrint(EMPTY_LIST_MSG);
 			return TASK_NOT_FOUND;
@@ -416,7 +416,7 @@ public class Logic {
 		return count;
 	}
 	
-	public ArrayList<String> getCategoryOfToDo(String toDo){
+	private ArrayList<String> getCategoryOfToDo(String toDo){
 		return separateCats(formatTaskForDisplay(toDo).get(TASK_CATEGORIES));
 	}
 	
@@ -447,7 +447,7 @@ public class Logic {
 		return temp;
 	}
 	
-	public ArrayList<Integer> getTaskIDsByCat(ArrayList<String> categories) {
+	private ArrayList<Integer> getTaskIDsByCat(ArrayList<String> categories) {
 		ArrayList<String> tasks = new ArrayList<String>();
 		ArrayList<Integer> iDs = new ArrayList<Integer>();
 		for (String cat : categories) {
@@ -459,7 +459,7 @@ public class Logic {
 		return iDs;
 	}
 	
-	public ArrayList<String> getTasksByCat(String input) {
+	private ArrayList<String> getTasksByCat(String input) {
 		ArrayList<String> tasks = new ArrayList<String>();
 		for (String s : store.getIDByCat(input)) {
 			if (isNotDone(s)) {
@@ -469,7 +469,7 @@ public class Logic {
 		return tasks;
 	}
 	
-	public ArrayList<String> getSortedList() {
+	private ArrayList<String> getSortedList() {
 		return viewList;
 	}
 	
