@@ -70,9 +70,7 @@ public class Controller {
 		view.getMainTable().removeAll();
 		TableItem mainItem;
 		ArrayList<Task> list = Storage.getTasks();
-
 		for (Task task : list) {
-	
 			String taskIDandDesc = task.getUserFormat();
 			String formattedOutput = WordUtils.wrap(taskIDandDesc, WRAP_AROUND, "\n", true);
 			String outputArray[] = formattedOutput.split("\n");
@@ -87,7 +85,8 @@ public class Controller {
 					/*
 					for(int z = 0 ; z < taskIDandDesc[TASK_ID].length() + DEFAULT_WHITESPACES; z++){
 						whiteSpaces += " ";
-					}					
+					}
+										
 					mainItem.setText(whiteSpaces + outputArray[j]);
 					*/
 					mainItem.setText(taskIDandDesc + " " +outputArray[j]);
@@ -194,7 +193,7 @@ public class Controller {
 					tip.setVisible(false);
 					tip.setMessage(View.EMPTY_STRING);
 					
-					parser.parse(tempInput);
+					//parser.parse(tempInput);
 					
 					displayList();
 					/*

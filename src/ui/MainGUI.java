@@ -1,7 +1,13 @@
 package ui;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+
+import logic.AddTask;
+import shared.Task;
+import storage.Storage;
 
 public class MainGUI {
 
@@ -14,7 +20,8 @@ public class MainGUI {
 		shell.open();
 		shell.layout();
 		controller.initBorderSize();
-		
+		AddTask.addTask(new Task("", "test", null));
+		System.out.println("HERE " + Storage.getTasks().size());
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
