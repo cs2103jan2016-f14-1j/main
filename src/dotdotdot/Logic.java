@@ -2,15 +2,18 @@ package dotdotdot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+
+import dotdotdot.Parser.COMMAND_TYPE;
 
 public class Logic {
 
 	private Storage store = null;
 	private ArrayList<Integer> currTaskIDs = new ArrayList<Integer>();
 	private ArrayList<String> currTaskDescs = new ArrayList<String>();
-	private ArrayList<String> tasksToDisplay = new ArrayList<String>();
+	private ArrayList<String> displayList = new ArrayList<String>();
 	private static int VIEW_CURRENT = 1;
 	private static String VIEW_CATEGORY = "";
 	public static final int VIEW_DEFAULT = 1;
@@ -25,13 +28,15 @@ public class Logic {
 	private final String TASKID_PREPEND = "#";
 	private final String DATE_PREPEND = "- ";
 
-	private final int TASK_ID = 0;
-	private final int TASK_DESC = 1;
-	private final int TASK_DATE = 2;
+	private final int TASK_DATE = 0;
+	private final int TASK_ID = 1;
+	private final int TASK_DESC = 2;
 	private final int TASK_CATEGORIES = 3;
 	private final int TASK_ISCOMPLETE = 4;
 	private final int TASK_NOT_FOUND = -1;
 	private final int TASK_BOTH = -2;
+	private final int NOT_COMPLETE = 0;
+	private final int NO_DATE = 999;
 	private final String COMPLETED = "1";
 	private final String NOT_COMPLETED = "0";
 	private final String DELIMITER = "\\|";
@@ -216,6 +221,12 @@ public class Logic {
 	}
 	
 	public boolean viewTasks(String input) {
+		displayList.clear();
+		for (String task : store.getStoreFormattedToDos()) {
+			displayList.add(formatToUserFormat(task));
+		}
+		Collections.sort(displayList, String.CASE_INSENSITIVE_ORDER);
+		
 		defaultList.clear();
 		viewList.clear();
 		for (String task : store.getStoreFormattedToDos()) {
@@ -398,7 +409,7 @@ public class Logic {
 		ArrayList<String> temp = store.getStoreFormattedToDos();
 		int count = 0;
 		for(String toDo : temp){
-			if(Integer.parseInt(formatTaskForDisplay(toDo).get(TASK_ISCOMPLETE))==0){
+			if(Integer.parseInt(formatTaskForDisplay(toDo).get(TASK_ISCOMPLETE)) == NOT_COMPLETE){
 				count++;
 			}
 		}
@@ -413,7 +424,7 @@ public class Logic {
 		ArrayList<String> temp = store.getStoreFormattedToDos();
 		
 		for(String toDo : temp){
-			if(Integer.parseInt(formatTaskForDisplay(toDo).get(TASK_ISCOMPLETE))==0){
+			if(Integer.parseInt(formatTaskForDisplay(toDo).get(TASK_ISCOMPLETE)) == NOT_COMPLETE){
 				ArrayList<String> listOfCat = getCategoryOfToDo(toDo);
 					for(String cat: listOfCat){
 							if(!cat.equals(EMPTY_STRING)){
@@ -466,6 +477,34 @@ public class Logic {
 		return viewList;
 	}
 	
+	public ArrayList<String> getDisplayList() {
+		displayList.clear();
+		populateDisplayListByDefault();
+		
+		Collections.sort(displayList);
+		removePrependIntDates();
+		return displayList;
+	}
+	/**
+	 * removes the dates (int) prepended in front of tasks used for sorting purposes
+	 */
+	private void removePrependIntDates() {
+		for (int i = 0; i < displayList.size(); i++) {
+			String s = displayList.get(i);
+			s = s.split(" ", 2)[1];
+			displayList.set(i, s);
+		}
+	}
+	
+	private void populateDisplayListByDefault() {
+		ArrayList<String> tempList = store.getStoreFormattedToDos();
+		for (String task : tempList) {
+			if (task.split(DELIMITER)[TASK_ISCOMPLETE].equals(NOT_COMPLETED)) {
+				displayList.add(formatToUserFormat(task));
+			}
+		}
+	}
+	
 	public ArrayList<String> getDefaultList() {
 		defaultList.clear();
 		ArrayList<String> tempList = store.getStoreFormattedToDos();
@@ -516,16 +555,25 @@ public class Logic {
 	 */
 	private String formatToUserFormat(String s) {
 		ArrayList<String> as = formatTaskForDisplay(s);
-		String 	id = as.get(TASK_ID),
+		String 	date = as.get(TASK_DATE),
+				id = as.get(TASK_ID),
 				name = as.get(TASK_DESC),
-				cats = as.get(TASK_CATEGORIES),
-				date = as.get(TASK_DATE);
-		if (!date.equals(EMPTY_STRING)) {
+				cats = as.get(TASK_CATEGORIES);
+		/*
+		if (isDate(date)) {
 			date = DATE_PREPEND + date;
+		} else {
+			date = EMPTY_STRING;
 		}
-		String out = String.format("(%s%s) %s %s %s", TASKID_PREPEND, id, name, cats, date);
+		*/
+		String out = String.format("%s (%s%s) %s %s %s", 
+						date, TASKID_PREPEND, id, name, cats, fromIntToDDMMM(date));
 		
 		return out;
+	}
+	
+	private boolean isDate(String date) {
+		return Integer.parseInt(date) != NO_DATE;
 	}
 	
 	/**
@@ -537,11 +585,12 @@ public class Logic {
 	 * @return
 	 */
 	private String formatToDo(	String taskName, String date, 
-								ArrayList<String> cats, String completeStatus) {
+								ArrayList<String> cats, String completeStatus) {		
+		int intDate = fromDDMMMToInt(removePreposition(date));
 		int forNewTaskId = store.getNextTaskId();
 		String allCats = concatCats(cats);
-		ArrayList<String> finalTodo = putStringsTogetherForStorage(forNewTaskId, taskName,
-				date, allCats, completeStatus);
+		ArrayList<String> finalTodo = putStringsTogetherForStorage(intDate, forNewTaskId, taskName,
+				 allCats, completeStatus);
 		return formatTaskForStorage(finalTodo);
 	}
 	
@@ -558,14 +607,14 @@ public class Logic {
 		return out.trim();
 	}
 	
-	/** takes in int, Str, Str, Str, Str
+	/** takes in int, int, Str, Str, Str
 	 * @return ArrayList<String> of size 5 of the above variables
 	 */
 	private ArrayList<String> putStringsTogetherForStorage(
-			int a, String b, String c, String d, String e) {
+			int a, int b, String c, String d, String e) {
 		ArrayList<String> out = new ArrayList<String>();
 		out.add(String.valueOf(a));
-		out.add(b);
+		out.add(String.valueOf(b));
 		out.add(c);
 		out.add(d);
 		out.add(e);
@@ -600,6 +649,90 @@ public class Logic {
 	
 	private ArrayList<String> separateCats(String categories){
 		return new ArrayList<String>(Arrays.asList(categories.split(SPACE_STRING)));
+	}
+	
+	/**
+	 * converts date <DDMMM | DMMM> to int representing a unique date 
+	 * assumption: String is valid format [d]dmmm where mmm is legit month and [d]d is legit day
+	 * if empty string, return NO_DATE
+	 */
+	private int fromDDMMMToInt(String date) {
+		if (date.equals(EMPTY_STRING)) {
+			return NO_DATE;
+		}
+		int len = date.length();
+		String day = date.substring(0, len - 3);
+		String month = date.substring(len - 3, len);
+		int result = Integer.parseInt(day) + (convertMonthToInt(month) * 32);
+		return result;
+	}
+	private int convertMonthToInt(String month) {
+		if (month.equalsIgnoreCase("jan")) {
+			return 1;
+		} else if (month.equalsIgnoreCase("feb")) {
+			return 2;
+		} else if (month.equalsIgnoreCase("mar")) {
+			return 3;
+		} else if (month.equalsIgnoreCase("apr")) {
+			return 4;
+		} else if (month.equalsIgnoreCase("may")) {
+			return 5;
+		} else if (month.equalsIgnoreCase("jun")) {
+			return 6;
+		} else if (month.equalsIgnoreCase("jul")) {
+			return 7;
+		} else if (month.equalsIgnoreCase("aug")) {
+			return 8;
+		} else if (month.equalsIgnoreCase("sep")) {
+			return 9;
+		} else if (month.equalsIgnoreCase("oct")) {
+			return 10;
+		} else if (month.equalsIgnoreCase("nov")) {
+			return 11;
+		} else { // month.equalsIgnoreCase("dec")
+			return 12;
+		}
+	}
+	
+	/**
+	 * converts date <int> to human-readable String <DDMMM>
+	 */
+	private String fromIntToDDMMM(String date) {
+		if (!isDate(date)) {
+			return EMPTY_STRING;
+		}
+		int intDate = convertStringDateToInt(date);
+		int month = intDate / 32;
+		int day = intDate - (month * 32);
+		String result = String.format("- %d%s", day, convertIntToMonth(month));
+		return result;
+	}
+	private int convertStringDateToInt(String date) {
+		// TOOD: need to change after introducing preposition
+		return Integer.parseInt(date);
+	}
+	private String convertIntToMonth(int month) {
+		switch (month) {
+		case 1: return "Jan";
+		case 2: return "Feb";
+		case 3: return "Mar";
+		case 4: return "Apr";
+		case 5: return "May";
+		case 6: return "Jun";
+		case 7: return "Jul";
+		case 8: return "Aug";
+		case 9: return "Sep";
+		case 10: return "Oct";
+		case 11: return "Nov";
+		case 12: return "Dec";
+		}
+		return ""; // will never reach this statement
+	}
+	private String removePreposition(String date) {
+		if (date.equals(EMPTY_STRING)) {
+			return date;
+		}
+		return date.split(" ", 2)[1];
 	}
 	
 	//============================== END OF FORMAT FUNCTIONS ==============================

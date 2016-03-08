@@ -309,6 +309,7 @@ public class GUI {
 	}
 	
 	private static String [] getTaskIdAndDesc(String rawInput) {
+		System.out.println(rawInput);
 		return rawInput.split(SPACE_STRING, 2);
 	}
 }
