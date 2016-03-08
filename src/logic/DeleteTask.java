@@ -13,7 +13,6 @@ public class DeleteTask {
 		boolean value = false;
 		for (int id : taskIds) {
 			if (deleteTask(id)) {
-				currTaskIDs.add(id);
 				value = true;
 			}
 		}
@@ -27,7 +26,6 @@ public class DeleteTask {
 	 */
 	public boolean deleteByCat(ArrayList<String> categories) {
 		ArrayList<Integer> iDs = new ArrayList<Integer>();
-		iDs = getTaskIDsByCat(categories);
 		if (iDs.isEmpty()) {
 			return false;
 		}
@@ -45,14 +43,6 @@ public class DeleteTask {
 	 * @return
 	 */
 	private boolean deleteTask(int taskId) {
-		int taskIndex = searchForTask(taskId);
-		if (taskIndex == TASK_NOT_FOUND) {
-			System.out.println(TASK_NOT_FOUND_MSG);
-			return false;
-		}
-		currTaskDescs.add(getTaskDesc(store.getStoreFormattedToDos().get(taskIndex)));
-		syncTaskToList(EMPTY_STRING, taskId, taskIndex, COMMAND.DELETE);
-		writeToFile();
 		return true;
 	}
 }
