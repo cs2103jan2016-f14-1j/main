@@ -1,5 +1,7 @@
 package storage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import shared.Keywords;
@@ -13,24 +15,12 @@ public class FreeIDs {
 		return Storage.getFreeIDs().poll();
 	}
 
-	protected static void sortIDs() {
-		Collections.sort(Storage.getFreeIDs());
-	}
-
 	protected static void addIDs(int id) {
 		Storage.getFreeIDs().offerFirst(id);
 	}
 
 	protected static void setCurrentID(int id) {
 		Storage.currentTaskId = id;
-	}
-	
-	protected static String formatIDToString(){
-		String stringID = Keywords.EMPTY_STRING;
-		for(int id:Storage.getFreeIDs()){
-			stringID+=id+Keywords.EMPTY_STRING;
-		}
-		return stringID;
 	}
 
 	private static boolean isListEmpty() {
@@ -39,6 +29,28 @@ public class FreeIDs {
 
 	private static void generateID() {
 		Storage.getFreeIDs().offer(Storage.currentTaskId++);
+	}
+	
+	protected static String convertIDListToString(){
+		String stringID = Keywords.EMPTY_STRING;
+		for(int id:Storage.getFreeIDs()){
+			stringID+=id+Keywords.EMPTY_STRING;
+		}
+		return stringID;
+	}
+	
+	protected static void convertIDStringToList(String s) {
+		ArrayList<String> stringOfIds = (ArrayList<String>) Arrays.asList(s.split(Keywords.SPACE_STRING));
+		for (String id : stringOfIds) {
+			Storage.getFreeIDs().offerFirst(Integer.parseInt(id));
+		}
+		setCurrentID(Storage.getFreeIDs().peek());
+		sortIDs();
+	}
+
+
+	private static void sortIDs() {
+		Collections.sort(Storage.getFreeIDs());
 	}
 
 }

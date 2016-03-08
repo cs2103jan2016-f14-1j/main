@@ -6,8 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import shared.Task;
 import shared.Keywords;
 
@@ -19,10 +17,10 @@ public class ReadWrite {
 			bufferReader = new BufferedReader(new FileReader(Keywords.FILENAME_FILEPATH));
 			String currentLine = Keywords.EMPTY_STRING;
 			while ((currentLine = bufferReader.readLine()) != null) {
-				if (currentLine.contains("|")) {
+				if (currentLine.contains(Keywords.STORE_DELIMITER)) {
 					Storage.addTaskToList(Task.formatStringToObject(currentLine));
 				}else{
-					convertIDStringToList(currentLine);
+					FreeIDs.convertIDStringToList(currentLine);
 				}
 			}
 		} catch (FileNotFoundException ex) {
@@ -40,15 +38,6 @@ public class ReadWrite {
 		}
 	}
 
-	private void convertIDStringToList(String s) {
-		ArrayList<String> stringOfIds = (ArrayList<String>) Arrays.asList(s.split(Keywords.SPACE_STRING));
-		for (String id : stringOfIds) {
-			Storage.getFreeIDs().offerFirst(Integer.parseInt(id));
-		}
-		FreeIDs.setCurrentID(Storage.getFreeIDs().poll());
-		FreeIDs.sortIDs();
-	}
-
 	protected void writeTasksToFile() {
 		try {
 			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.FILENAME_FILEPATH));
@@ -56,7 +45,7 @@ public class ReadWrite {
 				bufferWriter.write(Task.formatObjectToString(Storage.getTasks().get(index)));
 				bufferWriter.newLine();
 			}
-			bufferWriter.write(FreeIDs.formatIDToString());
+			bufferWriter.write(FreeIDs.convertIDListToString());
 			bufferWriter.close();
 		} catch (IOException ex) {
 			//systemPrint(IO_ERROR_MSG);
