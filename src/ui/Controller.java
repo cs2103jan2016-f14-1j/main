@@ -25,13 +25,16 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import dotdotdot.Parser;
+import logic.Logic;
+import parser.Parser;;
 
 public class Controller {
 	
 	private View view;
 	private int borderSize;
-	
+    private Parser parser = new Parser();
+    private Logic logic = new Logic();
+    
 	public Controller(){
 		view = new View();
 		timer();
@@ -46,22 +49,24 @@ public class Controller {
 	
 	private void displayCategory(){
 		view.getCategoryTable().removeAll();
+		TableItem categoryItem;
+/*
 		// Call logic for list
-		/*
-		ArrayList<String> categories = parser.getLogic().getListOfCategoriesWithCount();
+		ArrayList<String> categories = logic.getListOfCategoriesWithCount();
 		for(int i =0 ; i < categories.size(); i++){
 			categoryItem = new TableItem(categoryTable, SWT.NONE);
 			categoryItem.setText(categories.get(i));
 		}
-		*/
+	*/	
 	}
 	
 	private void displayList() {
 
 		view.getMainTable().removeAll();
 		TableItem mainItem;
-		
-		/*for (int i = 0; i < list.size(); i++) {
+		ArrayList<String> list = null;
+		/*
+		for (int i = 0; i < list.size(); i++) {
 	
 			String[] taskIDandDesc = getTaskIdAndDesc(list.get(i));
 			String formattedOutput = WordUtils.wrap(taskIDandDesc[TASK_DESC], WRAP_AROUND, "\n", true);
@@ -82,7 +87,8 @@ public class Controller {
 			}
 			
 		}
-*/
+		*/
+
 	}
 	
 	private void displayHelp() {
