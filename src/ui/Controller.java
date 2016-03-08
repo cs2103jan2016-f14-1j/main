@@ -49,7 +49,7 @@ public class Controller {
 		view.getDayLabel().setText(getCurrentDay());
 		view.getTimeLabel().setText(getCurrentTime());
 		displayCategory();
-		//displayList();
+		displayList();
 	}
 	
 	private void displayCategory(){

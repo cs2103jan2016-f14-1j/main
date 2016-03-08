@@ -24,7 +24,6 @@ public class Task {
 		setDate(date);
 		setTask(taskName);
 		setCategories(cats);
-
 		initIntDate(date);
 	}
 	public String getUserFormat() {
@@ -100,8 +99,7 @@ public class Task {
 		Task temp = new Task();
 		temp.setId(Integer.parseInt(properties.get(Keywords.TASK_ID)));
 		temp.setDate(properties.get(Keywords.TASK_DATE));
-		temp.setIntDate(0);// have not set what position is this intDate
-							// supposed to be
+		temp.setCategories(new ArrayList<String>(Arrays.asList(properties.get(Keywords.TASK_CATEGORIES).split(Keywords.SPACE_STRING))));
 		temp.setIsCompleted(Integer.parseInt(properties.get(Keywords.TASK_ISCOMPLETE)));
 		temp.setTask(properties.get(Keywords.TASK_DESC));
 		return temp;
