@@ -1,27 +1,17 @@
 package ui;
 
-import java.util.ArrayList;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import dotdotdot.Parser;
-
 public class View {
 	
-	private static TableItem categoryItem;
-	private static TableItem mainItem;
-	private static Parser parser = new Parser();
-	private static ArrayList<String> list;
-	private static int borderSize;
 	private Shell shell;
 	private final String GUI_TITLE = "Dotdotdot";
 	protected final static String GUI_HINT = "< Input ? or help to show available commands >";
@@ -31,7 +21,7 @@ public class View {
 	protected final static Color normalColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
 
 	protected final static int BORDER_WIDTH = 2;
-	protected static final int SCROLL_AMOUNT = 5;
+	protected final static int SCROLL_AMOUNT = 5;
 	
 	private Text input;
 	private Label dayLabel;

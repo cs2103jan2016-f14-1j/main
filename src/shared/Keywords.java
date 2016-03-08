@@ -10,6 +10,8 @@ public class Keywords {
 	public static final String REGEX_CATEGORIES = "(@.*)";
 	public static final String EMPTY_STRING = "";
 	public static final String SPACE_STRING = " ";
+	public static final String DELIMITER = "\\|";
+	public static final String STORE_DELIMITER = "|";
 	
 	public static final String MESSAGE_DELETE_SUCCESS = "success delete";
 	public static final String TASKID_PREPEND = "-";
@@ -17,4 +19,12 @@ public class Keywords {
 	public static final int FIRST_ELEMENT = 0;
 	
 	public static final int NO_DATE = 999;
+	
+	public static final String FILENAME_FILEPATH = "test.txt";
+	
+	public static final int TASK_ID = 0;
+	public static final int TASK_DESC = 1;
+	public static final int TASK_DATE = 2;
+	public static final int TASK_CATEGORIES = 3;
+	public static final int TASK_ISCOMPLETE = 4;
 }
