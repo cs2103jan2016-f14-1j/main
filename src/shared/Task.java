@@ -7,9 +7,13 @@ public class Task {
 	private int ID = 0;
 	private String task = "";
 	private String date = "";
-	private ArrayList<String> categories = new ArrayList<String>();
+	private ArrayList<String> categories;
 	private int isCompleted = 0;
 	private int intDate = 0;
+	
+	public Task(){
+		categories = new ArrayList<String>();
+	}
 
 	public int getID() {
 		return ID;
