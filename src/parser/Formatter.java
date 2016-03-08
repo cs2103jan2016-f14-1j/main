@@ -152,5 +152,21 @@ public class Formatter {
 	private static boolean isDate(String date) {
 		return Integer.parseInt(date) != Keywords.NO_DATE;
 	}
+	
+	public static String toCatsForDisplay(ArrayList<String> as) {
+		String out = "";
+		for (String s : as) {
+			out += Keywords.CATEGORY_PREPEND + s + Keywords.SPACE_STRING;
+		}
+		return out.trim();
+	}
+	
+	public static String toCatsForStore(ArrayList<String> as) {
+		String out = "";
+		for (String s : as) {
+			out += s + Keywords.SPACE_STRING;
+		}
+		return out.trim();
+	}
 
 }

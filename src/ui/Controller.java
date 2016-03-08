@@ -49,7 +49,7 @@ public class Controller {
 		view.getDayLabel().setText(getCurrentDay());
 		view.getTimeLabel().setText(getCurrentTime());
 		displayCategory();
-		//displayList();
+		displayList();
 	}
 	
 	private void displayCategory(){
@@ -74,6 +74,9 @@ public class Controller {
 		for (Task task : list) {
 	
 			String taskIDandDesc = task.getUserFormat();
+			mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+			mainItem.setText(taskIDandDesc);
+			/*
 			String formattedOutput = WordUtils.wrap(taskIDandDesc, WRAP_AROUND, "\n", true);
 			String outputArray[] = formattedOutput.split("\n");
 			for (int j = 0; j < outputArray.length; j++) {
@@ -83,16 +86,15 @@ public class Controller {
 				if (j == 0) {
 					mainItem.setText(taskIDandDesc + " " +outputArray[j]);
 				} else {
-					String whiteSpaces = "";
-					/*
+					String whiteSpaces = ""
 					for(int z = 0 ; z < taskIDandDesc[TASK_ID].length() + DEFAULT_WHITESPACES; z++){
 						whiteSpaces += " ";
 					}					
 					mainItem.setText(whiteSpaces + outputArray[j]);
-					*/
 					mainItem.setText(taskIDandDesc + " " +outputArray[j]);
 				}
 			}
+			*/
 			
 		}
 

@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class Task {
 	
-	private final String USER_FORMAT = "%s (#%s) %s %s %s";
+	private final String USER_FORMAT = "(#%s) %s %s %s";
 	private final String STORAGE_FORMAT = "%d|%s|%s|%s|%d|";
 
 	private int id = 0;
@@ -17,26 +17,27 @@ public class Task {
 	private int intDate = 999; // for sorting purposes
 
 	public Task() {
-
+		
 	}
 
 	public Task(String date, String taskName, ArrayList<String> cats) {
 		setDate(date);
 		setTask(taskName);
 		setCategories(cats);
-
-		initIntDate(date);
 	}
 	public String getUserFormat() {
 		return String.format(USER_FORMAT,
-				date, id, task, categories, Formatter.fromIntToDDMMM(date));
+				id, task, Formatter.toCatsForDisplay(categories), Formatter.fromIntToDDMMM(date));
 	}
 	public String getStorageFormat() {
 		return String.format(STORAGE_FORMAT,
-				id, task, date, categories, isCompleted);
+				id, task, date, Formatter.toCatsForStore(categories), isCompleted);
 	}
 	
 	private void initIntDate(String date) {
+		if (date.equals(Keywords.EMPTY_STRING)) {
+			setIntDate(999);
+		}
 		setIntDate(Formatter.fromDDMMMToInt(date));
 	}
 
@@ -62,6 +63,7 @@ public class Task {
 
 	public void setDate(String date) {
 		this.date = date;
+		initIntDate(date);
 	}
 
 	public ArrayList<String> getCategories() {
