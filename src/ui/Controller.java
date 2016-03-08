@@ -34,9 +34,12 @@ public class Controller {
 	
 	public Controller(){
 		view = new View();
-		timer(view.getTimeLabel());
+		timer();
 		inputToHint();
 		addKeyListener();
+		view.getDateLabel().setText(getCurrentDate());
+		view.getDayLabel().setText(getCurrentDay());
+		view.getTimeLabel().setText(getCurrentTime());
 		displayCategory();
 		//displayList();
 	}
@@ -229,7 +232,7 @@ public class Controller {
 		
 	}
 	
-	private void timer(Label timeLabel){
+	private void timer(){
 		Timer timer = new Timer();
 		TimerTask task = new TimerTask() {
 		    @Override
@@ -242,7 +245,7 @@ public class Controller {
 		                public void run() {
 		                	Display.getDefault().asyncExec(new Runnable() {
 		                	    public void run() {
-		                	    	timeLabel.setText(getCurrentTime());
+		                	    	view.getTimeLabel().setText(getCurrentTime());
 		                	    }
 		                	});
 		                }

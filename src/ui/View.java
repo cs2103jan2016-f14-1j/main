@@ -17,9 +17,7 @@ import dotdotdot.Parser;
 
 public class View {
 	
-	private static TableItem categoryItem;
-	private static TableItem mainItem;
-	private static Parser parser = new Parser();
+	//private static Parser parser = new Parser();
 	private static ArrayList<String> list;
 	private static int borderSize;
 	private Shell shell;
