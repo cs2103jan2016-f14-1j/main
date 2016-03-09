@@ -86,6 +86,7 @@ public class Task {
 	public void setIntDate(int intDate) {
 		this.intDate = intDate;
 	}
+	
 	/**
 	 * This method is used to split the concatenated task into blocks of
 	 * information stored using ArrayList<String>
@@ -106,7 +107,6 @@ public class Task {
 	}
 
 	public static String formatObjectToString(Task task) {
-		// [taskID]|[task]|[date]|[categories]|[isComplete]|
 		String toString = task.getId() + Keywords.STORE_DELIMITER + task.getTask() + Keywords.STORE_DELIMITER
 				+ task.getDate() + Keywords.STORE_DELIMITER;
 		for (String cat : task.getCategories()) {

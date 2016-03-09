@@ -1,6 +1,7 @@
 package storage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import shared.Task;
@@ -10,13 +11,14 @@ public class Storage {
 
 	// FORMAT OF EACH TASK: [taskID]|[task]|[date]|[categories]|[isComplete]|
 	private static ArrayList<Task> tasks;//still in development: transitioning to OOP
-
+	private static HashMap<String,Integer> noOfTasksPerCat;
 	private static LinkedList<Integer> freeIDs;
 	protected static int currentTaskId = 0;
 	private ReadWrite rw;
 	
 	public Storage(){
 		tasks = new ArrayList<Task>();
+		noOfTasksPerCat = new HashMap<>();
 		freeIDs = new LinkedList<Integer>();
 		rw = new ReadWrite();
 		rw.readTasksFromFile();
@@ -24,6 +26,10 @@ public class Storage {
 	
 	public static ArrayList<Task> getTasks(){
 		return tasks;
+	}
+	
+	public static HashMap<String,Integer> getNoOfTasksPerCat(){
+		return noOfTasksPerCat;
 	}
 	
 	public static void addTaskToList(Task task){
