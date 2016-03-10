@@ -32,14 +32,21 @@ public class Task {
 		setDate(date);
 		setTask(taskName);
 		setCategories(cats);
+		initIntDate(date);
 	}
+	/**
+	 * @return task <String> to display to user
+	 */
 	public String getUserFormat() {
 		return String.format(USER_FORMAT,
 				id, task, Formatter.toCatsForDisplay(categories), date);
 	}
+	/**
+	 * @return task <String> to be stored
+	 */
 	public String getStorageFormat() {
 		return String.format(STORAGE_FORMAT,
-				id, task, date, Formatter.toCatsForStore(categories), isCompleted);
+				id, task, intDate, Formatter.toCatsForStore(categories), isCompleted);
 	}
 	
 	private void initIntDate(String date) {
@@ -93,7 +100,7 @@ public class Task {
 		return intDate;
 	}
 
-	public void setIntDate(int intDate) {
+	private void setIntDate(int intDate) {
 		this.intDate = intDate;
 		this.date = Formatter.fromIntToDDMMM(String.valueOf(intDate));
 	}

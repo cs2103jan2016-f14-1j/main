@@ -15,8 +15,8 @@ public class Logic {
 		return true;
 	}
 
-	public boolean deleteTask(Task task) {
-		// DeleteTask.addTask(task);
+	public static boolean deleteTask(ArrayList<Integer> taskIDs) {
+		new DeleteTask().deleteTask(taskIDs);
 		return true;
 	}
 	
