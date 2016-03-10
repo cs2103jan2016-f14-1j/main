@@ -82,7 +82,7 @@ public class Storage {
 			Map.Entry pair = (Map.Entry) it.next();
 			temp.add(pair.getKey() + Keywords.SPACE_STRING + "(" + pair.getValue() + ")");
 		}
-		temp.add(/*"@Uncompleted (" + */Categories.getNoOfUncompletedTasks()/* + ")"*/);
+		temp.add(Categories.getNoOfUncompletedTasks());
 		noOfTasksPerCat.clear();
 		return temp;
 	}
