@@ -1,11 +1,6 @@
 package storage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
-
 import shared.Keywords;
 import shared.Task;
 
@@ -23,7 +18,7 @@ public class Storage {
 		ReadWrite.readTasksFromFile(tasks);
 	}
 
-	public static ArrayList<Task> getTasks() {
+	public static ArrayList<Task> getListOfTasks() {
 		return tasks;
 	}
 
