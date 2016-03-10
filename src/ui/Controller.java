@@ -79,17 +79,10 @@ public class Controller {
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				
 				if (j == 0) {
-					mainItem.setText(taskIDandDesc + " " +outputArray[j]);
+					mainItem.setText(outputArray[j]);
 				} else {
-					String whiteSpaces = "";
-					/*
-					for(int z = 0 ; z < taskIDandDesc[TASK_ID].length() + DEFAULT_WHITESPACES; z++){
-						whiteSpaces += " ";
-					}
-										
-					mainItem.setText(whiteSpaces + outputArray[j]);
-					*/
-					mainItem.setText(taskIDandDesc + " " +outputArray[j]);
+					// Add necessary white space to align tasks
+					mainItem.setText(" " +outputArray[j]);
 				}
 			}
 			
