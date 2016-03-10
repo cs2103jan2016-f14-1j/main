@@ -16,14 +16,12 @@ public class Storage {
 	private static HashMap<String, Integer> noOfTasksPerCat;
 	private static LinkedList<Integer> freeIDs;
 	protected static int currentTaskId = 0;
-	private static ReadWrite rw;
 
 	public Storage() {
 		tasks = new ArrayList<Task>();
 		noOfTasksPerCat = new HashMap<>();
 		freeIDs = new LinkedList<Integer>();
-		rw = new ReadWrite();
-		rw.readTasksFromFile();
+		ReadWrite.readTasksFromFile(tasks);
 	}
 
 	public static ArrayList<Task> getTasks() {
@@ -65,11 +63,15 @@ public class Storage {
 	}
 
 	public static void readTasksFromFile() {
-		ReadWrite.readTasksFromFile();
+		ReadWrite.readTasksFromFile(tasks);
 	}
 
 	protected static LinkedList<Integer> getFreeIDs() {
 		return freeIDs;
+	}
+	
+	public static void recycleId(int id) {
+		FreeIDs.addToFreeId(id);
 	}
 
 	public static ArrayList<String> getListOfCategoriesWithCount() {

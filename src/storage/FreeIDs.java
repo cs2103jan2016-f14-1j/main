@@ -14,6 +14,14 @@ public class FreeIDs {
 		}
 		return Storage.getFreeIDs().poll();
 	}
+	
+	/**
+	 * only called when task is deleted (recycle the id)
+	 * @param id
+	 */
+	public static void addToFreeId(int id) {
+		Storage.getFreeIDs().offerFirst(id);
+	}
 
 	protected static void addIDs(int id) {
 		Storage.getFreeIDs().offerFirst(id);
@@ -28,7 +36,7 @@ public class FreeIDs {
 	}
 
 	private static void generateID() {
-		Storage.getFreeIDs().offer(Storage.currentTaskId++);
+		Storage.getFreeIDs().offer(++Storage.currentTaskId);
 	}
 	
 	protected static String convertIDListToString() {
@@ -37,7 +45,7 @@ public class FreeIDs {
 			generateID();
 		}
 		for(int id : Storage.getFreeIDs()){
-			stringID += id + Keywords.EMPTY_STRING;
+			stringID += id + Keywords.SPACE_STRING;
 		}
 		return stringID;
 	}

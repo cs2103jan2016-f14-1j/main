@@ -13,15 +13,15 @@ import shared.Keywords;
 
 public class ReadWrite {
 
-	protected static void readTasksFromFile() {
+	protected static void readTasksFromFile(ArrayList<Task> at) {
 		BufferedReader bufferReader = null;
 		try {
 			bufferReader = new BufferedReader(new FileReader(Keywords.FILENAME_FILEPATH));
 			String currentLine = Keywords.EMPTY_STRING;
 			while ((currentLine = bufferReader.readLine()) != null) {
 				if (currentLine.contains(Keywords.STORE_DELIMITER)) {
-					Storage.addTaskToList(Task.formatStringToObject(currentLine));
-				}else{
+					at.add(Task.formatStringToObject(currentLine));
+				} else {
 					FreeIDs.convertIDStringToList(currentLine);
 				}
 			}

@@ -54,6 +54,7 @@ public class DeleteTask extends Functionality {
 			return false;
 		}
 		Storage.removeTaskFromList(Storage.getTaskIndex(taskId));
+		Storage.recycleId(taskId);
 		super.synchronization();
 		return true;
 	}
