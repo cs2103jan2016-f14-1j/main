@@ -8,21 +8,7 @@ import shared.Keywords;
 
 public class DoTask extends Functionality {
 
-	public boolean doTask(ArrayList<Integer> taskIds) {
-		for (int taskID : taskIds) {
-			doTask(taskID);
-		}
-		super.synchronization();
-		return true;
-	}
-
-	private boolean undoTask(int taskID) {
-		if (Storage.getTask(taskID) == null) {
-			return false;
-		}
-		Storage.getTask(taskID).setIsCompleted(Keywords.TASK_NOT_COMPLETED);
-		return true;
-	}
+	private final String TASK_NOT_FOUND_MSG = "The task is not found";
 
 	/**
 	 * This method allows the user to mark task as completed
@@ -32,11 +18,36 @@ public class DoTask extends Functionality {
 	 * @return it will return successful when a task is marked as completed,
 	 *         else otherwise.
 	 */
-	private boolean doTask(int taskID) {
+
+	public boolean doTask(ArrayList<Integer> taskIds) {
+		boolean value = false;
+		for (int taskID : taskIds) {
+			if (doTask(taskID)) {
+				value = true;
+			}
+		}
+		super.synchronization();
+		return value;
+	}
+
+	private boolean undoTask(int taskID) {
 		if (Storage.getTask(taskID) == null) {
 			return false;
 		}
-		Storage.getTask(taskID).setIsCompleted(Keywords.TASK_COMPLETED);
+		Storage.getTask(taskID).setIsCompleted(Keywords.TASK_NOT_COMPLETED);
 		return true;
+	}
+	
+	private boolean doTask(int taskID) {
+		Task t = Storage.getTask(taskID);
+		if (doesTaskExist(t)) {
+			return false;
+		}
+		t.setIsCompleted(Keywords.TASK_COMPLETED);
+		return true;
+	}
+	
+	private boolean doesTaskExist(Task t) {
+		return t == null;
 	}
 }

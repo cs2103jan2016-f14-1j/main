@@ -10,20 +10,27 @@ public class DeleteTask extends Functionality {
 	 * @param int
 	 *            taskID or a list of integers(taskIDs) the taskID is used to
 	 *            search for the task in the storage
+	 *        String
+	 *            categories to delete
 	 * @return it will return successful when a task is deleted, else otherwise.
 	 */
-	public boolean deleteTask(ArrayList<Integer> taskIds) {
+	public boolean deleteTask(ArrayList<Integer> ids, ArrayList<String> cats) {
+		return deleteByIds(ids) | deleteByCats(cats);
+	}
+	
+	/**
+	 * delete by ids
+	 * @param ids
+	 * @return
+	 */
+	private boolean deleteByIds(ArrayList<Integer> ids) {
 		boolean value = false;
-		if (taskIds.isEmpty()) {
-			return value;
-		} else {
-			for (int id : taskIds) {
-				if (deleteTask(id)) {
-					value = true;
-				}
+		for (int id : ids) {
+			if (deleteTask(id)) {
+				value = true;
 			}
-			return value;
 		}
+		return value;
 	}
 	
 	/**
@@ -31,8 +38,9 @@ public class DeleteTask extends Functionality {
 	 * Finds all taskIDs of tasks under category and call the 
 	 * deleteTask method
 	 */
-	public boolean deleteByCat(ArrayList<String> categories) {
-		ArrayList<Task> taskList = Storage.getTasksByCat(categories); // TODO: Need to implement this in storage
+	private boolean deleteByCats(ArrayList<String> categories) {
+		// TODO: getTasksByCat to complete
+		ArrayList<Task> taskList = Storage.getTasksByCat(categories);
 		if (taskList.isEmpty()) {
 			return false;
 		}

@@ -35,7 +35,7 @@ public class FreeIDs {
 		for(int id : freeIDs){
 			stringID += id + Keywords.SPACE_STRING;
 		}
-		return stringID;
+		return stringID.trim();
 	}
 	
 	protected void convertIDStringToList(String s) {
