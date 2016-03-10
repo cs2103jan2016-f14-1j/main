@@ -23,6 +23,6 @@ public class Categories {
 				Storage.getNoOfTasksPerCat().put("Uncompleted", currentCount);
 			}
 		}
-		return new String("@Uncompleted ("+Storage.getNoOfTasksPerCat().get("Uncompleted")+")");
+		return new String("Uncompleted ("+Storage.getNoOfTasksPerCat().get("Uncompleted")+")");
 	}
 }
