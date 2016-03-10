@@ -119,7 +119,7 @@ public class Formatter {
 		int intDate = convertStringDateToInt(date);
 		int month = intDate / 32;
 		int day = intDate - (month * 32);
-		String result = String.format("- %d%s", day, convertIntToMonth(month));
+		String result = String.format("%d%s", day, convertIntToMonth(month));
 		return result;
 	}
 	private static int convertStringDateToInt(String date) {

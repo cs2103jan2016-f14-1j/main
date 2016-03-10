@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class Task {
 	
-	private final String USER_FORMAT = "(#%s) %s %s %s";
+	private final String USER_FORMAT = "(#%s) %s %s - %s";
 	private final String STORAGE_FORMAT = "%d|%s|%s|%s|%d|";
 
 	private int id = 0;
@@ -14,7 +14,7 @@ public class Task {
 	private String date; 
 	private ArrayList<String> categories;
 	private int isCompleted = 0;
-	private int intDate = 999; // for sorting purposes
+	private int intDate = Keywords.NO_DATE; // for sorting purposes
 
 	public Task() {
 		
@@ -27,7 +27,7 @@ public class Task {
 	}
 	public String getUserFormat() {
 		return String.format(USER_FORMAT,
-				id, task, Formatter.toCatsForDisplay(categories), Formatter.fromIntToDDMMM(date));
+				id, task, Formatter.toCatsForDisplay(categories), date);
 	}
 	public String getStorageFormat() {
 		return String.format(STORAGE_FORMAT,
@@ -36,9 +36,9 @@ public class Task {
 	
 	private void initIntDate(String date) {
 		if (date.equals(Keywords.EMPTY_STRING)) {
-			setIntDate(999);
+			this.intDate = Keywords.NO_DATE;
 		}
-		setIntDate(Formatter.fromDDMMMToInt(date));
+		this.intDate = Formatter.fromDDMMMToInt(date);
 	}
 
 	public int getId() {
@@ -63,7 +63,6 @@ public class Task {
 
 	public void setDate(String date) {
 		this.date = date;
-		initIntDate(date);
 	}
 
 	public ArrayList<String> getCategories() {
@@ -88,6 +87,7 @@ public class Task {
 
 	public void setIntDate(int intDate) {
 		this.intDate = intDate;
+		this.date = Formatter.fromIntToDDMMM(String.valueOf(intDate));
 	}
 	/**
 	 * This method is used to split the concatenated task into blocks of
@@ -101,9 +101,9 @@ public class Task {
 		ArrayList<String> properties = new ArrayList<String>(Arrays.asList(task.split(Keywords.DELIMITER)));
 		Task temp = new Task();
 		temp.setId(Integer.parseInt(properties.get(Keywords.TASK_ID)));
-		temp.setDate(properties.get(Keywords.TASK_DATE));
-		temp.setIntDate(0);// have not set what position is this intDate
-							// supposed to be
+		temp.setIntDate(Integer.parseInt(properties.get(Keywords.TASK_DATE)));
+		temp.setCategories(new ArrayList<String>(
+				Arrays.asList(properties.get(Keywords.TASK_CATEGORIES).split(Keywords.SPACE_STRING))));
 		temp.setIsCompleted(Integer.parseInt(properties.get(Keywords.TASK_ISCOMPLETE)));
 		temp.setTask(properties.get(Keywords.TASK_DESC));
 		return temp;
