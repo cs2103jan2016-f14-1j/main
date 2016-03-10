@@ -37,7 +37,7 @@ public class Storage {
 		tasks.add(task);
 	}
 
-	public void removeTasksFromList(int taskIndex) {
+	public static void removeTasksFromList(int taskIndex) {
 		tasks.remove(taskIndex);
 	}
 
@@ -85,6 +85,19 @@ public class Storage {
 		temp.add(Categories.getNoOfUncompletedTasks());
 		noOfTasksPerCat.clear();
 		return temp;
+	}
+
+	public static ArrayList<Task> getTasksByCat(ArrayList<String> categories) {
+		ArrayList<Task> taskList = new ArrayList<Task>();
+		for (Task t : tasks) {
+			ArrayList<String> cats = t.getCategories();
+			for (String cat : cats) {
+				if (categories.contains(cat)) {
+					taskList.add(t);
+				}
+			}
+		}
+		return taskList;
 	}
 
 }

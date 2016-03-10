@@ -5,6 +5,7 @@ import storage.Storage;
 import java.util.ArrayList;
 
 public class DeleteTask {
+	
 	/** The following deleteTask() methods allow the user to delete task(s)
 	 * @param int
 	 *            taskID or a list of integers(taskIDs) the taskID is used to
@@ -13,12 +14,16 @@ public class DeleteTask {
 	 */
 	public boolean deleteTask(ArrayList<Integer> taskIds) {
 		boolean value = false;
-		for (int id : taskIds) {
-			if (deleteTask(id)) {
-				value = true;
+		if (taskIds.isEmpty()) {
+			return value;
+		} else {
+			for (int id : taskIds) {
+				if (deleteTask(id)) {
+					value = true;
+				}
 			}
+			return value;
 		}
-		return value;
 	}
 	
 	/**
@@ -27,13 +32,13 @@ public class DeleteTask {
 	 * deleteTask method
 	 */
 	public boolean deleteByCat(ArrayList<String> categories) {
-		ArrayList<Integer> iDs = new ArrayList<Integer>();
-		if (iDs.isEmpty()) {
+		ArrayList<Task> taskList = Storage.getTasksByCat(categories); // TODO: Need to implement this in storage
+		if (taskList.isEmpty()) {
 			return false;
 		}
 		
-		for (int taskID : iDs) {
-			deleteTask(taskID);
+		for (Task task : taskList) {
+			deleteTask(task.getId());
 		}
 		
 		return true;
@@ -45,6 +50,7 @@ public class DeleteTask {
 	 * @return
 	 */
 	private boolean deleteTask(int taskId) {
+		Storage.removeTasksFromList(taskId);
 		return true;
 	}
 	
