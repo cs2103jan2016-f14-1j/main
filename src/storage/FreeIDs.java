@@ -47,7 +47,7 @@ public class FreeIDs {
 		for(int id : Storage.getFreeIDs()){
 			stringID += id + Keywords.SPACE_STRING;
 		}
-		return stringID;
+		return stringID.trim();
 	}
 	
 	protected static void convertIDStringToList(String s) {

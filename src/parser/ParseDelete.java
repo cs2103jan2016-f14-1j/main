@@ -8,9 +8,8 @@ public class ParseDelete {
 	
 	public static boolean deleteTask(String rawInput) {
 		ArrayList<Integer> ids = Formatter.breakToIds(rawInput);
-		
-		Logic.deleteTask(ids);
-
+		ArrayList<String> cats = Formatter.breakString(rawInput);
+		Logic.deleteTask(ids, cats);
 		return true;
 	}
 }
