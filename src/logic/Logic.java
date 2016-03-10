@@ -8,7 +8,7 @@ public class Logic {
 	public Logic(){
 	}
 	
-	private boolean addTask(Task task) {
+	public static boolean addTask(Task task) {
 		AddTask.addTask(task);
 		return true;
 	}

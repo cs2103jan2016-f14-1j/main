@@ -25,10 +25,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import logic.Logic;
-import parser.Parser;
-import shared.Task;
-import storage.Storage;
+import logic.*;
+import parser.*;
+import shared.*;
+import storage.*;
 
 public class Controller {
 	
@@ -55,14 +55,13 @@ public class Controller {
 	private void displayCategory(){
 		view.getCategoryTable().removeAll();
 		TableItem categoryItem;
-/*
-		// Call logic for list
-		ArrayList<String> categories = logic.getListOfCategoriesWithCount();
+
+		ArrayList<String> categories = new ArrayList<String>(); //Storage.getListOfCategoriesWithCount();
 		for(int i =0 ; i < categories.size(); i++){
-			categoryItem = new TableItem(categoryTable, SWT.NONE);
+			categoryItem = new TableItem(view.getCategoryTable(), SWT.NONE);
 			categoryItem.setText(categories.get(i));
 		}
-	*/	
+
 	}
 	
 	private void displayList() {
@@ -193,7 +192,7 @@ public class Controller {
 					tip.setVisible(false);
 					tip.setMessage(View.EMPTY_STRING);
 					
-					//parser.parse(tempInput);
+					parser.parse(tempInput);
 					
 					displayList();
 					/*
