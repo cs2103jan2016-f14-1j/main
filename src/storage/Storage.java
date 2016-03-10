@@ -16,13 +16,14 @@ public class Storage {
 	private static HashMap<String, Integer> noOfTasksPerCat;
 	private static LinkedList<Integer> freeIDs;
 	protected static int currentTaskId = 0;
-	private ReadWrite rw;
+	private static ReadWrite rw;
 
 	public Storage() {
 		tasks = new ArrayList<Task>();
 		noOfTasksPerCat = new HashMap<>();
 		freeIDs = new LinkedList<Integer>();
 		rw = new ReadWrite();
+		rw.readTasksFromFile();
 	}
 
 	public static ArrayList<Task> getTasks() {
@@ -59,7 +60,7 @@ public class Storage {
 		return null;
 	}
 
-	public void writeTasksToFile() {
+	public static void writeTasksToFile() {
 		rw.writeTasksToFile();
 	}
 

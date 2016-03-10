@@ -4,7 +4,7 @@ import shared.*;
 import storage.Storage;
 import java.util.ArrayList;
 
-public class AddTask {
+public class AddTask extends Functionality {
 	
 	public String taskDesc;
 	public String taskDate;
@@ -13,6 +13,7 @@ public class AddTask {
 	
 	public static boolean addTask(Task task) {
 		Storage.addTaskToList(task);
+		synchronization();
 		return true;
 	}
 
