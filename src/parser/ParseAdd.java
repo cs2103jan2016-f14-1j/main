@@ -22,7 +22,7 @@ public class ParseAdd {
 		
 		Task task = new Task(date, taskName, categories); 
 		
-		Logic.addTask(task);
+		AddTask.addTask(task);
 		
 		/*
 		if (!hasCategory && !hasPreposition) {
