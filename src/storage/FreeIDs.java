@@ -3,65 +3,60 @@ package storage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 
 import shared.Keywords;
 
 public class FreeIDs {
 
-	public static int getNextAvailableID() {
-		if (isListEmpty()) {
+	private LinkedList<Integer> freeIDs;
+	private int currentTaskId = 0;
+	
+	protected FreeIDs(){
+		freeIDs = new LinkedList<Integer>();
+	}
+	
+	protected int getNextAvailableID() {
+		if (freeIDs.isEmpty()) {
 			generateID();
 		}
-		return Storage.getFreeIDs().poll();
+		return freeIDs.poll();
+	}
+
+	protected void addToFreeId(int id) {
+		freeIDs.offerFirst(id);
 	}
 	
-	/**
-	 * only called when task is deleted (recycle the id)
-	 * @param id
-	 */
-	public static void addToFreeId(int id) {
-		Storage.getFreeIDs().offerFirst(id);
-	}
-
-	protected static void addIDs(int id) {
-		Storage.getFreeIDs().offerFirst(id);
-	}
-
-	protected static void setCurrentID(int id) {
-		Storage.currentTaskId = id;
-	}
-
-	private static boolean isListEmpty() {
-		return Storage.getFreeIDs().isEmpty();
-	}
-
-	private static void generateID() {
-		Storage.getFreeIDs().offer(++Storage.currentTaskId);
-	}
-	
-	protected static String convertIDListToString() {
+	protected String convertIDListToString() {
 		String stringID = Keywords.EMPTY_STRING;
-		if (isListEmpty()) {
+		if (freeIDs.isEmpty()) {
 			generateID();
 		}
-		for(int id : Storage.getFreeIDs()){
+		for(int id : freeIDs){
 			stringID += id + Keywords.SPACE_STRING;
 		}
 		return stringID;
 	}
 	
-	protected static void convertIDStringToList(String s) {
+	protected void convertIDStringToList(String s) {
 		ArrayList<String> stringOfIds = new ArrayList<String>(Arrays.asList(s.split(Keywords.SPACE_STRING)));
 		for (String id : stringOfIds) {
-			Storage.getFreeIDs().offerFirst(Integer.parseInt(id));
+			freeIDs.offerFirst(Integer.parseInt(id));
 		}
-		setCurrentID(Storage.getFreeIDs().peek());
+		setCurrentID(freeIDs.peek());
 		sortIDs();
 	}
 
+	private void sortIDs() {
+		Collections.sort(freeIDs);
+	}
 
-	private static void sortIDs() {
-		Collections.sort(Storage.getFreeIDs());
+	private void setCurrentID(int id) {
+		currentTaskId = id;
+	}
+
+	private void generateID() {
+		freeIDs.offer(++currentTaskId);
 	}
 
 }

@@ -28,7 +28,7 @@ public class Task {
 
 	public Task(String date, String taskName, ArrayList<String> cats) {
 		this();
-		setId(FreeIDs.getNextAvailableID());
+		setId(Storage.getNextAvailableID());
 		setDate(date);
 		setTask(taskName);
 		setCategories(cats);
