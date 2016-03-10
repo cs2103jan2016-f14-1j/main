@@ -79,17 +79,10 @@ public class Controller {
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				
 				if (j == 0) {
-					mainItem.setText(taskIDandDesc/* + " " +outputArray[j]*/); // commented out that part cause its duplicating taskDesc (e.g. (#0) test [] (#0) test [])
+					mainItem.setText(outputArray[j]);
 				} else {
-					String whiteSpaces = "";
-					/*
-					for(int z = 0 ; z < taskIDandDesc[TASK_ID].length() + DEFAULT_WHITESPACES; z++){
-						whiteSpaces += " ";
-					}
-										
-					mainItem.setText(whiteSpaces + outputArray[j]);
-					*/
-					mainItem.setText(taskIDandDesc/* + " " +outputArray[j]*/); // same as above
+					// Add necessary white space to align tasks
+					mainItem.setText(" " +outputArray[j]);
 				}
 			}
 			
