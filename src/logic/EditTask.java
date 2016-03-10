@@ -4,8 +4,6 @@ import shared.*;
 import storage.Storage;
 import java.util.ArrayList;
 
-import dotdotdot.Logic.COMMAND;
-
 public class EditTask {
 	
 	/** This method allows the user to edit a task
@@ -32,5 +30,6 @@ public class EditTask {
 		syncTaskToList(task, 0, taskIndex, COMMAND.EDIT);
 		return true;
 	*/
+		return true;
 	}
 }

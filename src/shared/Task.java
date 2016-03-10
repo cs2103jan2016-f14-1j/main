@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class Task {
 	
-	private final String USER_FORMAT = "(#%s) %s %s - %s";
+	private final String USER_FORMAT = "(#%s) %s %s %s";
 	private final String STORAGE_FORMAT = "%d|%s|%s|%s|%d|";
 
 	private int id = 0;
@@ -37,9 +37,9 @@ public class Task {
 	/**
 	 * @return task <String> to display to user
 	 */
-	public String getUserFormat() {
+	public String getUserFormat() {		
 		return String.format(USER_FORMAT,
-				id, task, Formatter.toCatsForDisplay(categories), date);
+				id, task, Formatter.toCatsForDisplay(categories), getDisplayDate(date));
 	}
 	/**
 	 * @return task <String> to be stored
@@ -47,6 +47,10 @@ public class Task {
 	public String getStorageFormat() {
 		return String.format(STORAGE_FORMAT,
 				id, task, intDate, Formatter.toCatsForStore(categories), isCompleted);
+	}
+	
+	private String getDisplayDate(String date) {
+		return date.equals(Keywords.EMPTY_STRING) ? date : "- " + date;
 	}
 	
 	private void initIntDate(String date) {
