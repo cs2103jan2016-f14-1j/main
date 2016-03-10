@@ -23,6 +23,8 @@ public class View {
 	protected final static int BORDER_WIDTH = 2;
 	protected final static int SCROLL_AMOUNT = 5;
 	
+	protected final static int MSG_SIZE = 13;
+	
 	private Text input;
 	private Label dayLabel;
 	private Label dateLabel;
