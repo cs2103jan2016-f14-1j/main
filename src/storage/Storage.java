@@ -62,7 +62,7 @@ public class Storage {
 		return freeIDs;
 	}
 
-	public ArrayList<String> getListOfCategoriesWithCount() {
+	public static ArrayList<String> getListOfCategoriesWithCount() {
 
 		for (Task t : tasks) {
 			if (t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
