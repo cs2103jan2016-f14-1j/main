@@ -280,19 +280,19 @@ public class Controller {
 	
 	public String getCurrentDate(){
 	    Date date = new Date();
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat(Keywords.FORMAT_DATE);
 	    return dateFormat.format(date);
 	}
 	
 	public String getCurrentTime(){
 	    Date date = new Date();
-	    DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+	    DateFormat timeFormat = new SimpleDateFormat(Keywords.FORMAT_TIME);
 	    return timeFormat.format(date);
 	}
 	
 	public String getCurrentDay(){
 	    Date date = new Date();
-		DateFormat dayFormat = new SimpleDateFormat("EEEEEEE");
+		DateFormat dayFormat = new SimpleDateFormat(Keywords.FORMAT_DAY);
 	    return dayFormat.format(date);
 	}
 	

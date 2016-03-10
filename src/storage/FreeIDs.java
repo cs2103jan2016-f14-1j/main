@@ -8,7 +8,7 @@ import shared.Keywords;
 
 public class FreeIDs {
 
-	protected static int getNextAvailableID() {
+	public static int getNextAvailableID() {
 		if (isListEmpty()) {
 			generateID();
 		}

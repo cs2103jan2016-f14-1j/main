@@ -1,6 +1,7 @@
 package shared;
 
 import parser.*;
+import storage.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -17,10 +18,17 @@ public class Task {
 	private int intDate = Keywords.NO_DATE; // for sorting purposes
 
 	public Task() {
-		
+		id = 0;
+		task = "";
+		date = "";
+		categories = new ArrayList<String>();
+		isCompleted = 0;
+		intDate = Keywords.NO_DATE;
 	}
 
 	public Task(String date, String taskName, ArrayList<String> cats) {
+		this();
+		setId(FreeIDs.getNextAvailableID());
 		setDate(date);
 		setTask(taskName);
 		setCategories(cats);

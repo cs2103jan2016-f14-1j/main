@@ -20,27 +20,17 @@ public class ParseAdd {
 			return false;
 		}
 		
+		if (hasCategory && !hasPreposition) {
+			taskName = Formatter.getTaskNameWithCategories(rawInput);
+		} else if (hasPreposition) {
+			date = Formatter.getDateFromRaw(rawInput);
+			taskName = Formatter.getTaskNameWithPreposition(rawInput);
+			//prep = getFirstElementInArrayList(preposition);
+		}
+		
 		Task task = new Task(date, taskName, categories); 
 		
 		Logic.addTask(task);
-		
-		/*
-		if (!hasCategory && !hasPreposition) {
-			logic.addTask(taskName);
-		} else if (hasCategory && !hasPreposition) {
-			taskName = getTaskNameWithCategories(taskName);
-			logic.addTask(taskName, categories);
-		} else { // hasPreposition
-			date = getDateFromRaw(taskName);
-			taskName = getTaskNameWithPreposition(taskName);
-			prep = getFirstElementInArrayList(preposition);
-			if (!hasCategory) { // && hasPreposition
-				logic.addTask(taskName, prep, date);
-			} else { // hasCategory && hasPreposition
-				logic.addTask(taskName, prep, date, categories);
-			}
-		}
-		*/	
 
 		return true;
 	}
