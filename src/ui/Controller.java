@@ -90,7 +90,7 @@ public class Controller {
 
 		view.getMainTable().removeAll();
 		TableItem mainItem;
-		ArrayList<Task> list = Storage.getTasks();
+		ArrayList<Task> list = Storage.getListOfTasks();
 		list = Sorter.sortByDate(list);
 		for (Task task : list) {
 			String taskIDandDesc = task.getUserFormat();
