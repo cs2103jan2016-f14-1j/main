@@ -7,7 +7,7 @@ public class Keywords {
 	protected static final String REGEX_VIEW = "(view|v|V|VIEW)(.*)";
 	
 	public static final String REGEX_PREPOSITIONS = "(at|by|on|to)";
-	public static final String REGEX_CATEGORIES = "(@.*)";
+	public static final String REGEX_CATEGORIES = "(#)(.*)";
 	public static final String EMPTY_STRING = "";
 	public static final String SPACE_STRING = " ";
 	public static final String DELIMITER = "\\|";
@@ -15,6 +15,7 @@ public class Keywords {
 	
 	public static final String MESSAGE_DELETE_SUCCESS = "success delete";
 	public static final String TASKID_PREPEND = "-";
+	public static final String CATEGORY_PREPEND = "#";
 	
 	public static final int FIRST_ELEMENT = 0;
 	
@@ -27,4 +28,11 @@ public class Keywords {
 	public static final int TASK_DATE = 2;
 	public static final int TASK_CATEGORIES = 3;
 	public static final int TASK_ISCOMPLETE = 4;
+	public static final int TASK_NOT_FOUND = -1;
+	public static final int TASK_BOTH = -2;
+	public static final int TASK_NOT_COMPLETED = 0;
+	
+	public static final String FORMAT_DATE = "dd/MM/yyyy";
+	public static final String FORMAT_TIME = "hh:mm a";
+	public static final String FORMAT_DAY = "EEEEEEE";
 }

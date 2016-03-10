@@ -1,5 +1,7 @@
 package logic;
 
+import shared.*;
+import storage.Storage;
 import java.util.ArrayList;
 
 import dotdotdot.Logic.COMMAND;

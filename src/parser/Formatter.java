@@ -26,7 +26,7 @@ public class Formatter {
 		boolean hasFound = false;
 		for (String s : parts) {
 			if (isCategory(s)) {
-				cats.add(s);
+				cats.add(s.substring(1));
 				hasFound = true;
 			}
 		}
@@ -59,7 +59,7 @@ public class Formatter {
 	}
 	
 	private static boolean isCategory(String s) {
-		return s.startsWith(Keywords.REGEX_CATEGORIES);
+		return s.startsWith(Keywords.CATEGORY_PREPEND);
 	}
 
 	private static boolean isPreposition(String s) {
@@ -119,7 +119,7 @@ public class Formatter {
 		int intDate = convertStringDateToInt(date);
 		int month = intDate / 32;
 		int day = intDate - (month * 32);
-		String result = String.format("- %d%s", day, convertIntToMonth(month));
+		String result = String.format("%d%s", day, convertIntToMonth(month));
 		return result;
 	}
 	private static int convertStringDateToInt(String date) {
@@ -150,7 +150,89 @@ public class Formatter {
 		return date.split(" ", 2)[1];
 	}
 	private static boolean isDate(String date) {
-		return Integer.parseInt(date) != Keywords.NO_DATE;
+		try {
+			return Integer.parseInt(date) != Keywords.NO_DATE;
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+	}
+	
+	public static String toCatsForDisplay(ArrayList<String> as) {
+		String out = "";
+		for (String s : as) {
+			out += Keywords.CATEGORY_PREPEND + s + Keywords.SPACE_STRING;
+		}
+		return out.trim();
+	}
+	
+	public static String toCatsForStore(ArrayList<String> as) {
+		String out = "";
+		for (String s : as) {
+			out += s + Keywords.SPACE_STRING;
+		}
+		return out.trim();
+	}
+	
+	public static ArrayList<Integer> breakToIds(String rawInput) {
+		ArrayList<String> as = breakString(rawInput);
+		ArrayList<Integer> ai = new ArrayList<Integer>();
+		for (String s : as) {
+			try {
+				ai.add(Integer.parseInt(s));
+			} catch (Exception e) {
+				// if s is not Integer parsable
+			}
+		}
+		return ai;
+	}
+	
+	public static String getTaskNameWithCategories(String taskName) {
+		String out = Keywords.EMPTY_STRING;
+		ArrayList<String> as = breakString(taskName);
+		for (String s : as) {
+			if (!isCategory(s)) {
+				out += s + Keywords.SPACE_STRING;
+			}
+		}
+
+		return out.trim();
+	}
+	
+	public static String getDateFromRaw(String taskName) {
+		String out = Keywords.EMPTY_STRING, s = Keywords.EMPTY_STRING;
+		ArrayList<String> as = breakString(taskName);
+		for (int i = lastIndexOf(as); !isPreposition(s); i--) {
+			s = as.get(i);
+			if (!isPreposition(s) && !isCategory(s)) {
+				out = s + out;
+			} else if (isPreposition(s)) {
+				break;
+			}
+		}
+
+		return out;
+	}
+	private static int lastIndexOf(ArrayList<String> as) {
+		return as.size() - 1;
+	}
+	
+	/**
+	 * @param rawInput:
+	 * 				without commandType (i.e. add/delete)
+	 * @return String without commandType and preposition/date
+	 */
+	public static String getTaskNameWithPreposition(String taskName) {
+		String out = Keywords.EMPTY_STRING;
+		ArrayList<String> as = breakString(taskName);
+		for (String s : as) {
+			if (!isPreposition(s) && !isCategory(s)) {
+				out += s + Keywords.SPACE_STRING;
+			} else if (isPreposition(s)) {
+				break;
+			}
+		}
+
+		return out.trim();
 	}
 
 }

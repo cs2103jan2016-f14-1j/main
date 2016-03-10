@@ -2,12 +2,18 @@ package logic;
 
 import shared.*;
 import storage.Storage;
+import java.util.ArrayList;
 
-public class AddTask {
+public class AddTask extends Functionality {
 	
-	public static boolean addTask(Task task) {
-		// TODO add task.....
+	public String taskDesc;
+	public String taskDate;
+	public ArrayList<String> taskCats;
+	public int taskStatus;
+	
+	public boolean addTask(Task task) {
 		Storage.addTaskToList(task);
+		super.synchronization();
 		return true;
 	}
 

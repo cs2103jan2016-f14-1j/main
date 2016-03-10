@@ -8,11 +8,19 @@ import shared.Keywords;
 
 public class FreeIDs {
 
-	protected static int getNextAvailableID() {
+	public static int getNextAvailableID() {
 		if (isListEmpty()) {
 			generateID();
 		}
 		return Storage.getFreeIDs().poll();
+	}
+	
+	/**
+	 * only called when task is deleted (recycle the id)
+	 * @param id
+	 */
+	public static void addToFreeId(int id) {
+		Storage.getFreeIDs().offerFirst(id);
 	}
 
 	protected static void addIDs(int id) {
@@ -28,13 +36,16 @@ public class FreeIDs {
 	}
 
 	private static void generateID() {
-		Storage.getFreeIDs().offer(Storage.currentTaskId++);
+		Storage.getFreeIDs().offer(++Storage.currentTaskId);
 	}
 	
-	protected static String convertIDListToString(){
+	protected static String convertIDListToString() {
 		String stringID = Keywords.EMPTY_STRING;
-		for(int id:Storage.getFreeIDs()){
-			stringID+=id+Keywords.EMPTY_STRING;
+		if (isListEmpty()) {
+			generateID();
+		}
+		for(int id : Storage.getFreeIDs()){
+			stringID += id + Keywords.SPACE_STRING;
 		}
 		return stringID;
 	}

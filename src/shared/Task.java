@@ -1,12 +1,13 @@
 package shared;
 
 import parser.*;
+import storage.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Task {
 	
-	private final String USER_FORMAT = "%s (#%s) %s %s %s";
+	private final String USER_FORMAT = "(#%s) %s %s - %s";
 	private final String STORAGE_FORMAT = "%d|%s|%s|%s|%d|";
 
 	private int id = 0;
@@ -14,29 +15,45 @@ public class Task {
 	private String date; 
 	private ArrayList<String> categories;
 	private int isCompleted = 0;
-	private int intDate = 999; // for sorting purposes
+	private int intDate = Keywords.NO_DATE; // for sorting purposes
 
 	public Task() {
-
+		id = 0;
+		task = "";
+		date = "";
+		categories = new ArrayList<String>();
+		isCompleted = 0;
+		intDate = Keywords.NO_DATE;
 	}
 
 	public Task(String date, String taskName, ArrayList<String> cats) {
+		this();
+		setId(FreeIDs.getNextAvailableID());
 		setDate(date);
 		setTask(taskName);
 		setCategories(cats);
 		initIntDate(date);
 	}
+	/**
+	 * @return task <String> to display to user
+	 */
 	public String getUserFormat() {
 		return String.format(USER_FORMAT,
-				date, id, task, categories, Formatter.fromIntToDDMMM(date));
+				id, task, Formatter.toCatsForDisplay(categories), date);
 	}
+	/**
+	 * @return task <String> to be stored
+	 */
 	public String getStorageFormat() {
 		return String.format(STORAGE_FORMAT,
-				id, task, date, categories, isCompleted);
+				id, task, intDate, Formatter.toCatsForStore(categories), isCompleted);
 	}
 	
 	private void initIntDate(String date) {
-		setIntDate(Formatter.fromDDMMMToInt(date));
+		if (date.equals(Keywords.EMPTY_STRING)) {
+			this.intDate = Keywords.NO_DATE;
+		}
+		this.intDate = Formatter.fromDDMMMToInt(date);
 	}
 
 	public int getId() {
@@ -83,8 +100,9 @@ public class Task {
 		return intDate;
 	}
 
-	public void setIntDate(int intDate) {
+	private void setIntDate(int intDate) {
 		this.intDate = intDate;
+		this.date = Formatter.fromIntToDDMMM(String.valueOf(intDate));
 	}
 	
 	/**
@@ -99,8 +117,9 @@ public class Task {
 		ArrayList<String> properties = new ArrayList<String>(Arrays.asList(task.split(Keywords.DELIMITER)));
 		Task temp = new Task();
 		temp.setId(Integer.parseInt(properties.get(Keywords.TASK_ID)));
-		temp.setDate(properties.get(Keywords.TASK_DATE));
-		temp.setCategories(new ArrayList<String>(Arrays.asList(properties.get(Keywords.TASK_CATEGORIES).split(Keywords.SPACE_STRING))));
+		temp.setIntDate(Integer.parseInt(properties.get(Keywords.TASK_DATE)));
+		temp.setCategories(new ArrayList<String>(
+				Arrays.asList(properties.get(Keywords.TASK_CATEGORIES).split(Keywords.SPACE_STRING))));
 		temp.setIsCompleted(Integer.parseInt(properties.get(Keywords.TASK_ISCOMPLETE)));
 		temp.setTask(properties.get(Keywords.TASK_DESC));
 		return temp;
@@ -108,7 +127,7 @@ public class Task {
 
 	public static String formatObjectToString(Task task) {
 		String toString = task.getId() + Keywords.STORE_DELIMITER + task.getTask() + Keywords.STORE_DELIMITER
-				+ task.getDate() + Keywords.STORE_DELIMITER;
+				+ task.getIntDate() + Keywords.STORE_DELIMITER;
 		for (String cat : task.getCategories()) {
 			toString += cat + Keywords.SPACE_STRING;
 		}

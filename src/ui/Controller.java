@@ -25,10 +25,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import logic.Logic;
-import parser.Parser;
-import shared.Task;
-import storage.Storage;
+import logic.*;
+import parser.*;
+import shared.*;
+import storage.*;
 
 public class Controller {
 	
@@ -55,14 +55,13 @@ public class Controller {
 	private void displayCategory(){
 		view.getCategoryTable().removeAll();
 		TableItem categoryItem;
-/*
-		// Call logic for list
-		ArrayList<String> categories = logic.getListOfCategoriesWithCount();
+
+		ArrayList<String> categories = Storage.getListOfCategoriesWithCount();
 		for(int i =0 ; i < categories.size(); i++){
-			categoryItem = new TableItem(categoryTable, SWT.NONE);
+			categoryItem = new TableItem(view.getCategoryTable(), SWT.NONE);
 			categoryItem.setText(categories.get(i));
 		}
-	*/	
+
 	}
 	
 	private void displayList() {
@@ -70,6 +69,7 @@ public class Controller {
 		view.getMainTable().removeAll();
 		TableItem mainItem;
 		ArrayList<Task> list = Storage.getTasks();
+		list = Sorter.sortByDate(list);
 		for (Task task : list) {
 			String taskIDandDesc = task.getUserFormat();
 			String formattedOutput = WordUtils.wrap(taskIDandDesc, WRAP_AROUND, "\n", true);
@@ -186,7 +186,7 @@ public class Controller {
 					tip.setVisible(false);
 					tip.setMessage(View.EMPTY_STRING);
 					
-					//parser.parse(tempInput);
+					parser.parse(tempInput);
 					
 					displayList();
 					/*
@@ -274,19 +274,19 @@ public class Controller {
 	
 	public String getCurrentDate(){
 	    Date date = new Date();
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat(Keywords.FORMAT_DATE);
 	    return dateFormat.format(date);
 	}
 	
 	public String getCurrentTime(){
 	    Date date = new Date();
-	    DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+	    DateFormat timeFormat = new SimpleDateFormat(Keywords.FORMAT_TIME);
 	    return timeFormat.format(date);
 	}
 	
 	public String getCurrentDay(){
 	    Date date = new Date();
-		DateFormat dayFormat = new SimpleDateFormat("EEEEEEE");
+		DateFormat dayFormat = new SimpleDateFormat(Keywords.FORMAT_DAY);
 	    return dayFormat.format(date);
 	}
 	

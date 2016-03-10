@@ -2,58 +2,114 @@ package storage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
+import shared.Keywords;
 import shared.Task;
 
 public class Storage {
 
-
 	// FORMAT OF EACH TASK: [taskID]|[task]|[date]|[categories]|[isComplete]|
-	private static ArrayList<Task> tasks;//still in development: transitioning to OOP
-	private static HashMap<String,Integer> noOfTasksPerCat;
+	private static ArrayList<Task> tasks;
+	private static HashMap<String, Integer> noOfTasksPerCat;
 	private static LinkedList<Integer> freeIDs;
 	protected static int currentTaskId = 0;
-	private ReadWrite rw;
-	
-	public Storage(){
+
+	public Storage() {
 		tasks = new ArrayList<Task>();
 		noOfTasksPerCat = new HashMap<>();
 		freeIDs = new LinkedList<Integer>();
-		rw = new ReadWrite();
-		rw.readTasksFromFile();
+		ReadWrite.readTasksFromFile(tasks);
 	}
-	
-	public static ArrayList<Task> getTasks(){
+
+	public static ArrayList<Task> getTasks() {
 		return tasks;
 	}
-	
-	public static HashMap<String,Integer> getNoOfTasksPerCat(){
+
+	public static HashMap<String, Integer> getNoOfTasksPerCat() {
 		return noOfTasksPerCat;
 	}
-	
-	public static void addTaskToList(Task task){
+
+	public static void addTaskToList(Task task) {
 		tasks.add(task);
 	}
-	
-	public void removeTasksFromList(int taskIndex){
+
+	public static void removeTaskFromList(int taskIndex) {
 		tasks.remove(taskIndex);
 	}
 	
-	public Task getTask(int index){
-		return tasks.get(index);
+	public static int getTaskIndex(int taskID) {
+		for (int i = 0; i < tasks.size(); i++) {
+			if (tasks.get(i).getId() == taskID) {
+				return i;
+			}
+		}
+		return Keywords.TASK_NOT_FOUND;
 	}
-	
-	public void writeTasksToFile(){
-		rw.writeTasksToFile();
+
+	public static Task getTask(int taskID) {
+		for (Task t : tasks) {
+			if (t.getId() == taskID) {
+				return t;
+			}
+		}
+		return null;
 	}
-	
-	private boolean isListEmpty(){
-		return tasks.isEmpty();
+
+	public static void writeTasksToFile() {
+		ReadWrite.writeTasksToFile(tasks);
 	}
-	
-	protected static LinkedList<Integer> getFreeIDs(){
+
+	public static void readTasksFromFile() {
+		ReadWrite.readTasksFromFile(tasks);
+	}
+
+	protected static LinkedList<Integer> getFreeIDs() {
 		return freeIDs;
 	}
 	
+	public static void recycleId(int id) {
+		FreeIDs.addToFreeId(id);
+	}
+
+	public static ArrayList<String> getListOfCategoriesWithCount() {
+
+		for (Task t : tasks) {
+			if (t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
+				for (String cat : t.getCategories()) {
+					if (!cat.equals(Keywords.EMPTY_STRING)) {
+						int currentCount = (noOfTasksPerCat.get(cat) == null) ? 0 : noOfTasksPerCat.get(cat);
+						currentCount++;
+						noOfTasksPerCat.put(cat, currentCount);
+					}
+				}
+			}
+		}
+		// format the list to be displayed
+		Iterator it = noOfTasksPerCat.entrySet().iterator();
+		ArrayList<String> temp = new ArrayList<>();
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry) it.next();
+			temp.add(pair.getKey() + Keywords.SPACE_STRING + "(" + pair.getValue() + ")");
+		}
+		temp.add(Categories.getNoOfUncompletedTasks());
+		noOfTasksPerCat.clear();
+		return temp;
+	}
+
+	public static ArrayList<Task> getTasksByCat(ArrayList<String> categories) {
+		ArrayList<Task> taskList = new ArrayList<Task>();
+		for (Task t : tasks) {
+			ArrayList<String> cats = t.getCategories();
+			for (String cat : cats) {
+				if (categories.contains(cat)) {
+					taskList.add(t);
+				}
+			}
+		}
+		return taskList;
+	}
+
 }
