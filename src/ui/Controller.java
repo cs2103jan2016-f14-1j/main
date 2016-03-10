@@ -69,6 +69,7 @@ public class Controller {
 		view.getMainTable().removeAll();
 		TableItem mainItem;
 		ArrayList<Task> list = Storage.getTasks();
+		list = Sorter.sortByDate(list);
 		for (Task task : list) {
 			String taskIDandDesc = task.getUserFormat();
 			String formattedOutput = WordUtils.wrap(taskIDandDesc, WRAP_AROUND, "\n", true);
