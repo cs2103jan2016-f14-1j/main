@@ -1,5 +1,7 @@
 package logic;
 
+import java.util.ArrayList;
+
 import shared.*;
 import storage.Storage;
 
@@ -18,9 +20,8 @@ public class Logic {
 		return true;
 	}
 	
-	private boolean doTask(Task task) {
-		// DoTask.addTask(task);
-		return true;
+	private boolean doTask(ArrayList<Integer> taskIDs) {
+		return new DoTask().doTask(taskIDs);
 	}
 	
 	private boolean editTask(Task task) {

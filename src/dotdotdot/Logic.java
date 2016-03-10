@@ -59,6 +59,7 @@ public class Logic {
 
 	public Logic() {
 		store = new Storage();
+		store.readFromFile();
 	}
 	
 	//============================== START OF USER FUNCTIONS ==============================
