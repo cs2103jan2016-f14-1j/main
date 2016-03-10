@@ -4,14 +4,25 @@ import shared.*;
 import storage.Storage;
 import java.util.ArrayList;
 import shared.Keywords;
-import storage.Storage;
 
-//import dotdotdot.Logic.COMMAND;
 
 public class DoTask extends Functionality {
 
-	private final String TASK_NOT_FOUND_MSG = "The task is not found";
-	private final int COMPLETED = 1;
+	public boolean doTask(ArrayList<Integer> taskIds) {
+		for (int taskID : taskIds) {
+			doTask(taskID);
+		}
+		super.synchronization();
+		return true;
+	}
+
+	private boolean undoTask(int taskID) {
+		if (Storage.getTask(taskID) == null) {
+			return false;
+		}
+		Storage.getTask(taskID).setIsCompleted(Keywords.TASK_NOT_COMPLETED);
+		return true;
+	}
 
 	/**
 	 * This method allows the user to mark task as completed
@@ -25,16 +36,7 @@ public class DoTask extends Functionality {
 		if (Storage.getTask(taskID) == null) {
 			return false;
 		}
-		Storage.getTask(taskID).setIsCompleted(COMPLETED);
+		Storage.getTask(taskID).setIsCompleted(Keywords.TASK_COMPLETED);
 		return true;
-	}
-
-	public boolean doTask(ArrayList<Integer> taskIds) {
-		boolean value = false;
-		for (int taskID : taskIds) {
-			value = doTask(taskID);
-		}
-		super.synchronization();
-		return value;
 	}
 }

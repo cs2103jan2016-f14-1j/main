@@ -1,5 +1,8 @@
 package parser;
 
+import java.util.ArrayList;
+
+import logic.Logic;
 import shared.*;
 
 public class Parser {
@@ -21,21 +24,25 @@ public class Parser {
 	private static final String COMMAND_DELETE = "delete";
 	private static final String COMMAND_EDIT = "edit";
 	private static final String COMMAND_DISPLAY = "display";
+	private static final String COMMAND_VIEW = "view";
 	private static final String COMMAND_CLEAR = "clear";
 	private static final String COMMAND_UNDO = "undo";
 	private static final String COMMAND_HELP = "help";
 	
-	public Task parse(String userInput) {
+	public ArrayList<Task> parse(String userInput) {
 		String commandType = getFirstWord(userInput).toLowerCase();
 		String inputWithoutCommandType = removeFirstWord(userInput);
 	
 		switch (commandType) {
 			case COMMAND_ADD:
 				ParseAdd.addTask(inputWithoutCommandType);
+				break;
 			case COMMAND_DO:
 				ParseDo.doTask(inputWithoutCommandType);
+				break;
 			case COMMAND_DELETE:
 				ParseDelete.deleteTask(inputWithoutCommandType);
+				break;
 			case COMMAND_EDIT:
 				// TODO
 			case COMMAND_DISPLAY:
@@ -46,6 +53,8 @@ public class Parser {
 				// TODO	
 			case COMMAND_HELP:
 				// TODO
+			case COMMAND_VIEW:
+				return Logic.viewTask(inputWithoutCommandType);
 			default:
 				// TODO
 		}

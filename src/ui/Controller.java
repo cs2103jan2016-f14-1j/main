@@ -31,16 +31,16 @@ import shared.*;
 import storage.*;
 
 public class Controller {
-	
+
 	private static final int WRAP_AROUND = 40;
-	
+
 	private View view;
 	private int borderSize;
-    private Parser parser = new Parser();
-    private Logic logic = new Logic();
-    private Storage storage = new Storage();
-    
-	public Controller(){
+	private Parser parser = new Parser();
+	private Logic logic = new Logic();
+	private Storage storage = new Storage();
+
+	public Controller() {
 		view = new View();
 		timer();
 		inputToHint();
@@ -49,48 +49,47 @@ public class Controller {
 		view.getDayLabel().setText(getCurrentDay());
 		view.getTimeLabel().setText(getCurrentTime());
 		displayCategory();
-		displayList();
+		displayList(Storage.getListOfUncompletedTasks());
 	}
-	
-	public int getMsgSize(){
+
+	public int getMsgSize() {
 		int msgSize = 15;
-		return msgSize*View.MSG_SIZE;
+		return msgSize * View.MSG_SIZE;
 	}
-	
-	private void displayNotification(){
+
+	private void displayNotification() {
 
 		ToolTip tip = view.getNotification();
-		
+
 		tip.setVisible(false);
 		tip.setMessage(View.EMPTY_STRING);
 		tip.setText(Notification.title);
-		
-		if(!Notification.message.equals(View.EMPTY_STRING)){
-		tip.setMessage(Notification.message);
+
+		if (!Notification.message.equals(View.EMPTY_STRING)) {
+			tip.setMessage(Notification.message);
 		}
-		
-		tip.setLocation(new Point(view.getShell().getLocation().x + view.getShell().getSize().x - getMsgSize() ,
+
+		tip.setLocation(new Point(view.getShell().getLocation().x + view.getShell().getSize().x - getMsgSize(),
 				view.getShell().getLocation().y + borderSize));
 		tip.setVisible(true);
 	}
-	
-	private void displayCategory(){
+
+	private void displayCategory() {
 		view.getCategoryTable().removeAll();
 		TableItem categoryItem;
 
 		ArrayList<String> categories = Storage.getListOfCategoriesWithCount();
-		for(int i =0 ; i < categories.size(); i++){
+		for (int i = 0; i < categories.size(); i++) {
 			categoryItem = new TableItem(view.getCategoryTable(), SWT.NONE);
 			categoryItem.setText(categories.get(i));
 		}
 
 	}
-	
-	private void displayList() {
+
+	private void displayList(ArrayList<Task> list) {
 
 		view.getMainTable().removeAll();
 		TableItem mainItem;
-		ArrayList<Task> list = Storage.getListOfTasks();
 		list = Sorter.sortByDate(list);
 		for (Task task : list) {
 			String taskIDandDesc = task.getUserFormat();
@@ -99,19 +98,19 @@ public class Controller {
 			for (int j = 0; j < outputArray.length; j++) {
 
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-				
+
 				if (j == 0) {
 					mainItem.setText(outputArray[j]);
 				} else {
 					// Add necessary white space to align tasks
-					mainItem.setText(" " +outputArray[j]);
+					mainItem.setText(" " + outputArray[j]);
 				}
 			}
-			
+
 		}
 
 	}
-	
+
 	private void displayHelp() {
 
 		Table mainTable = view.getMainTable();
@@ -191,9 +190,9 @@ public class Controller {
 		mainItem.setText("Scroll through command history: \u2191 or \u2193");
 
 	}
-	
-	private void addKeyListener(){
-		
+
+	private void addKeyListener() {
+
 		Text input = view.getInput();
 		input.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent event) {
@@ -204,13 +203,17 @@ public class Controller {
 					// SWT.CR : when "ENTER" key is pressed
 					String tempInput = input.getText();
 					inputToHint();
-					
-					parser.parse(tempInput);
-					
+
+					Object result = parser.parse(tempInput);
+
 					displayCategory();
-					displayList();
+					if (result instanceof ArrayList<?>) {
+						displayList((ArrayList<Task>) result);
+					}else{
+						displayList(Storage.getListOfUncompletedTasks());
+					}
 					displayNotification();
-			
+
 					break;
 				case SWT.ARROW_UP:
 					view.getMainTable().setTopIndex(view.getMainTable().getTopIndex() - View.SCROLL_AMOUNT);
@@ -239,58 +242,58 @@ public class Controller {
 				}
 			}
 		});
-		
+
 	}
-	
-	private void timer(){
+
+	private void timer() {
 		Timer timer = new Timer();
 		TimerTask task = new TimerTask() {
-		    @Override
-		    public void run() {
-		        // Task to be executed every second
-		        try {
-		            SwingUtilities.invokeAndWait(new Runnable() {
+			@Override
+			public void run() {
+				// Task to be executed every second
+				try {
+					SwingUtilities.invokeAndWait(new Runnable() {
 
-		                @Override
-		                public void run() {
-		                	Display.getDefault().asyncExec(new Runnable() {
-		                	    public void run() {
-		                	    	view.getTimeLabel().setText(getCurrentTime());
-		                	    }
-		                	});
-		                }
-		            });
-		        } catch (InterruptedException e) {
-		          
-		        } catch (InvocationTargetException e) {
-					
+						@Override
+						public void run() {
+							Display.getDefault().asyncExec(new Runnable() {
+								public void run() {
+									view.getTimeLabel().setText(getCurrentTime());
+								}
+							});
+						}
+					});
+				} catch (InterruptedException e) {
+
+				} catch (InvocationTargetException e) {
+
 				}
 
-		    }
+			}
 		};
 
 		// This will invoke the timer every second
 		timer.scheduleAtFixedRate(task, 1000, 1000);
 	}
-	
-	public String getCurrentDate(){
-	    Date date = new Date();
+
+	public String getCurrentDate() {
+		Date date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat(Keywords.FORMAT_DATE);
-	    return dateFormat.format(date);
+		return dateFormat.format(date);
 	}
-	
-	public String getCurrentTime(){
-	    Date date = new Date();
-	    DateFormat timeFormat = new SimpleDateFormat(Keywords.FORMAT_TIME);
-	    return timeFormat.format(date);
+
+	public String getCurrentTime() {
+		Date date = new Date();
+		DateFormat timeFormat = new SimpleDateFormat(Keywords.FORMAT_TIME);
+		return timeFormat.format(date);
 	}
-	
-	public String getCurrentDay(){
-	    Date date = new Date();
+
+	public String getCurrentDay() {
+		Date date = new Date();
 		DateFormat dayFormat = new SimpleDateFormat(Keywords.FORMAT_DAY);
-	    return dayFormat.format(date);
+		return dayFormat.format(date);
 	}
-	
+
 	private void inputToHint() {
 		view.getInput().setText(View.GUI_HINT);
 		view.getInput().setForeground(View.hintColor);
@@ -300,18 +303,18 @@ public class Controller {
 		view.getInput().setText(View.EMPTY_STRING);
 		view.getInput().setForeground(View.normalColor);
 	}
-	
+
 	public void initBorderSize() {
 		Rectangle outer = Display.getCurrent().getActiveShell().getBounds();
-        Rectangle inner = Display.getCurrent().getActiveShell().getClientArea();
-        borderSize = outer.height - inner.height - View.BORDER_WIDTH;
+		Rectangle inner = Display.getCurrent().getActiveShell().getClientArea();
+		borderSize = outer.height - inner.height - View.BORDER_WIDTH;
 	}
-	
+
 	private boolean isTextEmpty(Text t) {
 		return t.getText().length() == 1;
 	}
-	
-	public View getView(){
+
+	public View getView() {
 		return view;
 	}
 }

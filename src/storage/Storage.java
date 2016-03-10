@@ -22,6 +22,26 @@ public class Storage {
 		return tasks;
 	}
 
+	public static ArrayList<Task> getListOfUncompletedTasks() {
+		ArrayList<Task> temp = new ArrayList<>();
+		for (Task t : tasks) {
+			if (t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
+				temp.add(t);
+			}
+		}
+		return temp;
+	}
+
+	public static ArrayList<Task> getListOfCompletedTasks() {
+		ArrayList<Task> temp = new ArrayList<>();
+		for (Task t : tasks) {
+			if (t.getIsCompleted() == Keywords.TASK_COMPLETED) {
+				temp.add(t);
+			}
+		}
+		return temp;
+	}
+
 	public static Task getTask(int taskID) {
 		for (Task t : tasks) {
 			if (t.getId() == taskID) {
@@ -30,7 +50,7 @@ public class Storage {
 		}
 		return null;
 	}
-	
+
 	public static int getTaskIndex(int taskID) {
 		for (int i = 0; i < tasks.size(); i++) {
 			if (tasks.get(i).getId() == taskID) {
@@ -39,8 +59,8 @@ public class Storage {
 		}
 		return Keywords.TASK_NOT_FOUND;
 	}
-	
-	public static int getNextAvailableID(){
+
+	public static int getNextAvailableID() {
 		return freeIDs.getNextAvailableID();
 	}
 
@@ -53,7 +73,7 @@ public class Storage {
 		Task t = tasks.remove(taskIndex);
 		categories.removeACountFromCat(t.getCategories());
 	}
-	
+
 	public static void recycleId(int id) {
 		freeIDs.addToFreeId(id);
 	}
@@ -72,8 +92,13 @@ public class Storage {
 	}
 
 	public static ArrayList<Task> getTasksByCat(ArrayList<String> categoriesList) {
-		return categories.getTasksByCat(categoriesList, tasks);
+		ArrayList<Task> temp = new ArrayList<>();
+		for (Task t : categories.getTasksByCat(categoriesList, tasks)) {
+			if (t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
+				temp.add(t);
+			}
+		}
+		return temp;
 	}
-
 
 }
