@@ -5,6 +5,7 @@ import storage.Storage;
 import java.util.ArrayList;
 import shared.Keywords;
 
+
 public class DoTask extends Functionality {
 
 	private final String TASK_NOT_FOUND_MSG = "The task is not found";
@@ -17,6 +18,7 @@ public class DoTask extends Functionality {
 	 * @return it will return successful when a task is marked as completed,
 	 *         else otherwise.
 	 */
+
 	public boolean doTask(ArrayList<Integer> taskIds) {
 		boolean value = false;
 		for (int taskID : taskIds) {
@@ -26,6 +28,14 @@ public class DoTask extends Functionality {
 		}
 		super.synchronization();
 		return value;
+	}
+
+	private boolean undoTask(int taskID) {
+		if (Storage.getTask(taskID) == null) {
+			return false;
+		}
+		Storage.getTask(taskID).setIsCompleted(Keywords.TASK_NOT_COMPLETED);
+		return true;
 	}
 	
 	private boolean doTask(int taskID) {
@@ -40,6 +50,4 @@ public class DoTask extends Functionality {
 	private boolean doesTaskExist(Task t) {
 		return t == null;
 	}
-
-	
 }

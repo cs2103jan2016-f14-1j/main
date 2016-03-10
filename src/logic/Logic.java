@@ -29,9 +29,8 @@ public class Logic {
 		return true;
 	}
 	
-	public boolean viewTask(Task task) {
-		// ViewTask.addTask(task);
-		return true;
+	public static ArrayList<Task> viewTask(String input) {
+		return new ViewTask().viewTasks(input);
 	}
 
 }
