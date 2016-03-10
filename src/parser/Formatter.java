@@ -150,7 +150,11 @@ public class Formatter {
 		return date.split(" ", 2)[1];
 	}
 	private static boolean isDate(String date) {
-		return Integer.parseInt(date) != Keywords.NO_DATE;
+		try {
+			return Integer.parseInt(date) != Keywords.NO_DATE;
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
 	}
 	
 	public static String toCatsForDisplay(ArrayList<String> as) {

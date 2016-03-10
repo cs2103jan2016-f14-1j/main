@@ -25,10 +25,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import logic.Logic;
-import parser.Parser;
-import shared.Task;
-import storage.Storage;
+import logic.*;
+import parser.*;
+import shared.*;
+import storage.*;
 
 public class Controller {
 	
@@ -55,14 +55,13 @@ public class Controller {
 	private void displayCategory(){
 		view.getCategoryTable().removeAll();
 		TableItem categoryItem;
-/*
-		// Call logic for list
-		ArrayList<String> categories = logic.getListOfCategoriesWithCount();
+
+		ArrayList<String> categories = new ArrayList<String>(); //Storage.getListOfCategoriesWithCount();
 		for(int i =0 ; i < categories.size(); i++){
-			categoryItem = new TableItem(categoryTable, SWT.NONE);
+			categoryItem = new TableItem(view.getCategoryTable(), SWT.NONE);
 			categoryItem.setText(categories.get(i));
 		}
-	*/	
+
 	}
 	
 	private void displayList() {
@@ -70,13 +69,8 @@ public class Controller {
 		view.getMainTable().removeAll();
 		TableItem mainItem;
 		ArrayList<Task> list = Storage.getTasks();
-
 		for (Task task : list) {
-	
 			String taskIDandDesc = task.getUserFormat();
-			mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-			mainItem.setText(taskIDandDesc);
-			/*
 			String formattedOutput = WordUtils.wrap(taskIDandDesc, WRAP_AROUND, "\n", true);
 			String outputArray[] = formattedOutput.split("\n");
 			for (int j = 0; j < outputArray.length; j++) {
@@ -84,17 +78,19 @@ public class Controller {
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				
 				if (j == 0) {
-					mainItem.setText(taskIDandDesc + " " +outputArray[j]);
+					mainItem.setText(taskIDandDesc/* + " " +outputArray[j]*/); // commented out that part cause its duplicating taskDesc (e.g. (#0) test [] (#0) test [])
 				} else {
-					String whiteSpaces = ""
+					String whiteSpaces = "";
+					/*
 					for(int z = 0 ; z < taskIDandDesc[TASK_ID].length() + DEFAULT_WHITESPACES; z++){
 						whiteSpaces += " ";
-					}					
+					}
+										
 					mainItem.setText(whiteSpaces + outputArray[j]);
-					mainItem.setText(taskIDandDesc + " " +outputArray[j]);
+					*/
+					mainItem.setText(taskIDandDesc/* + " " +outputArray[j]*/); // same as above
 				}
 			}
-			*/
 			
 		}
 

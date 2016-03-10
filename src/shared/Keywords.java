@@ -28,4 +28,7 @@ public class Keywords {
 	public static final int TASK_DATE = 2;
 	public static final int TASK_CATEGORIES = 3;
 	public static final int TASK_ISCOMPLETE = 4;
+	public static final int TASK_NOT_FOUND = -1;
+	public static final int TASK_BOTH = -2;
+	public static final int TASK_NOT_COMPLETED = 0;
 }

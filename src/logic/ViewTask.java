@@ -1,6 +1,9 @@
 package logic;
 
+import shared.*;
+import storage.Storage;
 import java.util.ArrayList;
+
 
 public class ViewTask {
 	
