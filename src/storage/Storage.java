@@ -23,6 +23,7 @@ public class Storage {
 		noOfTasksPerCat = new HashMap<>();
 		freeIDs = new LinkedList<Integer>();
 		rw = new ReadWrite();
+		rw.readTasksFromFile();
 	}
 
 	public static ArrayList<Task> getTasks() {
@@ -59,12 +60,12 @@ public class Storage {
 		return null;
 	}
 
-	public void writeTasksToFile() {
-		rw.writeTasksToFile();
+	public static void writeTasksToFile() {
+		ReadWrite.writeTasksToFile(tasks);
 	}
 
-	public void readTasksFromFile() {
-		rw.readTasksFromFile();
+	public static void readTasksFromFile() {
+		ReadWrite.readTasksFromFile();
 	}
 
 	protected static LinkedList<Integer> getFreeIDs() {

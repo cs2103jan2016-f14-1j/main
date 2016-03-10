@@ -11,7 +11,7 @@ public class Logic {
 	}
 	
 	public static boolean addTask(Task task) {
-		AddTask.addTask(task);
+		new AddTask().addTask(task);
 		return true;
 	}
 

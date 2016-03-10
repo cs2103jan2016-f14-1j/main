@@ -26,7 +26,6 @@ public class DoTask extends Functionality {
 			return false;
 		}
 		Storage.getTask(taskID).setIsCompleted(COMPLETED);
-		super.synchronization();
 		return true;
 	}
 
@@ -35,6 +34,7 @@ public class DoTask extends Functionality {
 		for (int taskID : taskIds) {
 			value = doTask(taskID);
 		}
+		super.synchronization();
 		return value;
 	}
 }

@@ -12,7 +12,8 @@ public class Parser {
 		DISPLAY,
 		CLEAR,
 		UNDO,
-		INVALID
+		HELP,
+		INVALID,
 	}
 	
 	private static final String COMMAND_ADD = "add";
@@ -22,6 +23,7 @@ public class Parser {
 	private static final String COMMAND_DISPLAY = "display";
 	private static final String COMMAND_CLEAR = "clear";
 	private static final String COMMAND_UNDO = "undo";
+	private static final String COMMAND_HELP = "help";
 	
 	public Task parse(String userInput) {
 		String commandType = getFirstWord(userInput).toLowerCase();
@@ -41,7 +43,9 @@ public class Parser {
 			case COMMAND_UNDO:
 				// TODO
 			case COMMAND_CLEAR:
-				// TODO			
+				// TODO	
+			case COMMAND_HELP:
+				// TODO
 			default:
 				// TODO
 		}

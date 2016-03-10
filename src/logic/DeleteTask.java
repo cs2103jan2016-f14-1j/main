@@ -49,7 +49,7 @@ public class DeleteTask extends Functionality {
 			return false;
 		}
 		Storage.removeTaskFromList(Storage.getTaskIndex(taskId));
-		//super.synchronization();
+		super.synchronization();
 		return true;
 	}
 	

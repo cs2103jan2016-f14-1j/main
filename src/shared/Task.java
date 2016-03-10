@@ -127,7 +127,7 @@ public class Task {
 
 	public static String formatObjectToString(Task task) {
 		String toString = task.getId() + Keywords.STORE_DELIMITER + task.getTask() + Keywords.STORE_DELIMITER
-				+ task.getDate() + Keywords.STORE_DELIMITER;
+				+ task.getIntDate() + Keywords.STORE_DELIMITER;
 		for (String cat : task.getCategories()) {
 			toString += cat + Keywords.SPACE_STRING;
 		}

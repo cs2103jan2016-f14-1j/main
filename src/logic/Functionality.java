@@ -4,8 +4,8 @@ import storage.Storage;
 
 public class Functionality {
 
-	protected void synchronization(){
-		Storage storage = new Storage();
-		storage.writeTasksToFile();
+	protected static void synchronization(){
+		//Storage storage = new Storage();
+		Storage.writeTasksToFile();
 	}
 }

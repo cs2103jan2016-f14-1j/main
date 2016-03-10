@@ -31,10 +31,13 @@ public class FreeIDs {
 		Storage.getFreeIDs().offer(Storage.currentTaskId++);
 	}
 	
-	protected static String convertIDListToString(){
+	protected static String convertIDListToString() {
 		String stringID = Keywords.EMPTY_STRING;
-		for(int id:Storage.getFreeIDs()){
-			stringID+=id+Keywords.EMPTY_STRING;
+		if (isListEmpty()) {
+			generateID();
+		}
+		for(int id : Storage.getFreeIDs()){
+			stringID += id + Keywords.EMPTY_STRING;
 		}
 		return stringID;
 	}
