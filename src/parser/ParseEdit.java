@@ -9,6 +9,9 @@ public class ParseEdit {
 		ArrayList<String> inputParts = Formatter.breakString(rawInput);
 		
 		// TODO: determine if date edit or description edit
+		// (1) edit <id> to <date>
+		// (2) edit <id> to <name>
+		// (3) edit <cat> to <date>
 		//Logic.editTask();
 
 		return true;
