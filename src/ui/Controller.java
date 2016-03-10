@@ -78,7 +78,7 @@ public class Controller {
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				
 				if (j == 0) {
-					mainItem.setText(taskIDandDesc + " " +outputArray[j]);
+					mainItem.setText(taskIDandDesc/* + " " +outputArray[j]*/); // commented out that part cause its duplicating taskDesc (e.g. (#0) test [] (#0) test [])
 				} else {
 					String whiteSpaces = "";
 					/*
@@ -88,7 +88,7 @@ public class Controller {
 										
 					mainItem.setText(whiteSpaces + outputArray[j]);
 					*/
-					mainItem.setText(taskIDandDesc + " " +outputArray[j]);
+					mainItem.setText(taskIDandDesc/* + " " +outputArray[j]*/); // same as above
 				}
 			}
 			
