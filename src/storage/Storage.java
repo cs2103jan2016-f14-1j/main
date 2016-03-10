@@ -62,7 +62,7 @@ public class Storage {
 		return freeIDs;
 	}
 
-	public ArrayList<String> getListOfCategoriesWithCount() {
+	public static ArrayList<String> getListOfCategoriesWithCount() {
 
 		for (Task t : tasks) {
 			if (t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
@@ -82,7 +82,7 @@ public class Storage {
 			Map.Entry pair = (Map.Entry) it.next();
 			temp.add(pair.getKey() + Keywords.SPACE_STRING + "(" + pair.getValue() + ")");
 		}
-		temp.add("@Uncompleted (" + Categories.getNoOfUncompletedTasks() + ")");
+		temp.add(/*"@Uncompleted (" + */Categories.getNoOfUncompletedTasks()/* + ")"*/);
 		noOfTasksPerCat.clear();
 		return temp;
 	}

@@ -56,7 +56,7 @@ public class Controller {
 		view.getCategoryTable().removeAll();
 		TableItem categoryItem;
 
-		ArrayList<String> categories = new ArrayList<String>(); //Storage.getListOfCategoriesWithCount();
+		ArrayList<String> categories = Storage.getListOfCategoriesWithCount();
 		for(int i =0 ; i < categories.size(); i++){
 			categoryItem = new TableItem(view.getCategoryTable(), SWT.NONE);
 			categoryItem.setText(categories.get(i));
