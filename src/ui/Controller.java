@@ -52,6 +52,28 @@ public class Controller {
 		displayList();
 	}
 	
+	public int getMsgSize(){
+		int msgSize = 15;
+		return msgSize*View.MSG_SIZE;
+	}
+	
+	private void displayNotification(){
+
+		ToolTip tip = view.getNotification();
+		
+		tip.setVisible(false);
+		tip.setMessage(View.EMPTY_STRING);
+		tip.setText(Notification.title);
+		
+		if(!Notification.message.equals(View.EMPTY_STRING)){
+		tip.setMessage(Notification.message);
+		}
+		
+		tip.setLocation(new Point(view.getShell().getLocation().x + view.getShell().getSize().x - getMsgSize() ,
+				view.getShell().getLocation().y + borderSize));
+		tip.setVisible(true);
+	}
+	
 	private void displayCategory(){
 		view.getCategoryTable().removeAll();
 		TableItem categoryItem;
@@ -173,7 +195,6 @@ public class Controller {
 	private void addKeyListener(){
 		
 		Text input = view.getInput();
-		ToolTip tip = view.getNotification();
 		input.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent event) {
 
@@ -183,33 +204,13 @@ public class Controller {
 					// SWT.CR : when "ENTER" key is pressed
 					String tempInput = input.getText();
 					inputToHint();
-					tip.setVisible(false);
-					tip.setMessage(View.EMPTY_STRING);
 					
 					parser.parse(tempInput);
 					
+					displayCategory();
 					displayList();
-					/*
-					
-				
-					if(parser.getIsViewOrHelp() == Parser.HELP_VIEW){
-						displayHelp();
-					} else {
-						list = parser.getList();
-						tip.setText(parser.getNotifyTitle());
-							
-						String notifyMsg = parser.getNotifyMsg();
-	
-						if(!notifyMsg.equals(EMPTY_STRING)){
-							tip.setMessage(notifyMsg);
-						}
-						tip.setLocation(new Point(shell.getLocation().x + shell.getSize().x - parser.getMsgSize() ,
-									shell.getLocation().y + borderSize));
-						tip.setVisible(true);
-						displayList();
-						displayCategory();
-					}
-					*/
+					displayNotification();
+			
 					break;
 				case SWT.ARROW_UP:
 					view.getMainTable().setTopIndex(view.getMainTable().getTopIndex() - View.SCROLL_AMOUNT);
