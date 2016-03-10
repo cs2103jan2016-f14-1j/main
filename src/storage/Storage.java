@@ -16,7 +16,7 @@ public class Storage {
 	private static HashMap<String, Integer> noOfTasksPerCat;
 	private static LinkedList<Integer> freeIDs;
 	protected static int currentTaskId = 0;
-	private ReadWrite rw;
+	private static ReadWrite rw;
 
 	public Storage() {
 		tasks = new ArrayList<Task>();
@@ -95,6 +95,19 @@ public class Storage {
 		temp.add(Categories.getNoOfUncompletedTasks());
 		noOfTasksPerCat.clear();
 		return temp;
+	}
+
+	public static ArrayList<Task> getTasksByCat(ArrayList<String> categories) {
+		ArrayList<Task> taskList = new ArrayList<Task>();
+		for (Task t : tasks) {
+			ArrayList<String> cats = t.getCategories();
+			for (String cat : cats) {
+				if (categories.contains(cat)) {
+					taskList.add(t);
+				}
+			}
+		}
+		return taskList;
 	}
 
 }
