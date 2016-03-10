@@ -37,8 +37,17 @@ public class Storage {
 		tasks.add(task);
 	}
 
-	public static void removeTasksFromList(int taskIndex) {
+	public static void removeTaskFromList(int taskIndex) {
 		tasks.remove(taskIndex);
+	}
+	
+	public static int getTaskIndex(int taskID) {
+		for (int i = 0; i < tasks.size(); i++) {
+			if (tasks.get(i).getId() == taskID) {
+				return i;
+			}
+		}
+		return Keywords.TASK_NOT_FOUND;
 	}
 
 	public static Task getTask(int taskID) {

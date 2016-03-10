@@ -4,8 +4,8 @@ import shared.*;
 import storage.Storage;
 import java.util.ArrayList;
 
-public class DeleteTask {
-	
+public class DeleteTask extends Functionality {
+
 	/** The following deleteTask() methods allow the user to delete task(s)
 	 * @param int
 	 *            taskID or a list of integers(taskIDs) the taskID is used to
@@ -50,7 +50,11 @@ public class DeleteTask {
 	 * @return
 	 */
 	private boolean deleteTask(int taskId) {
-		Storage.removeTasksFromList(taskId);
+		if (Storage.getTask(taskId) == null) {
+			return false;
+		}
+		Storage.removeTaskFromList(Storage.getTaskIndex(taskId));
+		//super.synchronization();
 		return true;
 	}
 	

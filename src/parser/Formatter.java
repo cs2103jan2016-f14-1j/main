@@ -26,7 +26,7 @@ public class Formatter {
 		boolean hasFound = false;
 		for (String s : parts) {
 			if (isCategory(s)) {
-				cats.add(s);
+				cats.add(s.substring(1));
 				hasFound = true;
 			}
 		}
@@ -59,7 +59,7 @@ public class Formatter {
 	}
 	
 	private static boolean isCategory(String s) {
-		return s.startsWith(Keywords.REGEX_CATEGORIES);
+		return s.startsWith(Keywords.CATEGORY_PREPEND);
 	}
 
 	private static boolean isPreposition(String s) {

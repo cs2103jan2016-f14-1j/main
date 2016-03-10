@@ -33,7 +33,7 @@ public class Parser {
 			case COMMAND_DO:
 				ParseDo.doTask(inputWithoutCommandType);
 			case COMMAND_DELETE:
-				
+				ParseDelete.deleteTask(inputWithoutCommandType);
 			case COMMAND_EDIT:
 				// TODO
 			case COMMAND_DISPLAY:
