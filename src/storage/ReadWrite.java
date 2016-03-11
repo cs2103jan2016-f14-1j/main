@@ -22,7 +22,7 @@ public class ReadWrite {
 				if (currentLine.contains(Keywords.STORE_DELIMITER)) {
 					at.add(Task.formatStringToObject(currentLine));
 				} else {
-					return currentLine;//the list of FreeIDs
+					//FreeIDs.convertIDStringToList(currentLine);
 				}
 			}
 		} catch (FileNotFoundException ex) {

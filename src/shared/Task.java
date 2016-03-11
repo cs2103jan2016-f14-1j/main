@@ -89,7 +89,11 @@ public class Task {
 	}
 
 	public void setCategories(ArrayList<String> categories) {
-		this.categories = categories;
+		if (categories.size() == 1 && categories.get(0).equals(Keywords.EMPTY_STRING)) {
+			this.categories = new ArrayList<String>();
+		} else {
+			this.categories = categories;
+		}
 	}
 
 	public int getIsCompleted() {
