@@ -231,8 +231,6 @@ public class Controller {
 					
 					if (isTextEmpty(input)) {
 						inputToHint();
-					} else if (input.getForeground().equals(View.hintColor)) {
-						inputToNormal();
 					}
 					
 					break;
@@ -240,6 +238,8 @@ public class Controller {
 					// removes hint and changes input back to normal
 					if (input.getForeground().equals(View.hintColor)) {
 						inputToNormal();
+						input.setText((char)event.keyCode + "");
+						input.setSelection(1);
 					}
 					break;
 				}
