@@ -1,12 +1,15 @@
 package ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.wb.swt.SWTResourceManager;
 
@@ -19,13 +22,14 @@ public class View {
 
 	protected final static Color hintColor = Display.getDefault().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
 	protected final static Color normalColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-
+	protected final static Color orangeColor = new Color (Display.getCurrent(), 251, 160, 38);
+	
 	protected final static int BORDER_WIDTH = 2;
 	protected final static int SCROLL_AMOUNT = 5;
 	
 	protected final static int MSG_SIZE = 13;
 	
-	private Text input;
+	private StyledText input;
 	private Label dayLabel;
 	private Label dateLabel;
 	private Label timeLabel;
@@ -36,34 +40,54 @@ public class View {
 	public View(){
 
 		shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
-		shell.setSize(725, 605);
+		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		shell.setSize(725, 625);
 		shell.setText(GUI_TITLE);
 			
-		categoryTable = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
-		categoryTable.setBounds(10, 102, 180, 408);
+		categoryTable = new Table(shell, SWT.FULL_SELECTION);
+		categoryTable.setBounds(10, 102, 180, 424);
 
-		mainTable = new Table(shell, SWT.BORDER | SWT.FULL_SELECTION);
-		mainTable.setBounds(203, 10, 506, 500);
+		mainTable = new Table(shell, SWT.FULL_SELECTION);
+		mainTable.setBounds(215, 33, 494, 493);
 
-		input = new Text(shell, SWT.BORDER);
-		input.setBounds(10, 522, 699, 31);
+		input = new StyledText(shell, SWT.NONE);
+		input.setTopMargin(6);
+		input.setRightMargin(10);
+		input.setLeftMargin(10);
+		input.setBounds(10, 532, 699, 39);
 		input.setFocus();
+		input.addPaintListener(new PaintListener() {
+	        @Override
+	        public void paintControl(PaintEvent e) {
+	            e.gc.setAntialias(SWT.ON);
+	            e.gc.setForeground(View.orangeColor);
+	            e.gc.setLineWidth(2);
+	            e.gc.drawRoundRectangle(1, 1, input.getBounds().width-2, input.getBounds().height-2, 12, 12);
+	        }
+	    });
 		
 		dayLabel = new Label(shell, SWT.NONE);
+		dayLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		dayLabel.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.BOLD));
 		dayLabel.setAlignment(SWT.CENTER);
 		dayLabel.setBounds(10, 10, 180, 31);
 		
 		dateLabel = new Label(shell, SWT.NONE);
+		dateLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		dateLabel.setAlignment(SWT.CENTER);
 		dateLabel.setBounds(10, 41, 180, 25);
 		
 		timeLabel = new Label(shell, SWT.NONE);
+		timeLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		timeLabel.setAlignment(SWT.CENTER);
 		timeLabel.setBounds(10, 67, 180, 29);
 		
 		notification = new ToolTip(shell, SWT.TOOL | SWT.ICON_INFORMATION | SWT.RIGHT);
 		
+		Label label = new Label(shell, SWT.SEPARATOR);
+		label.setBounds(196, 10, 2, 516);
+		label.setForeground(orangeColor);
+		label.setBackground(orangeColor);
 	}
 	
 	public Shell getShell(){
@@ -90,7 +114,7 @@ public class View {
 		return timeLabel;
 	}
 	
-	public Text getInput(){
+	public StyledText getInput(){
 		return input;
 	}
 	

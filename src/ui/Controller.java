@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Point;
@@ -193,7 +194,7 @@ public class Controller {
 
 	private void addKeyListener() {
 
-		Text input = view.getInput();
+		StyledText input = view.getInput();
 		input.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent event) {
 
@@ -227,11 +228,13 @@ public class Controller {
 					System.out.println(SWT.ESC);
 					break;
 				case SWT.BS:
+					
 					if (isTextEmpty(input)) {
 						inputToHint();
 					} else if (input.getForeground().equals(View.hintColor)) {
 						inputToNormal();
 					}
+					
 					break;
 				default:
 					// removes hint and changes input back to normal
@@ -310,8 +313,8 @@ public class Controller {
 		borderSize = outer.height - inner.height - View.BORDER_WIDTH;
 	}
 
-	private boolean isTextEmpty(Text t) {
-		return t.getText().length() == 1;
+	private boolean isTextEmpty(StyledText t) {
+		return t.getText().length() == 0;
 	}
 
 	public View getView() {
