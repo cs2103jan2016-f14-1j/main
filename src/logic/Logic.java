@@ -24,9 +24,8 @@ public class Logic {
 		return new DoTask().doTask(taskIDs);
 	}
 	
-	public boolean editTask(Task task) {
-		// EditTask.addTask(task);
-		return true;
+	public static boolean editTask(int taskId, ArrayList<String> properties) {
+		return new EditTask().editTask(taskId, properties);
 	}
 	
 	public static ArrayList<Task> viewTask(String input) {
