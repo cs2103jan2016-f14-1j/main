@@ -18,6 +18,7 @@ public class EditTask extends Functionality {
 	public boolean editTask(int taskID, ArrayList<String> properties) {
 		if (Storage.getTask(taskID) != null) {
 			Storage.getTask(taskID).setDate(properties.get(0));
+			Storage.getTask(taskID).callInitDate();
 			//Storage.getTask(taskID).setTask(properties.get(Keywords.TASK_DESC));
 		}
 		// Storage.getTask(taskID).setCategories((properties.get(Keywords.TASK_CATEGORIES));

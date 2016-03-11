@@ -53,6 +53,10 @@ public class Task {
 		return date.equals(Keywords.EMPTY_STRING) ? date : "- " + date;
 	}
 	
+	public void callInitDate(){
+		initIntDate(this.date);
+	}
+	
 	private void initIntDate(String date) {
 		if (date.equals(Keywords.EMPTY_STRING)) {
 			this.intDate = Keywords.NO_DATE;
