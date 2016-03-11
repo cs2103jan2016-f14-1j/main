@@ -39,16 +39,16 @@ public class View {
 	
 	public View(){
 
-		shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
+		shell = new Shell(SWT.CLOSE | SWT.MIN | SWT.TITLE);
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		shell.setSize(725, 625);
 		shell.setText(GUI_TITLE);
 			
 		categoryTable = new Table(shell, SWT.FULL_SELECTION);
-		categoryTable.setBounds(10, 102, 180, 424);
+		categoryTable.setBounds(10, 106, 180, 420);
 
 		mainTable = new Table(shell, SWT.FULL_SELECTION);
-		mainTable.setBounds(215, 33, 494, 493);
+		mainTable.setBounds(215, 14, 494, 512);
 
 		input = new StyledText(shell, SWT.NONE);
 		input.setTopMargin(6);
@@ -70,24 +70,23 @@ public class View {
 		dayLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		dayLabel.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.BOLD));
 		dayLabel.setAlignment(SWT.CENTER);
-		dayLabel.setBounds(10, 10, 180, 31);
+		dayLabel.setBounds(10, 14, 180, 31);
 		
 		dateLabel = new Label(shell, SWT.NONE);
 		dateLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		dateLabel.setAlignment(SWT.CENTER);
-		dateLabel.setBounds(10, 41, 180, 25);
+		dateLabel.setBounds(10, 45, 180, 25);
 		
 		timeLabel = new Label(shell, SWT.NONE);
 		timeLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		timeLabel.setAlignment(SWT.CENTER);
-		timeLabel.setBounds(10, 67, 180, 29);
+		timeLabel.setBounds(10, 71, 180, 29);
 		
 		notification = new ToolTip(shell, SWT.TOOL | SWT.ICON_INFORMATION | SWT.RIGHT);
 		
-		Label label = new Label(shell, SWT.SEPARATOR);
-		label.setBounds(196, 10, 2, 516);
-		label.setForeground(orangeColor);
-		label.setBackground(orangeColor);
+		Label seperator = new Label(shell, SWT.NONE);
+		seperator.setBounds(196, 14, 2, 510);
+		seperator.setBackground(orangeColor);
 	}
 	
 	public Shell getShell(){
