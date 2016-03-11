@@ -64,10 +64,10 @@ public class Controller {
 
 		tip.setVisible(false);
 		tip.setMessage(View.EMPTY_STRING);
-		tip.setText(Notification.title);
+		tip.setText(Notification.getTitle());
 
-		if (!Notification.message.equals(View.EMPTY_STRING)) {
-			tip.setMessage(Notification.message);
+		if (!Notification.getMessage().equals(View.EMPTY_STRING)) {
+			tip.setMessage(Notification.getMessage());
 		}
 
 		tip.setLocation(new Point(view.getShell().getLocation().x + view.getShell().getSize().x - getMsgSize(),

@@ -13,7 +13,11 @@ public class Keywords {
 	public static final String DELIMITER = "\\|";
 	public static final String STORE_DELIMITER = "|";
 	
-	public static final String MESSAGE_DELETE_SUCCESS = "success delete";
+	public static final String MESSAGE_DELETE_SUCCESS = "Task(s) Deleted!";
+	public static final String MESSAGE_ADD_SUCCESS = "Add Successful!";
+	public static final String MESSAGE_EDIT_SUCCESS = "Edit Successful!";
+	public static final String MESSAGE_COMPLETED_SUCCESS = "Task Completed!";
+	public static final String MESSAGE_VIEW_SUCCESS = "View By %s";
 	public static final String TASKID_PREPEND = "-";
 	public static final String CATEGORY_PREPEND = "#";
 	
