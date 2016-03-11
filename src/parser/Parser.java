@@ -32,7 +32,7 @@ public class Parser {
 	public ArrayList<Task> parse(String userInput) {
 		String commandType = getFirstWord(userInput).toLowerCase();
 		String inputWithoutCommandType = removeFirstWord(userInput);
-	
+
 		switch (commandType) {
 			case COMMAND_ADD:
 				ParseAdd.addTask(inputWithoutCommandType);

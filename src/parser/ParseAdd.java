@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class ParseAdd {
 
 	public static boolean addTask(String rawInput) {
-		String taskName = Formatter.getTaskName(rawInput), 
+		String taskName = rawInput, 
 				date = Keywords.EMPTY_STRING, 
 				prep = Keywords.EMPTY_STRING;
 		ArrayList<String> inputParts = Formatter.breakString(rawInput), 

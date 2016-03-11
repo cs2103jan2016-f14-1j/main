@@ -17,6 +17,7 @@ public class FreeIDs {
 	}
 	
 	protected static int getNextAvailableID() {
+		sortIDs();
 		if (freeIDs.isEmpty()) {
 			generateID();
 		}
