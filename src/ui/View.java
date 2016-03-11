@@ -6,6 +6,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -50,7 +51,7 @@ public class View {
 		mainTable = new Table(shell, SWT.FULL_SELECTION);
 		mainTable.setBounds(215, 14, 494, 512);
 
-		input = new StyledText(shell, SWT.NONE);
+		input = new StyledText(shell, SWT.WRAP);
 		input.setTopMargin(6);
 		input.setRightMargin(10);
 		input.setLeftMargin(10);

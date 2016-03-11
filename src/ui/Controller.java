@@ -237,9 +237,11 @@ public class Controller {
 				default:
 					// removes hint and changes input back to normal
 					if (input.getForeground().equals(View.hintColor)) {
+						if(Character.isLetterOrDigit((char)event.keyCode)){
 						inputToNormal();
 						input.setText((char)event.keyCode + "");
 						input.setSelection(1);
+						}
 					}
 					break;
 				}
