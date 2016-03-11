@@ -44,6 +44,7 @@ public class Parser {
 				ParseDelete.deleteTask(inputWithoutCommandType);
 				break;
 			case COMMAND_EDIT:
+				ParseEdit.editTask(inputWithoutCommandType);
 				// TODO
 			case COMMAND_DISPLAY:
 				// TODO
