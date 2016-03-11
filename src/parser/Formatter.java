@@ -160,7 +160,11 @@ public class Formatter {
 	public static String toCatsForDisplay(ArrayList<String> as) {
 		String out = "";
 		for (String s : as) {
-			out += Keywords.CATEGORY_PREPEND + s + Keywords.SPACE_STRING;
+			if (s.equals(Keywords.EMPTY_STRING)) {
+				continue;
+			} else {
+				out += Keywords.CATEGORY_PREPEND + s + Keywords.SPACE_STRING;
+			}
 		}
 		return out.trim();
 	}
