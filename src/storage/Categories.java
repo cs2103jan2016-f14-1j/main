@@ -28,8 +28,11 @@ public class Categories {
 
 	protected static void removeACountFromCat(ArrayList<String> category) {
 		for (String cat : category) {
-			if (noOfTasksPerCat.get(cat) == null || noOfTasksPerCat.get(cat) <=0) {
-				noOfTasksPerCat.put(cat, 0);
+			if (noOfTasksPerCat.get(cat) == null) {
+				continue;
+			}
+			if (noOfTasksPerCat.get(cat) <= 0) {
+				noOfTasksPerCat.remove(cat);
 			} else {
 				noOfTasksPerCat.put(cat, noOfTasksPerCat.get(cat) - 1);
 			}
@@ -63,10 +66,11 @@ public class Categories {
 	protected static ArrayList<Task> getTasksByCat(ArrayList<String> categories, ArrayList<Task> tasks) {
 		ArrayList<Task> taskList = new ArrayList<Task>();
 		for (Task t : tasks) {
-			ArrayList<String> cats = t.getCategories();
-			for (String cat : cats) {
-				if (categories.contains(cat)) {
+			ArrayList<String> taskCats = t.getCategories();
+			for (String cat : categories) {
+				if (taskCats.contains(cat)) {
 					taskList.add(t);
+					break;
 				}
 			}
 		}
@@ -82,8 +86,7 @@ public class Categories {
 				noOfTasksPerCat.put("Uncompleted", currentCount);
 			}
 		}
-		int count = (noOfTasksPerCat.get("Uncompleted") == null) ? 0
-				: noOfTasksPerCat.get("Uncompleted");
+		int count = (noOfTasksPerCat.get("Uncompleted") == null) ? 0 : noOfTasksPerCat.get("Uncompleted");
 		return new String("Uncompleted (" + count + ")");
 	}
 }

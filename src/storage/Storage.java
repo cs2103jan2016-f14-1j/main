@@ -68,7 +68,7 @@ public class Storage {
 
 	public static void addTaskToList(Task task) {
 		tasks.add(task);
-		Categories.addACountToCat(task.getCategories());
+		//Categories.addACountToCat(task.getCategories());
 	}
 
 	public static void removeTaskFromList(int taskIndex) {
@@ -93,7 +93,7 @@ public class Storage {
 	}
 
 	public static ArrayList<Task> getTasksByCat(ArrayList<String> categoriesList) {
-		ArrayList<Task> temp = new ArrayList<>();
+		ArrayList<Task> temp = new ArrayList<Task>();
 		for (Task t : Categories.getTasksByCat(categoriesList, tasks)) {
 			if (t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
 				temp.add(t);
