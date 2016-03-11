@@ -28,7 +28,7 @@ public class Categories {
 
 	protected static void removeACountFromCat(ArrayList<String> category) {
 		for (String cat : category) {
-			if (noOfTasksPerCat.get(cat) == null) {
+			if (noOfTasksPerCat.get(cat) == null || noOfTasksPerCat.get(cat) <=0) {
 				noOfTasksPerCat.put(cat, 0);
 			} else {
 				noOfTasksPerCat.put(cat, noOfTasksPerCat.get(cat) - 1);
