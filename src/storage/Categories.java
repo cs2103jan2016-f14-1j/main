@@ -10,13 +10,13 @@ import shared.Task;
 
 public class Categories {
 
-	private HashMap<String, Integer> noOfTasksPerCat;
+	private static HashMap<String, Integer> noOfTasksPerCat;
 
-	protected Categories() {
+	protected static void init() {
 		noOfTasksPerCat = new HashMap<>();
 	}
 
-	protected void addACountToCat(ArrayList<String> category) {
+	protected static void addACountToCat(ArrayList<String> category) {
 		for (String cat : category) {
 			if (noOfTasksPerCat.get(cat) == null) {
 				noOfTasksPerCat.put(cat, 1);
@@ -26,7 +26,7 @@ public class Categories {
 		}
 	}
 
-	protected void removeACountFromCat(ArrayList<String> category) {
+	protected static void removeACountFromCat(ArrayList<String> category) {
 		for (String cat : category) {
 			if (noOfTasksPerCat.get(cat) == null) {
 				noOfTasksPerCat.put(cat, 0);
@@ -36,7 +36,7 @@ public class Categories {
 		}
 	}
 
-	protected ArrayList<String> getListOfCategoriesWithCount(ArrayList<Task> tasks) {
+	protected static ArrayList<String> getListOfCategoriesWithCount(ArrayList<Task> tasks) {
 		for (Task t : tasks) {
 			if (t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
 				for (String cat : t.getCategories()) {
@@ -60,7 +60,7 @@ public class Categories {
 		return temp;
 	}
 
-	protected ArrayList<Task> getTasksByCat(ArrayList<String> categories, ArrayList<Task> tasks) {
+	protected static ArrayList<Task> getTasksByCat(ArrayList<String> categories, ArrayList<Task> tasks) {
 		ArrayList<Task> taskList = new ArrayList<Task>();
 		for (Task t : tasks) {
 			ArrayList<String> cats = t.getCategories();
@@ -73,7 +73,7 @@ public class Categories {
 		return taskList;
 	}
 
-	private String getUncompletedCatWithCount(ArrayList<Task> tasks) {
+	private static String getUncompletedCatWithCount(ArrayList<Task> tasks) {
 		for (Task t : tasks) {
 			if (t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
 				int currentCount = (noOfTasksPerCat.get("Uncompleted") == null) ? 0
@@ -82,6 +82,8 @@ public class Categories {
 				noOfTasksPerCat.put("Uncompleted", currentCount);
 			}
 		}
-		return new String("Uncompleted (" + noOfTasksPerCat.get("Uncompleted") + ")");
+		int count = (noOfTasksPerCat.get("Uncompleted") == null) ? 0
+				: noOfTasksPerCat.get("Uncompleted");
+		return new String("Uncompleted (" + count + ")");
 	}
 }

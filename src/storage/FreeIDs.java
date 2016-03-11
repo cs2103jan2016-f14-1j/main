@@ -9,25 +9,25 @@ import shared.Keywords;
 
 public class FreeIDs {
 
-	private LinkedList<Integer> freeIDs;
-	private int currentTaskId = 0;
+	private static LinkedList<Integer> freeIDs;
+	private static int currentTaskId = 0;
 	
-	protected FreeIDs(){
+	protected static void init(){
 		freeIDs = new LinkedList<Integer>();
 	}
 	
-	protected int getNextAvailableID() {
+	protected static int getNextAvailableID() {
 		if (freeIDs.isEmpty()) {
 			generateID();
 		}
 		return freeIDs.poll();
 	}
 
-	protected void addToFreeId(int id) {
+	protected static void addToFreeId(int id) {
 		freeIDs.offerFirst(id);
 	}
 	
-	protected String convertIDListToString() {
+	protected static String convertIDListToString() {
 		String stringID = Keywords.EMPTY_STRING;
 		if (freeIDs.isEmpty()) {
 			generateID();
@@ -38,7 +38,7 @@ public class FreeIDs {
 		return stringID.trim();
 	}
 	
-	protected void convertIDStringToList(String s) {
+	protected static void convertIDStringToList(String s) {
 		ArrayList<String> stringOfIds = new ArrayList<String>(Arrays.asList(s.split(Keywords.SPACE_STRING)));
 		for (String id : stringOfIds) {
 			freeIDs.offerFirst(Integer.parseInt(id));
@@ -47,15 +47,15 @@ public class FreeIDs {
 		sortIDs();
 	}
 
-	private void sortIDs() {
+	private static void sortIDs() {
 		Collections.sort(freeIDs);
 	}
 
-	private void setCurrentID(int id) {
+	private static void setCurrentID(int id) {
 		currentTaskId = id;
 	}
 
-	private void generateID() {
+	private static void generateID() {
 		freeIDs.offer(++currentTaskId);
 	}
 
