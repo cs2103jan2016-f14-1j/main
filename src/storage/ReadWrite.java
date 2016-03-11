@@ -13,7 +13,7 @@ import shared.Keywords;
 
 public class ReadWrite {
 
-	protected static String readTasksFromFile(ArrayList<Task> at) {
+	protected static void readTasksFromFile(ArrayList<Task> at) {
 		BufferedReader bufferReader = null;
 		try {
 			bufferReader = new BufferedReader(new FileReader(Keywords.FILENAME_FILEPATH));
@@ -22,7 +22,7 @@ public class ReadWrite {
 				if (currentLine.contains(Keywords.STORE_DELIMITER)) {
 					at.add(Task.formatStringToObject(currentLine));
 				} else {
-					//FreeIDs.convertIDStringToList(currentLine);
+					FreeIDs.convertIDStringToList(currentLine);
 				}
 			}
 		} catch (FileNotFoundException ex) {
@@ -38,17 +38,16 @@ public class ReadWrite {
 				// systemPrint(IO_ERROR_MSG);
 			}
 		}
-		return Keywords.EMPTY_STRING;
 	}
 
-	protected static void writeTasksToFile(ArrayList<Task> at, FreeIDs freeIDs) {
+	protected static void writeTasksToFile(ArrayList<Task> at) {
 		try {
 			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.FILENAME_FILEPATH));
 			for (int index = 0; index < at.size(); index++) {
 				bufferWriter.write(Task.formatObjectToString(at.get(index)));
 				bufferWriter.newLine();
 			}
-			bufferWriter.write(freeIDs.convertIDListToString());
+			bufferWriter.write(FreeIDs.convertIDListToString());
 			bufferWriter.close();
 		} catch (IOException ex) {
 			//systemPrint(IO_ERROR_MSG);

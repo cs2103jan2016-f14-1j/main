@@ -12,22 +12,22 @@ public class FreeIDs {
 	private static LinkedList<Integer> freeIDs;
 	private static int currentTaskId = 0;
 	
-	protected FreeIDs(){
+	protected static void init(){
 		freeIDs = new LinkedList<Integer>();
 	}
 	
-	protected int getNextAvailableID() {
+	protected static int getNextAvailableID() {
 		if (freeIDs.isEmpty()) {
 			generateID();
 		}
 		return freeIDs.poll();
 	}
 
-	protected void addToFreeId(int id) {
+	protected static void addToFreeId(int id) {
 		freeIDs.offerFirst(id);
 	}
 	
-	protected String convertIDListToString() {
+	protected static String convertIDListToString() {
 		String stringID = Keywords.EMPTY_STRING;
 		if (freeIDs.isEmpty()) {
 			generateID();
@@ -55,7 +55,7 @@ public class FreeIDs {
 		currentTaskId = id;
 	}
 
-	private void generateID() {
+	private static void generateID() {
 		freeIDs.offer(++currentTaskId);
 	}
 

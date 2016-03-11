@@ -8,13 +8,15 @@ public class Storage {
 
 	// FORMAT OF EACH TASK: [taskID]|[task]|[date]|[categories]|[isComplete]|
 	private static ArrayList<Task> tasks;
-	private static Categories categories;
-	private static FreeIDs freeIDs;
+	//private static Categories categories;
+	//private static FreeIDs freeIDs;
 
 	public Storage() {
 		tasks = new ArrayList<Task>();
-		categories = new Categories();
-		freeIDs = new FreeIDs();
+		//categories = new Categories();
+		//freeIDs = new FreeIDs();
+		Categories.init();
+		FreeIDs.init();
 		ReadWrite.readTasksFromFile(tasks);
 	}
 
@@ -61,39 +63,38 @@ public class Storage {
 	}
 
 	public static int getNextAvailableID() {
-		return freeIDs.getNextAvailableID();
+		return FreeIDs.getNextAvailableID();
 	}
 
 	public static void addTaskToList(Task task) {
 		tasks.add(task);
-		categories.addACountToCat(task.getCategories());
+		Categories.addACountToCat(task.getCategories());
 	}
 
 	public static void removeTaskFromList(int taskIndex) {
 		Task t = tasks.remove(taskIndex);
-		categories.removeACountFromCat(t.getCategories());
+		Categories.removeACountFromCat(t.getCategories());
 	}
 
 	public static void recycleId(int id) {
-		freeIDs.addToFreeId(id);
+		FreeIDs.addToFreeId(id);
 	}
 
 	public static void writeTasksToFile() {
-		ReadWrite.writeTasksToFile(tasks, freeIDs);
+		ReadWrite.writeTasksToFile(tasks);
 	}
 
 	public static void readTasksFromFile() {
-		String stringOfIDs = ReadWrite.readTasksFromFile(tasks);
-		freeIDs.convertIDStringToList(stringOfIDs);
+		ReadWrite.readTasksFromFile(tasks);
 	}
 
 	public static ArrayList<String> getListOfCategoriesWithCount() {
-		return categories.getListOfCategoriesWithCount(tasks);
+		return Categories.getListOfCategoriesWithCount(tasks);
 	}
 
 	public static ArrayList<Task> getTasksByCat(ArrayList<String> categoriesList) {
 		ArrayList<Task> temp = new ArrayList<>();
-		for (Task t : categories.getTasksByCat(categoriesList, tasks)) {
+		for (Task t : Categories.getTasksByCat(categoriesList, tasks)) {
 			if (t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
 				temp.add(t);
 			}
