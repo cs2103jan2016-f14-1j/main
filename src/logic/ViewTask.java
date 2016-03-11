@@ -18,9 +18,9 @@ public class ViewTask {
 		if(input.equals(Keywords.EMPTY_STRING)){
 			return Storage.getListOfUncompletedTasks();
 		}
-		if(input.equalsIgnoreCase("done")){
+		if (input.equalsIgnoreCase("done")){
 			return Storage.getListOfCompletedTasks();
-		}else if(input.contains("@")){
+		} else if (input.contains("#")){
 			ArrayList<String> categories = new ArrayList<String>(Arrays.asList(input.split(Keywords.SPACE_STRING)));
 			return viewByCat(categories);
 		}
