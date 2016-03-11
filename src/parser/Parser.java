@@ -6,19 +6,11 @@ import logic.Logic;
 import shared.*;
 
 public class Parser {
-	
+
 	public enum COMMAND_TYPE {
-		ADD,
-		DO,
-		DELETE,
-		EDIT,
-		DISPLAY,
-		CLEAR,
-		UNDO,
-		HELP,
-		INVALID,
+		ADD, DO, DELETE, EDIT, DISPLAY, CLEAR, UNDO, HELP, INVALID,
 	}
-	
+
 	private static final String COMMAND_ADD = "add";
 	private static final String COMMAND_DO = "do";
 	private static final String COMMAND_DELETE = "delete";
@@ -28,47 +20,50 @@ public class Parser {
 	private static final String COMMAND_CLEAR = "clear";
 	private static final String COMMAND_UNDO = "undo";
 	private static final String COMMAND_HELP = "help";
-	
+
 	public ArrayList<Task> parse(String userInput) {
 		String commandType = getFirstWord(userInput).toLowerCase();
 		String inputWithoutCommandType = removeFirstWord(userInput);
 
 		switch (commandType) {
-			case COMMAND_ADD:
-				ParseAdd.addTask(inputWithoutCommandType);
-				break;
-			case COMMAND_DO:
-				ParseDo.doTask(inputWithoutCommandType);
-				break;
-			case COMMAND_DELETE:
-				ParseDelete.deleteTask(inputWithoutCommandType);
-				break;
-			case COMMAND_EDIT:
-				ParseEdit.editTask(inputWithoutCommandType);
-				// TODO
-			case COMMAND_DISPLAY:
-				// TODO
-			case COMMAND_UNDO:
-				// TODO
-			case COMMAND_CLEAR:
-				// TODO	
-			case COMMAND_HELP:
-				// TODO
-			case COMMAND_VIEW:
-				return Logic.viewTask(inputWithoutCommandType);
-			default:
-				// TODO
+		case COMMAND_ADD:
+			ParseAdd.addTask(inputWithoutCommandType);
+			break;
+		case COMMAND_DO:
+			ParseDo.doTask(inputWithoutCommandType);
+			break;
+		case COMMAND_DELETE:
+			ParseDelete.deleteTask(inputWithoutCommandType);
+			break;
+		case COMMAND_EDIT:
+			ParseEdit.editTask(inputWithoutCommandType);
+			break;
+		// TODO
+		case COMMAND_DISPLAY:
+			// TODO
+		case COMMAND_UNDO:
+			// TODO
+		case COMMAND_CLEAR:
+			// TODO
+		case COMMAND_HELP:
+			// TODO
+		case COMMAND_VIEW:
+			return Logic.viewTask(inputWithoutCommandType);
+		default:
+			// TODO
 		}
-		
+
 		return null;
 	}
-	
-	 private String removeFirstWord(String userInput) {
-		 return userInput.split(" ", 2)[Keywords.SECOND_ELEMENT];
-	 }
 
-	 private String getFirstWord(String userInput) {
-		 return userInput.trim().split("\\s+")[0];
-	 }
-	 
+	private String removeFirstWord(String userInput) {
+	
+		return (!userInput.contains(Keywords.SPACE_STRING)) ? Keywords.EMPTY_STRING
+				: userInput.split(" ", 2)[Keywords.SECOND_ELEMENT];
+	}
+
+	private String getFirstWord(String userInput) {
+		return userInput.trim().split("\\s+")[0];
+	}
+
 }

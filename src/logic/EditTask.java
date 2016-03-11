@@ -4,7 +4,7 @@ import shared.*;
 import storage.Storage;
 import java.util.ArrayList;
 
-public class EditTask {
+public class EditTask extends Functionality {
 
 	/**
 	 * This method allows the user to edit a task
@@ -32,6 +32,7 @@ public class EditTask {
 		 * formatTaskForStorage(taskInformation); syncTaskToList(task, 0,
 		 * taskIndex, COMMAND.EDIT); return true;
 		 */
+		super.synchronization();
 		return true;
 	}
 }
