@@ -18,6 +18,7 @@ public class Keywords {
 	public static final String CATEGORY_PREPEND = "#";
 	
 	public static final int FIRST_ELEMENT = 0;
+	public static final int SECOND_ELEMENT = 1;
 	
 	public static final int NO_DATE = 999;
 	

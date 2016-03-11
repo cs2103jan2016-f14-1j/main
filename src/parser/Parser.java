@@ -63,7 +63,7 @@ public class Parser {
 	}
 	
 	 private String removeFirstWord(String userInput) {
-		 return userInput.replace(getFirstWord(userInput), "").trim();
+		 return userInput.split(" ", 2)[Keywords.SECOND_ELEMENT];
 	 }
 
 	 private String getFirstWord(String userInput) {
