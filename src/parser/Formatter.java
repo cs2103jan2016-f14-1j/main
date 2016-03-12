@@ -190,6 +190,20 @@ public class Formatter {
 		return ai;
 	}
 	
+	public static ArrayList<String> breakToCats(String rawInput) {
+		ArrayList<String> as = breakString(rawInput);
+		ArrayList<String> res = new ArrayList<String>();
+		for (String s : as) {
+			try {
+				Integer.parseInt(s);
+				continue;
+			} catch (Exception e) {
+				res.add(s);
+			}
+		}
+		return res;
+	}
+	
 	public static String getTaskNameWithCategories(String taskName) {
 		String out = Keywords.EMPTY_STRING;
 		ArrayList<String> as = breakString(taskName);
