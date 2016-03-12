@@ -15,6 +15,29 @@ public class DeleteTask extends Functionality {
 	 * @return it will return successful when a task is deleted, else otherwise.
 	 */
 	public boolean deleteTask(ArrayList<Integer> ids, ArrayList<String> cats) {
+		if (ids.isEmpty() && cats.isEmpty()) {
+			Notification.setTitle(Keywords.MESSAGE_ERROR);
+		} else if (ids.size() + cats.size() > 1) {
+			Notification.setTitle(Keywords.MESSAGE_DELETE_SUCCESS);
+			if (cats.isEmpty()) {
+				Notification.setMessage(ids.toString());
+			} else if (ids.isEmpty()) {
+				Notification.setMessage("All tasks under the following categories"
+										+ " have been deleted: " + cats.toString());
+			} else {
+				Notification.setMessage(ids.toString() + "\nAll tasks under the following"
+										+ " categories have been deleted: " + cats.toString());
+			}
+		} else {
+			Notification.setTitle(Keywords.MESSAGE_DELETE_SUCCESS);
+			if (cats.isEmpty()) {
+				Task t = Storage.getTask(ids.get(Keywords.FIRST_ELEMENT));
+				Notification.setMessage(t.getUserFormat());
+			} else {
+				Notification.setMessage("All tasks under the following categories"
+										+ " have been deleted: " + cats.toString());
+			}
+		}
 		return deleteByIds(ids) | deleteByCats(cats);
 	}
 	
@@ -39,7 +62,6 @@ public class DeleteTask extends Functionality {
 	 * deleteTask method
 	 */
 	private boolean deleteByCats(ArrayList<String> categories) {
-		// TODO: getTasksByCat to complete
 		ArrayList<Task> taskList = Storage.getTasksByCat(categories);
 		if (taskList.isEmpty()) {
 			return false;

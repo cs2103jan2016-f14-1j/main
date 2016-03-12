@@ -21,6 +21,15 @@ public class DoTask extends Functionality {
 
 	public boolean doTask(ArrayList<Integer> taskIds) {
 		boolean value = false;
+		if (taskIds.isEmpty()){
+			Notification.setTitle(Keywords.MESSAGE_ERROR);
+		} else if (taskIds.size() > 1) {
+			Notification.setTitle(Keywords.MESSAGE_COMPLETED_SUCCESS);
+			Notification.setMessage(taskIds.toString());
+		} else {
+			Notification.setTitle(Keywords.MESSAGE_COMPLETED_SUCCESS);
+			Notification.setMessage(Storage.getTask(taskIds.get(Keywords.FIRST_ELEMENT)).getUserFormat() + "done!");
+		}
 		for (int taskID : taskIds) {
 			if (doTask(taskID)) {
 				value = true;

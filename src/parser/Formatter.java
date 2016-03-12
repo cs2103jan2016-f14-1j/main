@@ -198,7 +198,9 @@ public class Formatter {
 				Integer.parseInt(s);
 				continue;
 			} catch (Exception e) {
-				res.add(s);
+				if (!s.equals(Keywords.EMPTY_STRING)) {
+					res.add(s);
+				}
 			}
 		}
 		return res;
@@ -219,6 +221,11 @@ public class Formatter {
 	public static String getDateFromRaw(String taskName) {
 		String out = Keywords.EMPTY_STRING, s = Keywords.EMPTY_STRING;
 		ArrayList<String> as = breakString(taskName);
+		
+		if (as.isEmpty()) {
+			return out;
+		}
+		
 		for (int i = lastIndexOf(as); !isPreposition(s); i--) {
 			s = as.get(i);
 			if (!isPreposition(s) && !isCategory(s)) {

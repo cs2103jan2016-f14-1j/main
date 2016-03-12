@@ -73,6 +73,7 @@ public class Controller {
 		tip.setLocation(new Point(view.getShell().getLocation().x + view.getShell().getSize().x - getMsgSize(),
 				view.getShell().getLocation().y + borderSize));
 		tip.setVisible(true);
+		Notification.clear();
 	}
 
 	private void displayCategory() {
@@ -209,6 +210,7 @@ public class Controller {
 
 					displayCategory();
 					if (result instanceof ArrayList<?>) {
+						// here might need handle is empty arraylist
 						displayList((ArrayList<Task>) result);
 					}else{
 						displayList(Storage.getListOfUncompletedTasks());

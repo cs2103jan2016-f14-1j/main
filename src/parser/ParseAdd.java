@@ -16,9 +16,11 @@ public class ParseAdd {
 		boolean hasCategory = Formatter.getCategories(categories, inputParts),
 				hasPreposition = Formatter.getPreposition(preposition, inputParts);
 
-		if (taskName.equals(Keywords.EMPTY_STRING)) {
-			return false;
-		}
+		//if (taskName.equals(Keywords.EMPTY_STRING)) {
+		//	return false;
+		//}
+		// From Jx: if have the above line, Error notification wont work, cause the flow wont go into logic :(
+		// 			unless you want shift notification under parser
 		
 		if (hasCategory && !hasPreposition) {
 			taskName = Formatter.getTaskNameWithCategories(rawInput);

@@ -19,4 +19,9 @@ public class Notification {
 	public static void setMessage(String toUpdate) {
 		message = toUpdate;
 	}
+
+	public static void clear() {
+		title = "";
+		message = "";
+	}
 }
