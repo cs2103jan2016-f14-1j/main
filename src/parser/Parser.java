@@ -8,7 +8,7 @@ import shared.*;
 public class Parser {
 
 	public enum COMMAND_TYPE {
-		ADD, DO, DELETE, EDIT, DISPLAY, CLEAR, UNDO, HELP, INVALID,
+		ADD, DO, DELETE, EDIT, DISPLAY, CLEAR, UNDO, HELP, INVALID, UNCOMPLETE, UNADD
 	}
 
 	private static final String COMMAND_ADD = "add";
@@ -20,6 +20,8 @@ public class Parser {
 	private static final String COMMAND_CLEAR = "clear";
 	private static final String COMMAND_UNDO = "undo";
 	private static final String COMMAND_HELP = "help";
+	private static final String COMMAND_UNCOMPLETE = "uncomplete";
+	private static final String COMMAND_UNADD = "unadd";
 
 	public ArrayList<Task> parse(String userInput) {
 		String commandType = getFirstWord(userInput).toLowerCase();
@@ -27,10 +29,10 @@ public class Parser {
 
 		switch (commandType) {
 		case COMMAND_ADD:
-			ParseAdd.addTask(inputWithoutCommandType);
+			ParseAdd.addTask(inputWithoutCommandType, 0);
 			break;
 		case COMMAND_DO:
-			ParseDo.doTask(inputWithoutCommandType);
+			ParseDo.doTask(inputWithoutCommandType, Keywords.TASK_COMPLETED);
 			break;
 		case COMMAND_DELETE:
 			ParseDelete.deleteTask(inputWithoutCommandType);
@@ -42,6 +44,7 @@ public class Parser {
 		case COMMAND_DISPLAY:
 			// TODO
 		case COMMAND_UNDO:
+			ParseUndo.undoTask();
 			// TODO
 		case COMMAND_CLEAR:
 			// TODO
@@ -49,6 +52,12 @@ public class Parser {
 			// TODO
 		case COMMAND_VIEW:
 			return Logic.viewTask(inputWithoutCommandType);
+		case COMMAND_UNCOMPLETE:
+			ParseDo.doTask(inputWithoutCommandType, Keywords.TASK_NOT_COMPLETED);
+			break;
+		case COMMAND_UNADD:
+			ParseAdd.addTask(inputWithoutCommandType, 1);
+			break;
 		default:
 			// TODO
 		}

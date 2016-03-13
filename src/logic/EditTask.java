@@ -17,6 +17,8 @@ public class EditTask extends Functionality {
 	 */
 	public boolean editTask(int taskID, ArrayList<String> properties) {
 		if (Storage.getTask(taskID) != null) {
+			String undoAction = "edit "+taskID+" to "+Storage.getTask(taskID).getDate();
+			super.addToHistory(undoAction);
 			Storage.getTask(taskID).setDate(properties.get(0));
 			Storage.getTask(taskID).callInitDate();
 			Notification.setTitle(Keywords.MESSAGE_EDIT_SUCCESS);

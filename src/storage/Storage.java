@@ -17,6 +17,7 @@ public class Storage {
 		//freeIDs = new FreeIDs();
 		Categories.init();
 		FreeIDs.init();
+		History.initHistory();
 		ReadWrite.readTasksFromFile(tasks);
 	}
 
@@ -100,6 +101,14 @@ public class Storage {
 			}
 		}
 		return temp;
+	}
+	
+	public static void addToHistory(String action){
+		History.addActionToHistory(action);
+	}
+	
+	public static String getLastAction(){
+		return History.getLastAction();
 	}
 
 }
