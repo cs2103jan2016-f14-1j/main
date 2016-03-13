@@ -3,6 +3,7 @@ package ui;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
@@ -15,19 +16,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.TextLayout;
 import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import logic.*;
@@ -38,7 +34,16 @@ import storage.*;
 public class Controller {
 
 	private static final int WRAP_AROUND = 40;
+	private static final int CATEGORY_COUNT = 1;
 
+	private final static int NUMBER_OF_DAYS = 7;
+	private final static String [] days = new String[NUMBER_OF_DAYS];
+	
+	private final static String TODAY = "TODAY";
+	private final static String TOMORROW = "TOMORROW";
+	private final static String OTHERS = "OTHERS";
+	private final static int STARTING_INDEX = 2;
+	
 	private View view;
 	private Parser parser = new Parser();
 	private Logic logic = new Logic();
@@ -46,6 +51,33 @@ public class Controller {
 
 	public Controller() {
 		view = new View();
+		
+		days[0] = TODAY;
+		days[1] = TOMORROW;
+		
+		String compareDay = getCurrentDay().toUpperCase();
+		int index = 0;
+		
+		if(compareDay.equals(DayOfWeek.TUESDAY)){
+			index = 1;
+		}else if(compareDay.equals(DayOfWeek.WEDNESDAY)){
+			index = 2;
+		}else if(compareDay.equals(DayOfWeek.THURSDAY)){
+			index = 3;
+		}else if(compareDay.equals(DayOfWeek.FRIDAY)){
+			index = 4;
+		}else if(compareDay.equals(DayOfWeek.SATURDAY)){
+			index = 5;
+		}else if(compareDay.equals(DayOfWeek.SUNDAY)){
+			index = 6;
+		} else {
+			index = -1;
+		}
+		
+		for(int i = STARTING_INDEX; i < days.length ;i++){
+			days[i] = DayOfWeek.values()[(index+i)%7].toString();
+		}
+		
 		timer();
 		inputToHint();
 		addKeyListener();
@@ -63,6 +95,7 @@ public class Controller {
 		Notification.clear();
 	}
 
+	
 	private void displayCategory() {
 		view.getCategoryTable().removeAll();
 		TableItem categoryItem;
@@ -71,35 +104,50 @@ public class Controller {
 		for (int i = 0; i < categories.size(); i++) {
 			categoryItem = new TableItem(view.getCategoryTable(), SWT.NONE);
 			categoryItem.setText(categories.get(i));
-			/*
-			TextLayout layout = new TextLayout(Display.getCurrent());
-			layout.setText(categories.get(i));
-			TextStyle styleForCategories = new TextStyle(SWTResourceManager.getFont("Trebuchet MS", 9, SWT.NORMAL), SWTResourceManager.getColor(SWT.COLOR_WHITE), null);
-			TextStyle styleForCount = new TextStyle(SWTResourceManager.getFont("Trebuchet MS", 9, SWT.NORMAL), View.orangeColor, null);
-			   
-			layout.setStyle(styleForCategories, 0, 0);
-		    
-			view.getCategoryTable().addListener(SWT.PaintItem, new Listener() {
-			      public void handleEvent(Event event) {
-			        layout.draw(event.gc, event.x, event.y);
-			      }
-			    });
-			final Rectangle textLayoutBounds = layout.getBounds();
-			view.getCategoryTable().addListener(SWT.MeasureItem, new Listener() {
-			      public void handleEvent(Event e) {
-			        e.width = textLayoutBounds.width + 2;
-			        e.height = textLayoutBounds.height + 2;
-			      }
-			    });*/
 		}
+		
+		final TextLayout textLayout = new TextLayout(Display.getCurrent());
+		
+		view.getCategoryTable().addListener(SWT.PaintItem, new Listener() {
+		public void handleEvent(Event event) {
+		TableItem item = (TableItem)event.item;
+		String text = item.getText();
+		textLayout.setText(text);
+		
+		TextStyle styleForCatCount = new TextStyle(null, View.orangeColor, null);
+		textLayout.setStyle(styleForCatCount, text.lastIndexOf(" ") + 1, text.length()+1);
+		
+		textLayout.draw(event.gc, event.x, event.y);
+		}
+		});
+		
+		view.getCategoryTable().addListener(SWT.EraseItem, new Listener() {
+		public void handleEvent(Event event) {
+		/* indicate that we'll be drawing the foreground in the
+		PaintItem listener */
+		event.detail &= ~SWT.FOREGROUND;
+		}
+		});
 
-	}
+		}
 
 	private void displayList(ArrayList<Task> list) {
 
 		view.getMainTable().removeAll();
 		TableItem mainItem;
 		list = Sorter.sortByDate(list);
+		TableItem item;
+		
+		for (String day : days) {
+			item = new TableItem(view.getMainTable(), SWT.NONE);
+			item.setText(day.toString());
+			item.setFont(View.headingFont);
+		}
+		
+		item = new TableItem(view.getMainTable(), SWT.NONE);
+		item.setText(OTHERS);
+		item.setFont(View.headingFont);
+		
 		for (Task task : list) {
 			String taskIDandDesc = task.getUserFormat();
 			String formattedOutput = WordUtils.wrap(taskIDandDesc, WRAP_AROUND, "\n", true);
@@ -321,7 +369,14 @@ public class Controller {
 	private boolean isTextEmpty(StyledText t) {
 		return t.getText().length() == 0;
 	}
-
+	
+	private String removeLastWord(String string){
+		return string.substring(0, string.lastIndexOf(' '));
+	}
+	
+	private String getLastWord(String string){
+		return string.substring(string.lastIndexOf(" ") + 1);
+	}
 	public View getView() {
 		return view;
 	}
