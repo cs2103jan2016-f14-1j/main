@@ -42,7 +42,7 @@ public class View {
 	public View(){
 
 		shell = new Shell(SWT.CLOSE | SWT.MIN | SWT.TITLE);
-		shell.setBackground(orangeColor);
+		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		shell.setSize(725, 625);
 		shell.setText(GUI_TITLE);
 			
@@ -55,8 +55,6 @@ public class View {
 		mainTable = new Table(shell, SWT.FULL_SELECTION);
 		mainTable.setFont(SWTResourceManager.getFont("Trebuchet MS", 9, SWT.NORMAL));
 		mainTable.setBounds(196, 14, 513, 485);
-		mainTable.setBackground(orangeColor);
-		mainTable.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 
 		input = new StyledText(shell, SWT.WRAP);
 		input.setFont(SWTResourceManager.getFont("Trebuchet MS", 9, SWT.NORMAL));
@@ -65,7 +63,7 @@ public class View {
 		input.setLeftMargin(10);
 		input.setBounds(196, 536, 513, 39);
 		input.setFocus();
-		/*
+		
 		input.addPaintListener(new PaintListener() {
 	        @Override
 	        public void paintControl(PaintEvent e) {
@@ -75,7 +73,7 @@ public class View {
 	            e.gc.drawRoundRectangle(1, 1, input.getBounds().width-2, input.getBounds().height-2, 12, 12);
 	        }
 	    });
-		*/
+		
 		dayLabel = new Label(shell, SWT.NONE);
 		dayLabel.setFont(SWTResourceManager.getFont("Trebuchet MS", 11, SWT.BOLD));
 		dayLabel.setAlignment(SWT.CENTER);
@@ -101,11 +99,13 @@ public class View {
 		seperator.setBounds(0, 0, 190, 585);
 		seperator.setBackground(blackGrayColor);
 		
-		Label notification = new Label(shell, SWT.NONE);
+		notification = new Label(shell, SWT.NONE);
 		notification.setFont(SWTResourceManager.getFont("Trebuchet MS", 9, SWT.NORMAL));
 		notification.setAlignment(SWT.CENTER);
-		notification.setBackground(orangeColor);
+		notification.setForeground(orangeColor);
+		notification.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		notification.setBounds(196, 505, 513, 25);
+		
 	}
 	
 	public Shell getShell(){

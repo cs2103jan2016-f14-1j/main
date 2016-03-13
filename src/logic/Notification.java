@@ -1,7 +1,7 @@
 package logic;
 
 public class Notification {
-	private static String title = "To be updated";
+	private static String title = "";
 	private static String message = "";
 	
 	public static String getTitle() {

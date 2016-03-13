@@ -53,25 +53,10 @@ public class Controller {
 		displayList(Storage.getListOfUncompletedTasks());
 	}
 
-	public int getMsgSize() {
-		int msgSize = 15;
-		return msgSize * View.MSG_SIZE;
-	}
-
 	private void displayNotification() {
 
 		Label tip = view.getNotification();
-
-		tip.setVisible(false);
-		tip.setText(Notification.getTitle());
-
-		if (!Notification.getMessage().equals(View.EMPTY_STRING)) {
-			tip.setText(Notification.getMessage());
-		}
-
-		tip.setLocation(new Point(view.getShell().getLocation().x + view.getShell().getSize().x - getMsgSize(),
-				view.getShell().getLocation().y + borderSize));
-		tip.setVisible(true);
+		tip.setText(Notification.getTitle() + " " + Notification.getMessage());
 		Notification.clear();
 	}
 
@@ -308,12 +293,6 @@ public class Controller {
 	private void inputToNormal() {
 		view.getInput().setText(View.EMPTY_STRING);
 		view.getInput().setForeground(View.normalColor);
-	}
-
-	public void initBorderSize() {
-		Rectangle outer = Display.getCurrent().getActiveShell().getBounds();
-		Rectangle inner = Display.getCurrent().getActiveShell().getClientArea();
-		borderSize = outer.height - inner.height - View.BORDER_WIDTH;
 	}
 
 	private boolean isTextEmpty(StyledText t) {
