@@ -5,13 +5,18 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.TextLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 public class View {
@@ -24,7 +29,9 @@ public class View {
 	protected final static Color hintColor = Display.getDefault().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
 	protected final static Color normalColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
 	protected final static Color orangeColor = new Color (Display.getCurrent(), 255, 116, 23);
-	protected final static Color blackGrayColor = new Color (Display.getCurrent(), 36, 45, 62);
+	//protected final static Color blackGrayColor = new Color (Display.getCurrent(), 36, 45, 62);
+	protected final static Color blackGrayColor = new Color (Display.getCurrent(), 50, 55, 60);
+	//protected final static Color blackGrayColor = new Color (Display.getCurrent(), 35, 40, 45);
 	
 	protected final static int BORDER_WIDTH = 2;
 	protected final static int SCROLL_AMOUNT = 5;

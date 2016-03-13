@@ -13,7 +13,6 @@ public class MainGUI {
 	    
 		shell.open();
 		shell.layout();
-		controller.initBorderSize();
 		
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {

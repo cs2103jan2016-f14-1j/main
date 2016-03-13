@@ -17,8 +17,12 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.TextLayout;
+import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
@@ -36,7 +40,6 @@ public class Controller {
 	private static final int WRAP_AROUND = 40;
 
 	private View view;
-	private int borderSize;
 	private Parser parser = new Parser();
 	private Logic logic = new Logic();
 	private Storage storage = new Storage();
@@ -68,6 +71,26 @@ public class Controller {
 		for (int i = 0; i < categories.size(); i++) {
 			categoryItem = new TableItem(view.getCategoryTable(), SWT.NONE);
 			categoryItem.setText(categories.get(i));
+			/*
+			TextLayout layout = new TextLayout(Display.getCurrent());
+			layout.setText(categories.get(i));
+			TextStyle styleForCategories = new TextStyle(SWTResourceManager.getFont("Trebuchet MS", 9, SWT.NORMAL), SWTResourceManager.getColor(SWT.COLOR_WHITE), null);
+			TextStyle styleForCount = new TextStyle(SWTResourceManager.getFont("Trebuchet MS", 9, SWT.NORMAL), View.orangeColor, null);
+			   
+			layout.setStyle(styleForCategories, 0, 0);
+		    
+			view.getCategoryTable().addListener(SWT.PaintItem, new Listener() {
+			      public void handleEvent(Event event) {
+			        layout.draw(event.gc, event.x, event.y);
+			      }
+			    });
+			final Rectangle textLayoutBounds = layout.getBounds();
+			view.getCategoryTable().addListener(SWT.MeasureItem, new Listener() {
+			      public void handleEvent(Event e) {
+			        e.width = textLayoutBounds.width + 2;
+			        e.height = textLayoutBounds.height + 2;
+			      }
+			    });*/
 		}
 
 	}
