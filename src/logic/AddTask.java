@@ -15,7 +15,7 @@ public class AddTask extends Functionality {
 		Storage.addTaskToList(task);
 		
 		//Add to history the action to be done
-		if(isItUndoFunc==0){
+		if(isItUndoFunc==Keywords.NO){
 		String undoAction = "delete "+task.getId();
 		Storage.addToHistory(undoAction);
 		}

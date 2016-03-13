@@ -29,7 +29,7 @@ public class Parser {
 
 		switch (commandType) {
 		case COMMAND_ADD:
-			ParseAdd.addTask(inputWithoutCommandType, 0);
+			ParseAdd.addTask(inputWithoutCommandType, Keywords.NO);
 			break;
 		case COMMAND_DO:
 			ParseDo.doTask(inputWithoutCommandType, Keywords.TASK_COMPLETED);
@@ -56,7 +56,7 @@ public class Parser {
 			ParseDo.doTask(inputWithoutCommandType, Keywords.TASK_NOT_COMPLETED);
 			break;
 		case COMMAND_UNADD:
-			ParseAdd.addTask(inputWithoutCommandType, 1);
+			ParseAdd.addTask(inputWithoutCommandType, Keywords.YES);
 			break;
 		default:
 			// TODO
@@ -72,7 +72,7 @@ public class Parser {
 	}
 
 	private String getFirstWord(String userInput) {
-		return userInput.trim().split("\\s+")[0];
+		return userInput.trim().split("\\s+")[Keywords.FIRST_ELEMENT];
 	}
 
 }

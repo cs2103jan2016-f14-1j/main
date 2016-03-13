@@ -24,6 +24,8 @@ public class Keywords {
 	
 	public static final int FIRST_ELEMENT = 0;
 	public static final int SECOND_ELEMENT = 1;
+	public static final int YES = 1;
+	public static final int NO = 0;
 	
 	public static final int NO_DATE = 999;
 	
