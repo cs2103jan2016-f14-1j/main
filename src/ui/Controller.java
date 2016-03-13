@@ -60,14 +60,13 @@ public class Controller {
 
 	private void displayNotification() {
 
-		ToolTip tip = view.getNotification();
+		Label tip = view.getNotification();
 
 		tip.setVisible(false);
-		tip.setMessage(View.EMPTY_STRING);
 		tip.setText(Notification.getTitle());
 
 		if (!Notification.getMessage().equals(View.EMPTY_STRING)) {
-			tip.setMessage(Notification.getMessage());
+			tip.setText(Notification.getMessage());
 		}
 
 		tip.setLocation(new Point(view.getShell().getLocation().x + view.getShell().getSize().x - getMsgSize(),
