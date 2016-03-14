@@ -36,7 +36,7 @@ public class View {
 	protected final static Color orangeColor = new Color (Display.getCurrent(), 255, 116, 23);
 	protected final static Color whiteColor = Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
 	//protected final static Color blackGrayColor = new Color (Display.getCurrent(), 36, 45, 62);
-	protected final static Color blackGrayColor = new Color (Display.getCurrent(), 50, 55, 60);
+	protected final static Color blackGrayColor = new Color (Display.getCurrent(), 246, 246, 246);
 	//protected final static Color blackGrayColor = new Color (Display.getCurrent(), 35, 40, 45);
 	
 	protected final static Font normalFont = SWTResourceManager.getFont("Trebuchet MS", 9, SWT.NORMAL);
@@ -53,6 +53,7 @@ public class View {
 	private Label timeLabel;
 	private Table categoryTable;
 	private Table mainTable;
+	private Label overdueLabel;
 	
 	public View(){
 
@@ -65,9 +66,9 @@ public class View {
 		Button invisibleButton = new Button(shell, SWT.NONE);
 		invisibleButton.setVisible(false);
 		categoryTable.setFont(normalFont);
-		categoryTable.setBounds(10, 106, 170, 479);
+		categoryTable.setBounds(10, 125, 170, 459);
 		categoryTable.setBackground(blackGrayColor);
-		categoryTable.setForeground(whiteColor);
+		categoryTable.setForeground(normalColor);
 		categoryTable.addListener(SWT.Selection, new Listener()
 	    {
 	        @Override
@@ -81,7 +82,7 @@ public class View {
 		
 		mainTable = new Table(shell, SWT.FULL_SELECTION);
 		mainTable.setFont(normalFont);
-		mainTable.setBounds(196, 14, 513, 485);
+		mainTable.setBounds(196, 10, 513, 489);
 		mainTable.addListener(SWT.Selection, new Listener()
 	    {
 	        @Override
@@ -112,25 +113,25 @@ public class View {
 	    });
 		
 		dayLabel = new Label(shell, SWT.NONE);
-		dayLabel.setFont(SWTResourceManager.getFont("Trebuchet MS", 11, SWT.BOLD));
+		dayLabel.setFont(SWTResourceManager.getFont("Trebuchet MS", 14, SWT.BOLD));
 		dayLabel.setAlignment(SWT.CENTER);
-		dayLabel.setBounds(0, 14, 190, 31);
+		dayLabel.setBounds(0, 15, 190, 45);
 		dayLabel.setBackground(blackGrayColor);
-		dayLabel.setForeground(whiteColor);
+		dayLabel.setForeground(normalColor);
 		
 		dateLabel = new Label(shell, SWT.NONE);
 		dateLabel.setFont(normalFont);
 		dateLabel.setAlignment(SWT.CENTER);
-		dateLabel.setBounds(0, 45, 190, 25);
+		dateLabel.setBounds(0, 60, 190, 30);
 		dateLabel.setBackground(blackGrayColor);
-		dateLabel.setForeground(whiteColor);
+		dateLabel.setForeground(normalColor);
 		
 		timeLabel = new Label(shell, SWT.NONE);
 		timeLabel.setFont(normalFont);
 		timeLabel.setAlignment(SWT.CENTER);
-		timeLabel.setBounds(0, 71, 190, 29);
+		timeLabel.setBounds(0, 90, 190, 30);
 		timeLabel.setBackground(blackGrayColor);
-		timeLabel.setForeground(whiteColor);
+		timeLabel.setForeground(normalColor);
 		
 		Label seperator = new Label(shell, SWT.NONE);
 		seperator.setBounds(0, 0, 190, 585);
@@ -176,5 +177,4 @@ public class View {
 	public Label getNotification(){
 		return notification;
 	}
-	
 }
