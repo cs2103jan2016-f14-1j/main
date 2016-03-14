@@ -274,9 +274,9 @@ public class Controller {
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-		mainItem.setText("Add priority");
+		mainItem.setText("Set priority");
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setText("set <task_ID#> to <priority#>");
+		mainItem.setText("mark <task_ID#>");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.ITALIC));
 		mainItem.setText("Eg. set 2 to 10");
