@@ -23,6 +23,7 @@ public class Parser {
 	private static final String COMMAND_UNCOMPLETE = "uncomplete";
 	private static final String COMMAND_UNADD = "unadd";
 	private static final String COMMAND_MARK = "mark";
+	private static final String COMMAND_UNDELETE = "undelete";
 
 	public ArrayList<Task> parse(String userInput) {
 		String commandType = getFirstWord(userInput).toLowerCase();
@@ -36,7 +37,7 @@ public class Parser {
 			ParseDo.doTask(inputWithoutCommandType, Keywords.TASK_COMPLETED);
 			break;
 		case COMMAND_DELETE:
-			ParseDelete.deleteTask(inputWithoutCommandType);
+			ParseDelete.deleteTask(inputWithoutCommandType, Keywords.NO);
 			break;
 		case COMMAND_EDIT:
 			ParseEdit.editTask(inputWithoutCommandType);
@@ -61,6 +62,9 @@ public class Parser {
 			break;
 		case COMMAND_MARK:
 			ParseMark.prioritize(inputWithoutCommandType);
+			break;
+		case COMMAND_UNDELETE:
+			ParseDelete.deleteTask(inputWithoutCommandType, Keywords.YES);
 			break;
 		default:
 			// TODO
