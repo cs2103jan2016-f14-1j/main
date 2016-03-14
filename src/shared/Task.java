@@ -16,6 +16,7 @@ public class Task {
 	private ArrayList<String> categories;
 	private int isCompleted = 0;
 	private int intDate = Keywords.NO_DATE; // for sorting purposes
+	private boolean priority = false;
 
 	public Task() {
 		id = 0;
@@ -24,6 +25,7 @@ public class Task {
 		categories = new ArrayList<String>();
 		isCompleted = 0;
 		intDate = Keywords.NO_DATE;
+		priority = false;
 	}
 
 	public Task(String date, String taskName, ArrayList<String> cats) {
@@ -117,6 +119,18 @@ public class Task {
 		this.date = Formatter.fromIntToDDMMM(String.valueOf(intDate));
 	}
 	
+	public boolean getPriority(){
+		return this.priority;
+	}
+	
+	public void setPriority(){
+		if (this.priority == true) {
+			this.priority = false;
+		} else {
+			this.priority = true;
+		}
+	}
+	
 	/**
 	 * This method is used to split the concatenated task into blocks of
 	 * information stored using ArrayList<String>
@@ -143,7 +157,8 @@ public class Task {
 		for (String cat : task.getCategories()) {
 			toString += cat + Keywords.SPACE_STRING;
 		}
-		toString += Keywords.STORE_DELIMITER + task.getIsCompleted() + Keywords.STORE_DELIMITER;
+		toString += Keywords.STORE_DELIMITER + task.getIsCompleted() + Keywords.STORE_DELIMITER 
+					+ task.getPriority() + Keywords.STORE_DELIMITER;
 		return toString;
 
 	}

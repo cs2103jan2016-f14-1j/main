@@ -34,4 +34,8 @@ public class Logic {
 		return new UndoTask().undoTask();
 	}
 
+	public static boolean prioritize(ArrayList<Integer> taskIDs) {
+		return new MarkTask().prioritise(taskIDs);
+	}
+
 }

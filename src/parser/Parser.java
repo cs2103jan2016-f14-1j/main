@@ -8,7 +8,7 @@ import shared.*;
 public class Parser {
 
 	public enum COMMAND_TYPE {
-		ADD, DO, DELETE, EDIT, DISPLAY, CLEAR, UNDO, HELP, INVALID, UNCOMPLETE, UNADD
+		ADD, DO, DELETE, EDIT, DISPLAY, CLEAR, UNDO, HELP, INVALID, UNCOMPLETE, UNADD, MARK
 	}
 
 	private static final String COMMAND_ADD = "add";
@@ -22,6 +22,7 @@ public class Parser {
 	private static final String COMMAND_HELP = "help";
 	private static final String COMMAND_UNCOMPLETE = "uncomplete";
 	private static final String COMMAND_UNADD = "unadd";
+	private static final String COMMAND_MARK = "mark";
 
 	public ArrayList<Task> parse(String userInput) {
 		String commandType = getFirstWord(userInput).toLowerCase();
@@ -57,6 +58,9 @@ public class Parser {
 			break;
 		case COMMAND_UNADD:
 			ParseAdd.addTask(inputWithoutCommandType, Keywords.YES);
+			break;
+		case COMMAND_MARK:
+			ParseMark.prioritize(inputWithoutCommandType);
 			break;
 		default:
 			// TODO
