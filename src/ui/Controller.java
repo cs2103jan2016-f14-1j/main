@@ -5,7 +5,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -34,9 +37,9 @@ import storage.*;
 public class Controller {
 
 	private static final int WRAP_AROUND = 40;
-	private static final int CATEGORY_COUNT = 1;
 
 	private final static int NUMBER_OF_DAYS = 7;
+	private HashMap<String, ArrayList<String>> putIntoDays = new HashMap<>();
 	private final static String [] days = new String[NUMBER_OF_DAYS];
 	
 	private final static String TODAY = "TODAY";
@@ -49,7 +52,7 @@ public class Controller {
 	private Logic logic = new Logic();
 	private Storage storage = new Storage();
 
-	public Controller() {
+	public Controller() throws Exception {
 		view = new View();
 		
 		days[0] = TODAY;
@@ -116,7 +119,6 @@ public class Controller {
 		
 		TextStyle styleForCatCount = new TextStyle(null, View.orangeColor, null);
 		textLayout.setStyle(styleForCatCount, text.lastIndexOf(" ") + 1, text.length()+1);
-		
 		textLayout.draw(event.gc, event.x, event.y);
 		}
 		});
@@ -131,25 +133,16 @@ public class Controller {
 
 		}
 
-	private void displayList(ArrayList<Task> list) {
+	private void displayList(ArrayList<Task> list) throws Exception {
 
 		view.getMainTable().removeAll();
-		TableItem mainItem;
 		list = Sorter.sortByDate(list);
-		TableItem item;
+		TableItem mainItem;
+		putIntoDays.clear();
 		
-		for (String day : days) {
-			item = new TableItem(view.getMainTable(), SWT.NONE);
-			item.setText(day.toString());
-			item.setFont(View.headingFont);
-		}
-		
-		item = new TableItem(view.getMainTable(), SWT.NONE);
-		item.setText(OTHERS);
-		item.setFont(View.headingFont);
-		
-		for (Task task : list) {
+		for(Task task : list){
 			String taskIDandDesc = task.getUserFormat();
+			/*
 			String formattedOutput = WordUtils.wrap(taskIDandDesc, WRAP_AROUND, "\n", true);
 			String outputArray[] = formattedOutput.split("\n");
 			for (int j = 0; j < outputArray.length; j++) {
@@ -163,8 +156,91 @@ public class Controller {
 					mainItem.setText(" " + outputArray[j]);
 				}
 			}
-
+			*/
+			if(task.getDate().equals(Keywords.EMPTY_STRING)){
+				ArrayList<String> toAddList= new ArrayList<String>();
+				
+				if(putIntoDays.containsKey(OTHERS)){
+					toAddList = putIntoDays.get(OTHERS);
+				} 
+				
+				toAddList.add(taskIDandDesc);
+				putIntoDays.put(OTHERS, toAddList);
+				
+			} else {
+				
+				String tempDate = task.getDate();
+				String dayDate = tempDate.substring(0, tempDate.length() - 3);
+				
+				String monthDate =  tempDate.substring(dayDate.length());
+				Date month = new SimpleDateFormat("MMM", Locale.ENGLISH).parse(monthDate);
+				Calendar compareMonth = Calendar.getInstance();
+				compareMonth.setTime(month);
+			    
+				Calendar compareCalendar = Calendar.getInstance();
+			    compareCalendar.set(getCurrentYear(), compareMonth.get(Calendar.MONTH), Integer.parseInt(dayDate));
+				int diffInDay = calculateDiffInDay(compareCalendar);
+			    
+			    if(diffInDay < 7 && diffInDay != -1 ){
+			    	ArrayList<String> toAddList= new ArrayList<String>();
+					String key = DayOfWeek.values()[Calendar.DAY_OF_WEEK-1].toString();
+					if (diffInDay == 0){
+						key = TODAY;
+			    		if(putIntoDays.containsKey(TODAY)){
+							toAddList = putIntoDays.get(TODAY);
+						} 
+					} else if (diffInDay == 1){
+						key = TOMORROW;
+			    		if(putIntoDays.containsKey(TOMORROW)){
+							toAddList = putIntoDays.get(TOMORROW);
+						} 
+					} else {
+			    		if(putIntoDays.containsKey(DayOfWeek.values()[Calendar.DAY_OF_WEEK-1].toString())){
+							toAddList = putIntoDays.get(DayOfWeek.values()[Calendar.DAY_OF_WEEK-1].toString());
+						} 
+					}
+			    	
+					toAddList.add(taskIDandDesc);
+					putIntoDays.put(key, toAddList);
+				
+			    } else {
+					ArrayList<String> toAddList= new ArrayList<String>();
+					
+					if(putIntoDays.containsKey(OTHERS)){
+						toAddList = putIntoDays.get(OTHERS);
+					} 
+					
+					toAddList.add(taskIDandDesc);
+					putIntoDays.put(OTHERS, toAddList);
+			    }
+			}
 		}
+		
+		for (String day : days) {
+			mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+			mainItem.setText(day);
+			mainItem.setFont(View.headingFont);
+			if(putIntoDays.containsKey(day)){
+				ArrayList<String> tempArrList = putIntoDays.get(day);
+				for(int i = 0; i < tempArrList.size(); i++){
+				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+				mainItem.setText(tempArrList.get(i));
+				}
+			}
+		}
+	    
+		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+		mainItem.setText(OTHERS);
+		mainItem.setFont(View.headingFont);
+		
+		if(putIntoDays.containsKey(OTHERS)){
+			ArrayList<String> tempArrList = putIntoDays.get(OTHERS);
+			for(int i = 0; i < tempArrList.size(); i++){
+				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+				mainItem.setText(tempArrList.get(i));
+			}
+		}
+		
 
 	}
 
@@ -248,7 +324,7 @@ public class Controller {
 
 	}
 
-	private void addKeyListener() {
+	private void addKeyListener()  {
 
 		StyledText input = view.getInput();
 		input.addKeyListener(new KeyAdapter() {
@@ -264,12 +340,18 @@ public class Controller {
 					Object result = parser.parse(tempInput);
 
 					displayCategory();
+					
+					try{
 					if (result instanceof ArrayList<?>) {
 						// here might need handle is empty arraylist
 						displayList((ArrayList<Task>) result);
 					}else{
 						displayList(Storage.getListOfUncompletedTasks());
 					}
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+					
 					displayNotification();
 
 					break;
@@ -285,17 +367,15 @@ public class Controller {
 					System.out.println(SWT.ESC);
 					break;
 				case SWT.BS:
-					
 					if (isTextEmpty(input)) {
 						inputToHint();
-					}
-					
+					} 
 					break;
 				default:
 					// removes hint and changes input back to normal
 					if (input.getForeground().equals(View.hintColor)) {
-						if(Character.isLetterOrDigit((char)event.keyCode)){
 						inputToNormal();
+						if(Character.isLetterOrDigit((char)event.keyCode)){
 						input.setText((char)event.keyCode + "");
 						input.setSelection(1);
 						}
@@ -355,6 +435,12 @@ public class Controller {
 		DateFormat dayFormat = new SimpleDateFormat(Keywords.FORMAT_DAY);
 		return dayFormat.format(date);
 	}
+	
+	public int getCurrentYear() {
+		Date date = new Date();
+		DateFormat dayFormat = new SimpleDateFormat(Keywords.FORMAT_YEAR);
+		return Integer.parseInt(dayFormat.format(date));
+	}
 
 	private void inputToHint() {
 		view.getInput().setText(View.GUI_HINT);
@@ -370,13 +456,17 @@ public class Controller {
 		return t.getText().length() == 0;
 	}
 	
-	private String removeLastWord(String string){
-		return string.substring(0, string.lastIndexOf(' '));
+	private int calculateDiffInDay(Calendar endDate){
+		Calendar currDate = Calendar.getInstance();
+	    int daysBetween = -1;  
+	    endDate.add(Calendar.DAY_OF_MONTH, 1);
+	    while (currDate.before(endDate)) {  
+	        currDate.add(Calendar.DAY_OF_MONTH, 1);  
+	        daysBetween++;  
+	    } 
+	    return daysBetween;
 	}
 	
-	private String getLastWord(String string){
-		return string.substring(string.lastIndexOf(" ") + 1);
-	}
 	public View getView() {
 		return view;
 	}
