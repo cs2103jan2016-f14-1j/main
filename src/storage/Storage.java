@@ -7,7 +7,7 @@ import shared.Task;
 public class Storage {
 
 	// FORMAT OF EACH TASK: [taskID]|[task]|[sdate]|[edate]|
-	//						[stime]|[etime]|[categories]|[isComplete]|
+	//						[stime]|[etime]|[categories]|[isComplete]|[priority]
 	private static ArrayList<Task> tasks;
 	//private static Categories categories;
 	//private static FreeIDs freeIDs;
@@ -18,6 +18,7 @@ public class Storage {
 		//freeIDs = new FreeIDs();
 		Categories.init();
 		FreeIDs.init();
+		History.initHistory();
 		ReadWrite.readTasksFromFile(tasks);
 	}
 
@@ -101,6 +102,14 @@ public class Storage {
 			}
 		}
 		return temp;
+	}
+	
+	public static void addToHistory(String action){
+		History.addActionToHistory(action);
+	}
+	
+	public static String getLastAction(){
+		return History.getLastAction();
 	}
 
 }

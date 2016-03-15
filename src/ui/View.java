@@ -5,13 +5,24 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.TextLayout;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.ToolTip;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
+import java.time.Month;
 
 public class View {
 	
@@ -22,40 +33,75 @@ public class View {
 
 	protected final static Color hintColor = Display.getDefault().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
 	protected final static Color normalColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-	protected final static Color orangeColor = new Color (Display.getCurrent(), 251, 160, 38);
+	protected final static Color orangeColor = new Color (Display.getCurrent(), 255, 116, 23);
+	protected final static Color whiteColor = Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
+	//protected final static Color blackGrayColor = new Color (Display.getCurrent(), 36, 45, 62);
+	protected final static Color blackGrayColor = new Color (Display.getCurrent(), 246, 246, 246);
+	//protected final static Color blackGrayColor = new Color (Display.getCurrent(), 35, 40, 45);
+	
+	protected final static Font normalFont = SWTResourceManager.getFont("Trebuchet MS", 9, SWT.NORMAL);
+	protected final static Font boldFont = SWTResourceManager.getFont("Trebuchet MS", 9, SWT.BOLD);
+	protected final static Font headingFont = SWTResourceManager.getFont("Trebuchet MS", 12, SWT.BOLD);
 	
 	protected final static int BORDER_WIDTH = 2;
 	protected final static int SCROLL_AMOUNT = 5;
 	
-	protected final static int MSG_SIZE = 13;
-	
 	private StyledText input;
 	private Label dayLabel;
 	private Label dateLabel;
+	private Label notification;
 	private Label timeLabel;
-	private ToolTip notification;
 	private Table categoryTable;
 	private Table mainTable;
+	private Label overdueLabel;
 	
 	public View(){
 
-		shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
-		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		shell = new Shell(SWT.CLOSE | SWT.MIN | SWT.TITLE);
+		shell.setBackground(whiteColor);
 		shell.setSize(725, 625);
 		shell.setText(GUI_TITLE);
-			
+		
 		categoryTable = new Table(shell, SWT.FULL_SELECTION);
-		categoryTable.setBounds(10, 102, 180, 424);
-
+		Button invisibleButton = new Button(shell, SWT.NONE);
+		invisibleButton.setVisible(false);
+		categoryTable.setFont(normalFont);
+		categoryTable.setBounds(10, 125, 170, 459);
+		categoryTable.setBackground(blackGrayColor);
+		categoryTable.setForeground(normalColor);
+		categoryTable.addListener(SWT.Selection, new Listener()
+	    {
+	        @Override
+	        public void handleEvent(Event event)
+	        {
+	        	categoryTable.deselectAll();
+	        	invisibleButton.setFocus();
+	        	invisibleButton.forceFocus();
+	        }
+	    });
+		
 		mainTable = new Table(shell, SWT.FULL_SELECTION);
-		mainTable.setBounds(215, 33, 494, 493);
-
-		input = new StyledText(shell, SWT.NONE);
-		input.setTopMargin(6);
+		mainTable.setFont(normalFont);
+		mainTable.setBounds(196, 10, 513, 489);
+		mainTable.addListener(SWT.Selection, new Listener()
+	    {
+	        @Override
+	        public void handleEvent(Event event)
+	        {
+	        	mainTable.deselectAll();
+	        	invisibleButton.setFocus();
+	        	invisibleButton.forceFocus();
+	        }
+	    });
+		
+		input = new StyledText(shell, SWT.WRAP);
+		input.setFont(normalFont);
+		input.setTopMargin(8);
 		input.setRightMargin(10);
 		input.setLeftMargin(10);
-		input.setBounds(10, 532, 699, 39);
+		input.setBounds(196, 536, 513, 39);
 		input.setFocus();
+		
 		input.addPaintListener(new PaintListener() {
 	        @Override
 	        public void paintControl(PaintEvent e) {
@@ -67,27 +113,37 @@ public class View {
 	    });
 		
 		dayLabel = new Label(shell, SWT.NONE);
-		dayLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		dayLabel.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.BOLD));
+		dayLabel.setFont(SWTResourceManager.getFont("Trebuchet MS", 14, SWT.BOLD));
 		dayLabel.setAlignment(SWT.CENTER);
-		dayLabel.setBounds(10, 10, 180, 31);
+		dayLabel.setBounds(0, 15, 190, 45);
+		dayLabel.setBackground(blackGrayColor);
+		dayLabel.setForeground(normalColor);
 		
 		dateLabel = new Label(shell, SWT.NONE);
-		dateLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		dateLabel.setFont(normalFont);
 		dateLabel.setAlignment(SWT.CENTER);
-		dateLabel.setBounds(10, 41, 180, 25);
+		dateLabel.setBounds(0, 60, 190, 30);
+		dateLabel.setBackground(blackGrayColor);
+		dateLabel.setForeground(normalColor);
 		
 		timeLabel = new Label(shell, SWT.NONE);
-		timeLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		timeLabel.setFont(normalFont);
 		timeLabel.setAlignment(SWT.CENTER);
-		timeLabel.setBounds(10, 67, 180, 29);
+		timeLabel.setBounds(0, 90, 190, 30);
+		timeLabel.setBackground(blackGrayColor);
+		timeLabel.setForeground(normalColor);
 		
-		notification = new ToolTip(shell, SWT.TOOL | SWT.ICON_INFORMATION | SWT.RIGHT);
+		Label seperator = new Label(shell, SWT.NONE);
+		seperator.setBounds(0, 0, 190, 585);
+		seperator.setBackground(blackGrayColor);
 		
-		Label label = new Label(shell, SWT.SEPARATOR);
-		label.setBounds(196, 10, 2, 516);
-		label.setForeground(orangeColor);
-		label.setBackground(orangeColor);
+		notification = new Label(shell, SWT.NONE);
+		notification.setFont(normalFont);
+		notification.setAlignment(SWT.CENTER);
+		notification.setForeground(orangeColor);
+		notification.setBackground(whiteColor);
+		notification.setBounds(196, 505, 513, 25);
+		
 	}
 	
 	public Shell getShell(){
@@ -118,7 +174,7 @@ public class View {
 		return input;
 	}
 	
-	public ToolTip getNotification(){
+	public Label getNotification(){
 		return notification;
 	}
 }

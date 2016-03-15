@@ -190,6 +190,22 @@ public class Formatter {
 		return ai;
 	}
 	
+	public static ArrayList<String> breakToCats(String rawInput) {
+		ArrayList<String> as = breakString(rawInput);
+		ArrayList<String> res = new ArrayList<String>();
+		for (String s : as) {
+			try {
+				Integer.parseInt(s);
+				continue;
+			} catch (Exception e) {
+				if (!s.equals(Keywords.EMPTY_STRING)) {
+					res.add(s);
+				}
+			}
+		}
+		return res;
+	}
+	
 	public static String getTaskNameWithCategories(String taskName) {
 		String out = Keywords.EMPTY_STRING;
 		ArrayList<String> as = breakString(taskName);
@@ -205,6 +221,11 @@ public class Formatter {
 	public static String getDateFromRaw(String taskName) {
 		String out = Keywords.EMPTY_STRING, s = Keywords.EMPTY_STRING;
 		ArrayList<String> as = breakString(taskName);
+		
+		if (as.isEmpty()) {
+			return out;
+		}
+		
 		for (int i = lastIndexOf(as); !isPreposition(s); i--) {
 			s = as.get(i);
 			if (!isPreposition(s) && !isCategory(s)) {

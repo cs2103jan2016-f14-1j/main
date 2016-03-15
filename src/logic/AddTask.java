@@ -2,17 +2,24 @@ package logic;
 
 import shared.*;
 import storage.Storage;
-import java.util.ArrayList;
 
 public class AddTask extends Functionality {
 	
-	public String taskDesc;
-	public String taskDate;
-	public ArrayList<String> taskCats;
-	public int taskStatus;
-	
-	public boolean addTask(Task task) {
+	public boolean addTask(Task task, int isItUndoFunc) {
+		if (task.getTask().isEmpty()) {
+			Notification.setTitle(Keywords.MESSAGE_ERROR);
+			return false;
+		}
+		Notification.setTitle(Keywords.MESSAGE_ADD_SUCCESS);
+		Notification.setMessage(task.getTask() + " has been added!");
 		Storage.addTaskToList(task);
+		
+		//Add to history the action to be done
+		if(isItUndoFunc==Keywords.NO){
+		String undoAction = "delete "+task.getId();
+		Storage.addToHistory(undoAction);
+		}
+		
 		super.synchronization();
 		return true;
 	}

@@ -7,7 +7,7 @@ import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 
 public class ParseAdd {
 
-	public static boolean addTask(String rawInput) {
+public static boolean addTask(String rawInput, int isItUndoFunc) {
 		/* TODO: 	
 		 * add <t> on <date> at <stime>
 		 * add <t> on <date> from <stime> to <etime>
@@ -34,9 +34,11 @@ public class ParseAdd {
 		boolean hasCategory = Formatter.getCategories(categories, inputParts),
 				hasPreposition = Formatter.getPreposition(preposition, inputParts);
 
-		if (taskName.equals(Keywords.EMPTY_STRING)) {
-			return false;
-		}
+		//if (taskName.equals(Keywords.EMPTY_STRING)) {
+		//	return false;
+		//}
+		// From Jx: if have the above line, Error notification wont work, cause the flow wont go into logic :(
+		// 			unless you want shift notification under parser
 		
 		if (hasCategory && !hasPreposition) {
 			taskName = Formatter.getTaskNameWithCategories(rawInput);
@@ -48,7 +50,7 @@ public class ParseAdd {
 		
 		Task task = new Task(date, taskName, categories); 
 		
-		Logic.addTask(task);
+		Logic.addTask(task, isItUndoFunc);
 
 		return true;
 	}

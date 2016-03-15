@@ -11,6 +11,7 @@ public class Task {
 	private int id = 0; 
 	private String task; 
 	private String date; 
+
 	private String startDate; 
 	private String endDate; 
 	private String startTime; 
@@ -19,6 +20,7 @@ public class Task {
 	private int isCompleted = 0; 
 	private int intDate = Keywords.NO_DATE; // for sorting purposes 
 	private int intDateEnd = Keywords.NO_DATE;
+	private boolean priority = false;
 
 	public Task() {
 		id = 0;
@@ -27,6 +29,7 @@ public class Task {
 		isCompleted = 0;
 		intDate = Keywords.NO_DATE;
 		intDateEnd = Keywords.NO_DATE;
+		priority = false;
 	}
 
 	public Task(String date, String taskName, ArrayList<String> cats) {
@@ -57,6 +60,10 @@ public class Task {
 	private String getDisplayDate() {
 		return String.format(Keywords.DATE_FORMAT, 
 				startDate, endDate, startTime, endTime);
+	}
+	
+	public void callInitDate(){
+		initIntDate(this.date);
 	}
 	
 	private void initIntDate(String date) {
@@ -133,6 +140,18 @@ public class Task {
 		this.intDateEnd = intDate;
 		this.endDate = Formatter.fromIntToDDMMM(String.valueOf(intDate));
 	}
+
+	public boolean getPriority(){
+		return this.priority;
+	}
+	
+	public void setPriority(){
+		if (this.priority) {
+			this.priority = false;
+		} else {
+			this.priority = true;
+		}
+	}
 	
 	/**
 	 * This method is used to split the concatenated task into blocks of
@@ -168,7 +187,8 @@ public class Task {
 		for (String cat : task.getCategories()) {
 			toString += cat + Keywords.SPACE_STRING;
 		}
-		toString += Keywords.STORE_DELIMITER + task.getIsCompleted() + Keywords.STORE_DELIMITER;
+		toString += Keywords.STORE_DELIMITER + task.getIsCompleted() + Keywords.STORE_DELIMITER 
+					+ task.getPriority() + Keywords.STORE_DELIMITER;
 		return toString;
 
 	}
