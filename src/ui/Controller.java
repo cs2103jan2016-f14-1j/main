@@ -1,6 +1,9 @@
 package ui;
 
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -12,6 +15,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -29,7 +33,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 
@@ -48,7 +51,7 @@ public class Controller {
 	private final static String [] DEFAULT_DAYS = new String[]{"","SUNDAY","MONDAY", "TUESDAY", "WEDNESDAY","THURSDAY", "FRIDAY", "SATURDAY"};
 
 	
-	private final static String FILE_PATH = "./warning-icon.png";
+	private final static String FILE_PATH = "images/warning-icon.png";
 	private final static String OVERDUE = "OVERDUE";
 	private final static String TODAY = "TODAY";
 	private final static String TOMORROW = "TOMORROW";
@@ -126,7 +129,7 @@ public class Controller {
 				String text = item.getText();
 				textLayout.setText(text);
 				
-				TextStyle styleForCatCount = new TextStyle(null, View.orangeColor, null);
+				TextStyle styleForCatCount = new TextStyle(View.boldFont, View.orangeColor, null);
 				textLayout.setStyle(styleForCatCount, text.lastIndexOf(" ") + 1, text.length()+1);
 				textLayout.draw(event.gc, event.x, event.y);
 			}
@@ -151,8 +154,9 @@ public class Controller {
 		final TableItem firstItem = new TableItem(view.getMainTable(), SWT.NONE);
 		firstItem.setText(OVERDUE);
 		firstItem.setFont(View.headingFont);
-		firstItem .setForeground(View.orangeColor);
-		Image image = new Image(Display.getCurrent(), FILE_PATH);
+		firstItem.setForeground(View.orangeColor);
+		
+		Image image  = new Image(Display.getCurrent(), Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE_PATH));
 		
 		Listener paintListener = new Listener() {
 		      public void handleEvent(Event event) {

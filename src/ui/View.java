@@ -53,7 +53,6 @@ public class View {
 	private Label timeLabel;
 	private Table categoryTable;
 	private Table mainTable;
-	private Label overdueLabel;
 	
 	public View(){
 

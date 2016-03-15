@@ -19,5 +19,7 @@ public class MainGUI {
 				display.sleep();
 			}
 		}
+		
+		System.exit(0);
 	}	
 }
