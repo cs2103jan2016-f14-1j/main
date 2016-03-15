@@ -29,10 +29,6 @@ public class ParseAdd {
 			//prep = getFirstElementInArrayList(preposition);
 		}
 		
-		for(Date d:datetimes) {
-			System.out.println(d);
-		}
-		
 		Task task = new Task(datetimes, taskName, categories); 
 		
 		Logic.addTask(task);

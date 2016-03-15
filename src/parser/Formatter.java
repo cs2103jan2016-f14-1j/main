@@ -79,7 +79,6 @@ public class Formatter {
 		if (date == null) {
 			return Keywords.NO_DATE;
 		}
-		System.out.printf("%s %s \n",date.getDate(),date.getMonth());
 		return date.getDate() + date.getMonth() * Keywords.CONSTANT_DATE_BREAK;
 	}
 	
