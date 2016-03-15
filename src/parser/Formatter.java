@@ -231,6 +231,7 @@ public class Formatter {
 				as.add(d);
 			}
 		}
+		// TODO: sam to fix three dates bug
 		if(as.size() == 2) as.add(Keywords.FIRST_ELEMENT, new Date());
 		while(as.size() < Keywords.MAX_DATES) as.add(null); //quickfix
 		

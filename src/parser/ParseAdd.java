@@ -18,7 +18,7 @@ public class ParseAdd {
 		ArrayList<String> inputParts = Formatter.breakString(rawInput), 
 				categories = new ArrayList<String>(),
 				preposition = new ArrayList<String>();
-		ArrayList<Date> datetimes = Formatter.getDateTimes(rawInput);;
+		ArrayList<Date> datetimes = Formatter.getDateTimes(rawInput);
 		boolean hasCategory = Formatter.getCategories(categories, inputParts),
 				hasPreposition = Formatter.getPreposition(preposition, inputParts);	
 		
