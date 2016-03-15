@@ -44,7 +44,9 @@ public class Controller {
 
 	private final static int NUMBER_OF_DAYS = 7;
 	private HashMap<String, ArrayList<String>> putIntoDays = new HashMap<>();
-	private final static String [] days = new String[NUMBER_OF_DAYS];
+	private static String [] days = new String[NUMBER_OF_DAYS];
+	private final static String [] DEFAULT_DAYS = new String[]{"SUNDAY","MONDAY", "TUESDAY", "WEDNESDAY","THURSDAY", "FRIDAY", "SATURDAY"};
+
 	
 	private final static String FILE_PATH = "./warning-icon.png";
 	private final static String OVERDUE = "OVERDUE";
@@ -67,21 +69,21 @@ public class Controller {
 		
 		String compareDay = getCurrentDay().toUpperCase();
 		int index;
-		System.out.println(compareDay);
+
 		if(compareDay.equals(DayOfWeek.TUESDAY)){
-			index = 1;
-		}else if(compareDay.equals(DayOfWeek.WEDNESDAY)){
 			index = 2;
-		}else if(compareDay.equals(DayOfWeek.THURSDAY)){
+		}else if(compareDay.equals(DayOfWeek.WEDNESDAY)){
 			index = 3;
-		}else if(compareDay.equals(DayOfWeek.FRIDAY)){
+		}else if(compareDay.equals(DayOfWeek.THURSDAY)){
 			index = 4;
-		}else if(compareDay.equals(DayOfWeek.SATURDAY)){
+		}else if(compareDay.equals(DayOfWeek.FRIDAY)){
 			index = 5;
-		}else if(compareDay.equals(DayOfWeek.SUNDAY)){
+		}else if(compareDay.equals(DayOfWeek.SATURDAY)){
 			index = 6;
+		}else if(compareDay.equals(DayOfWeek.SUNDAY)){
+			index = 7;
 		} else {
-			index = 0;
+			index = 1;
 		}
 		
 		for(int i = STARTING_INDEX; i < days.length ;i++){
@@ -222,7 +224,13 @@ public class Controller {
 					} else if (diffInDay == 1){
 						insertToHashMap(TOMORROW, taskIDandDesc);
 					} else {
-						insertToHashMap(DayOfWeek.values()[Calendar.DAY_OF_WEEK-1].toString(), taskIDandDesc);
+						
+						int tempDay = compareCalendar.get(Calendar.DAY_OF_WEEK) - 2;
+						
+						if(tempDay< 0 ){
+							tempDay+=7;
+						}
+						insertToHashMap(DEFAULT_DAYS[tempDay].toString(), taskIDandDesc);
 					}
 				
 			    } else {
@@ -262,10 +270,14 @@ public class Controller {
 				mainItem.setFont(View.headingFont);
 				mainItem.setForeground(View.orangeColor);
 				thirdItem = false;
+				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+				mainItem.setText(day);
+				mainItem.setFont(View.normalFont);
+				mainItem.setForeground(View.orangeColor);
 				insertIntoTable(day);
 				
 			} else {
-				mainItem.setText("	" + day);
+				mainItem.setText(day);
 				mainItem.setFont(View.normalFont);
 				mainItem.setForeground(View.orangeColor);
 				insertIntoTable(day);
