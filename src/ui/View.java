@@ -22,7 +22,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+
 import java.time.Month;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class View {
 	
@@ -60,6 +65,28 @@ public class View {
 		shell.setBackground(whiteColor);
 		shell.setSize(725, 625);
 		shell.setText(GUI_TITLE);
+		// For shortcut command
+		shell.addListener(SWT.Close, new Listener() {
+			
+			@Override
+			public void handleEvent(org.eclipse.swt.widgets.Event arg0) {
+				// TODO Auto-generated method stub
+				arg0.doit = false;
+				shell.setVisible(false);
+				try {
+		            GlobalScreen.registerNativeHook();
+		        }
+		        catch (NativeHookException ex) {
+		            System.err.println("There was a problem registering the native hook.");
+		            System.err.println(ex.getMessage());
+		            System.exit(0);
+		        }
+
+		        GlobalScreen.addNativeKeyListener(new MainGUI());
+		        Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+		        logger.setLevel(Level.OFF);
+			}
+	    });
 		
 		categoryTable = new Table(shell, SWT.FULL_SELECTION);
 		Button invisibleButton = new Button(shell, SWT.NONE);

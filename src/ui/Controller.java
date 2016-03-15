@@ -1,9 +1,6 @@
 package ui;
 
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -15,10 +12,8 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
@@ -415,7 +410,7 @@ public class Controller {
 					event.doit = false;
 					break;
 				case SWT.ESC:
-					System.out.println(SWT.ESC);
+					System.exit(0);
 					break;
 				case SWT.BS:
 					if (isTextEmpty(input)) {
