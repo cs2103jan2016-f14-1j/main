@@ -28,6 +28,18 @@ public class FreeIDs {
 		freeIDs.offerFirst(id);
 	}
 	
+	protected static void removeSpecificId(int id){
+		boolean foundID = false;
+		for(int i : freeIDs){
+			if(i==id){
+				foundID = true;
+			}
+		}
+		if(foundID==true){
+			freeIDs.remove(new Integer(id));
+		}
+	}
+	
 	protected static String convertIDListToString() {
 		String stringID = Keywords.EMPTY_STRING;
 		if (freeIDs.isEmpty()) {

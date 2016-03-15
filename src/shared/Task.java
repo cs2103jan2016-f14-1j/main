@@ -57,6 +57,10 @@ public class Task {
 		initIntDate(this.date);
 	}
 	
+	public void setIntDate(){
+		intDate = 999;
+	}
+	
 	private void initIntDate(String date) {
 		if (date.equals(Keywords.EMPTY_STRING)) {
 			this.intDate = Keywords.NO_DATE;
@@ -112,7 +116,7 @@ public class Task {
 		return intDate;
 	}
 
-	private void setIntDate(int intDate) {
+	public void setIntDate(int intDate) {
 		this.intDate = intDate;
 		this.date = Formatter.fromIntToDDMMM(String.valueOf(intDate));
 	}

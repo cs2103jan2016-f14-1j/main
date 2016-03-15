@@ -6,10 +6,10 @@ import logic.Logic;
 
 public class ParseDo {
 	
-	public static boolean doTask(String rawInput, int completeOrNot) {
+	public static boolean doTask(String rawInput) {
 		ArrayList<Integer> ids = Formatter.breakToIds(rawInput);
 		
-		Logic.doTask(ids, completeOrNot);
+		Logic.doTask(ids);
 
 		return true;
 	}

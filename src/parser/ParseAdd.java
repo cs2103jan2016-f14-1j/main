@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class ParseAdd {
 
-	public static boolean addTask(String rawInput, int isItUndoFunc) {
+	public static boolean addTask(String rawInput) {
 		String taskName = rawInput, 
 				date = Keywords.EMPTY_STRING, 
 				prep = Keywords.EMPTY_STRING;
@@ -32,7 +32,7 @@ public class ParseAdd {
 		
 		Task task = new Task(date, taskName, categories); 
 		
-		Logic.addTask(task, isItUndoFunc);
+		Logic.addTask(task);
 
 		return true;
 	}

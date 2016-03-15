@@ -14,7 +14,7 @@ public class DeleteTask extends Functionality {
 	 *            search for the task in the storage String categories to delete
 	 * @return it will return successful when a task is deleted, else otherwise.
 	 */
-	public boolean deleteTask(ArrayList<Integer> ids, ArrayList<String> cats, int isItUndoFunc) {
+	public boolean deleteTask(ArrayList<Integer> ids, ArrayList<String> cats) {
 		if (ids.isEmpty() && cats.isEmpty()) {
 			Notification.setTitle(Keywords.MESSAGE_ERROR);
 		} else if (ids.size() + cats.size() > 1) {
@@ -38,7 +38,7 @@ public class DeleteTask extends Functionality {
 						"All tasks under the following categories" + " have been deleted: " + cats.toString());
 			}
 		}
-		return deleteByIds(ids,isItUndoFunc) | deleteByCats(cats,isItUndoFunc);
+		return deleteByIds(ids) | deleteByCats(cats);
 	}
 
 	/**
@@ -47,18 +47,14 @@ public class DeleteTask extends Functionality {
 	 * @param ids
 	 * @return
 	 */
-	private boolean deleteByIds(ArrayList<Integer> ids, int isItUndoFunc) {
+	private boolean deleteByIds(ArrayList<Integer> ids) {
 		boolean value = false;
-		String undoAction = Keywords.EMPTY_STRING;
 		for (int id : ids) {
-			undoAction += formAddTaskAction(id) + Keywords.STORE_DELIMITER;
 			if (deleteTask(id)) {
 				value = true;
 			}
 		}
-		if (isItUndoFunc == Keywords.NO) {
-			super.addToHistory(undoAction);
-		}
+		super.addToHistory("delete");
 		return value;
 	}
 
@@ -66,21 +62,17 @@ public class DeleteTask extends Functionality {
 	 * This method allows user to delete all tasks under a category. Finds all
 	 * taskIDs of tasks under category and call the deleteTask method
 	 */
-	private boolean deleteByCats(ArrayList<String> categories, int isItUndoFunc) {
+	private boolean deleteByCats(ArrayList<String> categories) {
 		ArrayList<Task> taskList = Storage.getTasksByCat(categories);
-		String undoAction = Keywords.EMPTY_STRING;
 		if (taskList.isEmpty()) {
 			return false;
 		}
 
 		for (Task task : taskList) {
-			undoAction += formAddTaskAction(task.getId()) + Keywords.STORE_DELIMITER;
 			deleteTask(task.getId());
 		}
-		if (isItUndoFunc == Keywords.NO) {
-			super.addToHistory(undoAction);
-		}
 
+		super.addToHistory("delete");
 		return true;
 	}
 
@@ -93,23 +85,11 @@ public class DeleteTask extends Functionality {
 		if (Storage.getTask(taskId) == null) {
 			return false;
 		}
+		super.addToFuncTasks(Storage.getTask(taskId));
 		Storage.removeTaskFromList(Storage.getTaskIndex(taskId));
 		Storage.recycleId(taskId);
 		super.synchronization();
 		return true;
-	}
-
-	private String formAddTaskAction(int taskId) {
-		Task t = Storage.getTask(taskId);
-		if (t == null) {
-			return Keywords.EMPTY_STRING;
-		}
-		String undoAction = "unadd " + t.getTask() + Keywords.SPACE_STRING;
-		for (String cat : t.getCategories()) {
-			undoAction += "#" + cat + Keywords.SPACE_STRING;
-		}
-		undoAction += "by" + Keywords.SPACE_STRING + t.getDate();
-		return undoAction;
 	}
 
 }
