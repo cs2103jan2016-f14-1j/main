@@ -6,7 +6,8 @@ import shared.Task;
 
 public class Storage {
 
-	// FORMAT OF EACH TASK: [taskID]|[task]|[date]|[categories]|[isComplete]|
+	// FORMAT OF EACH TASK: [taskID]|[task]|[sdate]|[edate]|
+	//						[stime]|[etime]|[categories]|[isComplete]|[priority]
 	private static ArrayList<Task> tasks;
 	//private static Categories categories;
 	//private static FreeIDs freeIDs;
