@@ -1,24 +1,38 @@
 package storage;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
+import shared.Keywords;
+import shared.Task;
+
 public class History {
-	private static LinkedList<String> historyList;
-	private static final String EMPTY_HISTORY = "History is empty";
+	private static LinkedList<ArrayList<Task>> historyList;
+	private static LinkedList<String> actionList;
 	
 	protected static void initHistory(){
-		historyList = new LinkedList<String>();
+		historyList = new LinkedList<ArrayList<Task>>();
+		actionList = new LinkedList<String>();
 	}
 	
-	protected static String getLastAction(){
+	protected static ArrayList<Task> getLastTasks(){
 		if(historyList.isEmpty()){
-			return EMPTY_HISTORY;
+			return null;
 		}
 		return historyList.poll();
 	}
 	
-	protected static void addActionToHistory(String action){
-		historyList.addFirst(action);
+	protected static String getLastAction(){
+		if(actionList.isEmpty()){
+			return Keywords.EMPTY_STRING;
+		}
+		return actionList.poll();
+	}
+	
+	
+	protected static void addActionToHistory(ArrayList<Task> t, String action){
+		historyList.addFirst(t);
+		actionList.addFirst(action);
 	}
 	
 }

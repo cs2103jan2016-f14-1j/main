@@ -8,7 +8,6 @@ import shared.Keywords;
 public class DoTask extends Functionality {
 
 	private final String TASK_NOT_FOUND_MSG = "The task is not found";
-
 	/**
 	 * This method allows the user to mark task as completed
 	 * 
@@ -18,7 +17,7 @@ public class DoTask extends Functionality {
 	 *         else otherwise.
 	 */
 
-	public boolean doTask(ArrayList<Integer> taskIds, int doneOrNotDone) {
+	public boolean doTask(ArrayList<Integer> taskIds) {
 		boolean value = false;
 		if (taskIds.isEmpty()) {
 			Notification.setTitle(Keywords.MESSAGE_ERROR);
@@ -29,35 +28,15 @@ public class DoTask extends Functionality {
 			Notification.setTitle(Keywords.MESSAGE_COMPLETED_SUCCESS);
 			Notification.setMessage(Storage.getTask(taskIds.get(Keywords.FIRST_ELEMENT)).getUserFormat() + "done!");
 		}
-		if (doneOrNotDone == Keywords.TASK_COMPLETED) {
-			String undoAction = "uncomplete ";
-			for (int taskID : taskIds) {
-				if (doTask(taskID)) {
-					value = true;
-					undoAction += taskID + Keywords.SPACE_STRING;
-				}
-			}
-			//Add to history the action to be done
-			super.addToHistory(undoAction);
-		}else{
-			for (int taskID : taskIds) {
-				if (undoTask(taskID)) {
-					value = true;
-				}
+		for (int taskID : taskIds) {
+			if (doTask(taskID)) {
+				value = true;
 			}
 		}
+		// Add to history the action to be done
+		super.addToHistory("do");
 		super.synchronization();
 		return value;
-	}
-
-	private boolean undoTask(int taskID) {
-		Task t = Storage.getTask(taskID);
-		if (doesTaskExist(t)) {
-			return false;
-		}
-
-		Storage.getTask(taskID).setIsCompleted(Keywords.TASK_NOT_COMPLETED);
-		return true;
 	}
 
 	private boolean doTask(int taskID) {
@@ -65,6 +44,7 @@ public class DoTask extends Functionality {
 		if (doesTaskExist(t)) {
 			return false;
 		}
+		super.addToFuncTasks(t);
 		t.setIsCompleted(Keywords.TASK_COMPLETED);
 		return true;
 	}

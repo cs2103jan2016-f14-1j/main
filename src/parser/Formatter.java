@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 
 public class Formatter {
 	
@@ -69,46 +72,15 @@ public class Formatter {
 	}
 	
 	/**
-	 * converts date <DDMMM | DMMM> to int representing a unique date 
-	 * assumption: String is valid format [d]dmmm where mmm is legit month and [d]d is legit day
-	 * if empty string, return NO_DATE
+	 * converts date object <date> to int representing a unique date 
+	 * date object might be null
 	 */
-	public static int fromDDMMMToInt(String date) {
-		if (date.equals(Keywords.EMPTY_STRING)) {
+	public static int fromDateToInt(Date date) {
+		if (date == null) {
 			return Keywords.NO_DATE;
 		}
-		int len = date.length();
-		String day = date.substring(0, len - 3);
-		String month = date.substring(len - 3, len);
-		int result = Integer.parseInt(day) + (convertMonthToInt(month) * 32);
-		return result;
-	}
-	private static int convertMonthToInt(String month) {
-		if (month.equalsIgnoreCase("jan")) {
-			return 1;
-		} else if (month.equalsIgnoreCase("feb")) {
-			return 2;
-		} else if (month.equalsIgnoreCase("mar")) {
-			return 3;
-		} else if (month.equalsIgnoreCase("apr")) {
-			return 4;
-		} else if (month.equalsIgnoreCase("may")) {
-			return 5;
-		} else if (month.equalsIgnoreCase("jun")) {
-			return 6;
-		} else if (month.equalsIgnoreCase("jul")) {
-			return 7;
-		} else if (month.equalsIgnoreCase("aug")) {
-			return 8;
-		} else if (month.equalsIgnoreCase("sep")) {
-			return 9;
-		} else if (month.equalsIgnoreCase("oct")) {
-			return 10;
-		} else if (month.equalsIgnoreCase("nov")) {
-			return 11;
-		} else { // month.equalsIgnoreCase("dec")
-			return 12;
-		}
+		System.out.printf("%s %s \n",date.getDate(),date.getMonth());
+		return date.getDate() + date.getMonth() * Keywords.CONSTANT_DATE_BREAK;
 	}
 	
 	/**
@@ -119,30 +91,13 @@ public class Formatter {
 			return null;
 		}
 		int intDate = convertStringDateToInt(date);
-		int month = intDate / 32;
-		int day = intDate - (month * 32);
+		int month = intDate / Keywords.CONSTANT_DATE_BREAK;
+		int day = intDate - (month * Keywords.CONSTANT_DATE_BREAK);
 		return new Date(Keywords.CONSTANT_YEAR, month, day);
 	}
 	private static int convertStringDateToInt(String date) {
 		// TOOD: need to change after introducing preposition
 		return Integer.parseInt(date);
-	}
-	private static String convertIntToMonth(int month) {
-		switch (month) {
-		case 1: return "Jan";
-		case 2: return "Feb";
-		case 3: return "Mar";
-		case 4: return "Apr";
-		case 5: return "May";
-		case 6: return "Jun";
-		case 7: return "Jul";
-		case 8: return "Aug";
-		case 9: return "Sep";
-		case 10: return "Oct";
-		case 11: return "Nov";
-		case 12: return "Dec";
-		}
-		return ""; // will never reach this statement
 	}
 	private String removePreposition(String date) {
 		if (date.equals(Keywords.EMPTY_STRING)) {
@@ -261,23 +216,37 @@ public class Formatter {
 		return out.trim();
 	}
 	
-	/**
-	 * @return ArrayList<String> of dates detected
-	 */
-	public static ArrayList<String> extractDates(String input) {
-		ArrayList<String> as = new ArrayList<String>();
-		// TODO: regex to find dates and extract them like a boss
+	public static boolean hasPrepositionOn(String s) {
+		return s.contains(Keywords.PREPOSITION_ON);
+	}
+	
+	public static String getTaskNameWithPrepositionOn(String s) {
+		return s.split(Keywords.PREPOSITION_ON, 2)[Keywords.FIRST_ELEMENT];
+	}
+	
+	public static ArrayList<Date> getDateTimes(String s) {
+		ArrayList<Date> as = new ArrayList<Date>();
+		for (String t : breakByPreposition(s)) {
+			Date d = getDateFromString(t);
+			if (d != null) {
+				as.add(d);
+			}
+		}
+		if(as.size() == 2) as.add(Keywords.FIRST_ELEMENT, new Date());
+		while(as.size() < Keywords.MAX_DATES) as.add(null); //quickfix
+		
 		return as;
 	}
 	
-	/**
-	 * @return ArrayList<String> of times detected
-	 */
-	public static ArrayList<String> extractTimes(String input) {
-		ArrayList<String> as = new ArrayList<String>();
-		// TODO: regex to find dates and extract them like a boss
-		return as;
+	private static String[] breakByPreposition(String s) {
+		return s.split(Keywords.REGEX_PREPOSITIONS);
 	}
-	
+	public static Date getDateFromString(String s) {
+		List<Date> parse = new PrettyTimeParser().parse(s);
+		if (!parse.isEmpty()) {
+			return parse.get(Keywords.FIRST_ELEMENT);
+		}
+		return null;
+	}
 
 }

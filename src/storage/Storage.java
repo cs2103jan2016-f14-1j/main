@@ -70,12 +70,28 @@ public class Storage {
 
 	public static void addTaskToList(Task task) {
 		tasks.add(task);
-		//Categories.addACountToCat(task.getCategories());
 	}
 
 	public static void removeTaskFromList(int taskIndex) {
 		Task t = tasks.remove(taskIndex);
 		Categories.removeACountFromCat(t.getCategories());
+	}
+	
+	public static void removeTaskUsingTaskId(int taskId){
+		boolean foundTask = false;
+		for(Task t: tasks){
+			if(taskId==t.getId()){
+				foundTask = true;
+			}
+		}
+		if(foundTask){
+			Categories.removeACountFromCat(getTask(taskId).getCategories());	
+			tasks.remove(getTask(taskId));		
+		}
+	}
+	
+	public static void removeSpecificId(int id){
+		FreeIDs.removeSpecificId(id);
 	}
 
 	public static void recycleId(int id) {
@@ -104,8 +120,12 @@ public class Storage {
 		return temp;
 	}
 	
-	public static void addToHistory(String action){
-		History.addActionToHistory(action);
+	public static void addToHistory(ArrayList<Task> t, String action){
+		History.addActionToHistory(t, action);
+	}
+	
+	public static ArrayList<Task> getLastTasks(){
+		return History.getLastTasks();
 	}
 	
 	public static String getLastAction(){

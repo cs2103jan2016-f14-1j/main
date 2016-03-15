@@ -17,13 +17,14 @@ public class EditTask extends Functionality {
 	 */
 	public boolean editTask(int taskID, ArrayList<String> properties) {
 		if (Storage.getTask(taskID) != null) {
-			String undoAction = "edit "+taskID+" to "+Storage.getTask(taskID).getDate();
-			super.addToHistory(undoAction);
+			//super.getTasks().add(Storage.getTask(taskID));
+			super.addToFuncTasks(Storage.getTask(taskID));
+			super.addToHistory("edit");
 			Storage.getTask(taskID).setDate(properties.get(0));
 			Storage.getTask(taskID).callInitDate();
-			Notification.setTitle(Keywords.MESSAGE_EDIT_SUCCESS);
-			Notification.setMessage(Storage.getTask(taskID).getUserFormat() + " has been edited!");
-			//Storage.getTask(taskID).setTask(properties.get(Keywords.TASK_DESC));
+				Notification.setTitle(Keywords.MESSAGE_EDIT_SUCCESS);
+				Notification.setMessage(Storage.getTask(taskID).getUserFormat() + " has been edited!");
+			// Storage.getTask(taskID).setTask(properties.get(Keywords.TASK_DESC));
 		}
 		// Storage.getTask(taskID).setCategories((properties.get(Keywords.TASK_CATEGORIES));
 		/*
