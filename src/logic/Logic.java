@@ -37,5 +37,9 @@ public class Logic {
 	public static boolean prioritize(ArrayList<Integer> taskIDs) {
 		return new MarkTask().prioritise(taskIDs);
 	}
+	
+	public static ArrayList<Task> searchTask(String words){
+		return new SearchTask().searchTask(words);
+	}
 
 }
