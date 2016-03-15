@@ -45,7 +45,7 @@ public class Controller {
 	private final static int NUMBER_OF_DAYS = 7;
 	private HashMap<String, ArrayList<String>> putIntoDays = new HashMap<>();
 	private static String [] days = new String[NUMBER_OF_DAYS];
-	private final static String [] DEFAULT_DAYS = new String[]{"SUNDAY","MONDAY", "TUESDAY", "WEDNESDAY","THURSDAY", "FRIDAY", "SATURDAY"};
+	private final static String [] DEFAULT_DAYS = new String[]{"","SUNDAY","MONDAY", "TUESDAY", "WEDNESDAY","THURSDAY", "FRIDAY", "SATURDAY"};
 
 	
 	private final static String FILE_PATH = "./warning-icon.png";
@@ -211,27 +211,24 @@ public class Controller {
 				Date month = new SimpleDateFormat("MMM", Locale.ENGLISH).parse(monthDate);
 				Calendar compareMonth = Calendar.getInstance();
 				compareMonth.setTime(month);
-			    
+			
 				Calendar compareCalendar = Calendar.getInstance();
 			    compareCalendar.set(getCurrentYear(), compareMonth.get(Calendar.MONTH), Integer.parseInt(dayDate));
-				int diffInDay = calculateDiffInDay(compareCalendar);
+			 
+			    int diffInDay = calculateDiffInDay(compareCalendar);
+			    compareCalendar.set(getCurrentYear(), compareMonth.get(Calendar.MONTH), Integer.parseInt(dayDate));
 			    
 				if(diffInDay == -1){
 					insertToHashMap(OVERDUE, taskIDandDesc);
 				} else if(diffInDay < 7){
-					if (diffInDay == 0){
-			    		insertToHashMap(TODAY, taskIDandDesc);
-					} else if (diffInDay == 1){
-						insertToHashMap(TOMORROW, taskIDandDesc);
-					} else {
-						
-						int tempDay = compareCalendar.get(Calendar.DAY_OF_WEEK) - 2;
-						
-						if(tempDay< 0 ){
-							tempDay+=7;
-						}
-						insertToHashMap(DEFAULT_DAYS[tempDay].toString(), taskIDandDesc);
-					}
+				if (diffInDay == 0){
+		    		insertToHashMap(TODAY, taskIDandDesc);
+		    	} else if (diffInDay == 1){
+		    		insertToHashMap(TOMORROW, taskIDandDesc);
+				} else {		
+					int tempDay = compareCalendar.get(Calendar.DAY_OF_WEEK);
+					insertToHashMap(DEFAULT_DAYS[tempDay].toString(), taskIDandDesc);
+				}
 				
 			    } else {
 			    	insertToHashMap(OTHERS, taskIDandDesc);
@@ -389,7 +386,6 @@ public class Controller {
 					inputToHint();
 
 					Object result = parser.parse(tempInput);
-
 					displayCategory();
 					
 					try{
