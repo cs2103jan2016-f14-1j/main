@@ -3,6 +3,8 @@ package parser;
 import shared.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Formatter {
 	
@@ -110,17 +112,16 @@ public class Formatter {
 	}
 	
 	/**
-	 * converts date <int> to human-readable String <DDMMM>
+	 * converts date <int> to date object <Date>
 	 */
-	public static String fromIntToDDMMM(String date) {
+	public static Date fromIntToDate(String date) {
 		if (!isDate(date)) {
-			return Keywords.EMPTY_STRING;
+			return null;
 		}
 		int intDate = convertStringDateToInt(date);
 		int month = intDate / 32;
 		int day = intDate - (month * 32);
-		String result = String.format("%d%s", day, convertIntToMonth(month));
-		return result;
+		return new Date(Keywords.CONSTANT_YEAR, month, day);
 	}
 	private static int convertStringDateToInt(String date) {
 		// TOOD: need to change after introducing preposition

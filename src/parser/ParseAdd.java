@@ -3,7 +3,11 @@ package parser;
 import shared.*;
 import logic.*;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
+import org.ocpsoft.prettytime.nlp.parse.DateGroup;
 
 public class ParseAdd {
 
@@ -33,13 +37,17 @@ public static boolean addTask(String rawInput, int isItUndoFunc) {
 				times = Formatter.extractTimes(rawInput);
 		boolean hasCategory = Formatter.getCategories(categories, inputParts),
 				hasPreposition = Formatter.getPreposition(preposition, inputParts);
-
+		
+		List<Date> parse = new PrettyTimeParser().parse(rawInput);
+		System.out.println(parse);
+		
 		//if (taskName.equals(Keywords.EMPTY_STRING)) {
 		//	return false;
 		//}
 		// From Jx: if have the above line, Error notification wont work, cause the flow wont go into logic :(
 		// 			unless you want shift notification under parser
 		
+		/*
 		if (hasCategory && !hasPreposition) {
 			taskName = Formatter.getTaskNameWithCategories(rawInput);
 		} else if (hasPreposition) {
@@ -51,7 +59,8 @@ public static boolean addTask(String rawInput, int isItUndoFunc) {
 		Task task = new Task(date, taskName, categories); 
 		
 		Logic.addTask(task, isItUndoFunc);
-
+		*/
+		
 		return true;
 	}
 

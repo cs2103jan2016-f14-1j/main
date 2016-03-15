@@ -2,33 +2,36 @@ package shared;
 
 import parser.*;
 import storage.*;
-import shared.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public class Task {
 
 	private int id = 0; 
 	private String task; 
 	private String date; 
-
-	private String startDate; 
-	private String endDate; 
-	private String startTime; 
-	private String endTime; 
+	private Date startDate; 
+	private Date endDate; 
+	private int startTime; 
+	private int endTime; 
 	private ArrayList<String> categories; 
-	private int isCompleted = 0; 
-	private int priority = 0;
-	private int intDate = Keywords.NO_DATE; // for sorting purposes 
-	private int intDateEnd = Keywords.NO_DATE;
+	private int isCompleted; 
+	private int priority;
+	private int intDate; // for sorting purposes 
+	private int intDateEnd;
 
 	public Task() {
 		id = 0;
-		task = date = startDate = endDate = startTime = endTime = "";
+		task = date = Keywords.EMPTY_STRING;
+		startDate = null;
+		endDate = null;
+		startTime = Keywords.NO_DATE;
+		endTime = Keywords.NO_DATE;
 		categories = new ArrayList<String>();
-		isCompleted = 0;
 		intDate = Keywords.NO_DATE;
 		intDateEnd = Keywords.NO_DATE;
+		isCompleted = 0;
 		priority = 0;
 	}
 
@@ -54,7 +57,7 @@ public class Task {
 	public String getStorageFormat() {
 		return String.format(Keywords.STORAGE_FORMAT,
 				id, task, intDate, intDateEnd, startTime, endTime, 
-				Formatter.toCatsForStore(categories), isCompleted);
+				Formatter.toCatsForStore(categories), isCompleted, priority);
 	}
 	
 	private String getDisplayDate() {
@@ -133,12 +136,12 @@ public class Task {
 
 	private void setIntDate(int intDate) {
 		this.intDate = intDate;
-		this.date = Formatter.fromIntToDDMMM(String.valueOf(intDate));
+		this.startDate = Formatter.fromIntToDate(String.valueOf(intDate));
 	}
 	
 	private void setIntDateEnd(int intDate) {
 		this.intDateEnd = intDate;
-		this.endDate = Formatter.fromIntToDDMMM(String.valueOf(intDate));
+		this.endDate = Formatter.fromIntToDate(String.valueOf(intDate));
 	}
 
 	public int getPriority(){
@@ -167,8 +170,8 @@ public class Task {
 		temp.setId(Integer.parseInt(properties.get(Keywords.TASK_ID)));
 		temp.setIntDate(Integer.parseInt(properties.get(Keywords.TASK_STARTDATE)));
 		temp.setIntDateEnd(Integer.parseInt(properties.get(Keywords.TASK_ENDDATE)));
-		temp.setStartTime(properties.get(Keywords.TASK_STARTTIME));
-		temp.setEndTime(properties.get(Keywords.TASK_ENDTIME));
+		temp.setStartTime(Integer.parseInt(properties.get(Keywords.TASK_STARTTIME)));
+		temp.setEndTime(Integer.parseInt(properties.get(Keywords.TASK_ENDTIME)));
 		temp.setCategories(new ArrayList<String>(
 				Arrays.asList(properties.get(Keywords.TASK_CATEGORIES).split(Keywords.SPACE_STRING))));
 		temp.setIsCompleted(Integer.parseInt(properties.get(Keywords.TASK_ISCOMPLETE)));
@@ -183,7 +186,7 @@ public class Task {
 	 * @return
 	 */
 	public static String formatObjectToString(Task task) {
-		String cats = "";
+		String cats = Keywords.EMPTY_STRING;
 		for (String s : task.getCategories()) {
 			cats += s + Keywords.SPACE_STRING;
 		}
@@ -194,43 +197,36 @@ public class Task {
 		return toString;
 	}
 
-	public String getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
-
-	public String getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
-
-	public String getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
-
-	public String getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
-	
 	public boolean hasDateRange() {
-		return endDate.equals(Keywords.EMPTY_STRING);
+		return endDate != null;
 	}
 	
 	public boolean hasTimeRange() {
-		return endTime.equals(Keywords.EMPTY_STRING);
+		return endTime != Keywords.NO_DATE;
+	}
+	
+	public Date getStartDate() {
+		return startDate;
+	}
+	public Date getEndDate() {
+		return endDate;
+	}
+	public int getStartTime() {
+		return startTime;
+	}
+	public int getEndTime() {
+		return endTime;
+	}
+	public void setStartDate(Date d) {
+		this.startDate = d;
+	}
+	public void setEndDate(Date d) {
+		this.endDate = d;
+	}
+	public void setStartTime(int d) {
+		this.startTime = d;
+	}
+	public void setEndTime(int d) {
+		this.endTime = d;
 	}
 }
