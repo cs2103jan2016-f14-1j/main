@@ -18,15 +18,7 @@ public class MainGUI implements NativeKeyListener {
 	private static Shell shell;
 
 	public static void main(String[] args) throws Exception {
-		
-		//Uncomment this if u can't run, remember to use ESC button to exit and not top right X
-		//TODO: check the pid instead of file
-		//LockFile.lock.delete();
-	    if(!LockFile.lock()) {
-	    	System.out.println("The program is already running");
-	    	System.exit(0);
-	    }
-		 
+	
 		String value = "\"javaw -jar " + System.getProperty("user.dir") + "\\"+ JAR_NAME +"\"";
 		WinRegistry.writeStringValue(WinRegistry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", KEY_NAME, value);
 		//WinRegistry.deleteValue(WinRegistry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "dotdotdot autorun key");
@@ -50,48 +42,30 @@ public class MainGUI implements NativeKeyListener {
 		// TODO Auto-generated method stub
 		if (e.getKeyCode() == NativeKeyEvent.VC_D) {
             keyd = true;
-            
             if (keyd && keyctrl && keyalt) {
-            
-            	Display.getDefault().asyncExec(
-            			new Runnable(){
-           			       public void run(){
-           			    	   shell.setVisible(true);  
-           			    	   shell.forceActive();
-            			   } 
-            			});
-           	    	   
-            	try {
-					GlobalScreen.unregisterNativeHook();
-				} catch (NativeHookException e1) {
-					e1.printStackTrace();
-				}
+    	        
+               	Display.getDefault().asyncExec(
+               			new Runnable(){
+              			       public void run(){
+              			    	   shell.setVisible(true);  
+              			    	   shell.forceActive();
+               			   } 
+               			});
+              	    	   
+               	try {
+    					GlobalScreen.unregisterNativeHook();
+    				} catch (NativeHookException e1) {
+    					e1.printStackTrace();
+    				}
             }
-            
+            keyd = false;
+            keyctrl = false;
+            keyalt = false;
         } else if (e.getKeyCode() == NativeKeyEvent.VC_CONTROL_L || e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
         	keyctrl = true;
-        	
-            if (keyd && keyctrl && keyalt) {
-            	shell.setVisible(true);
-            	try {
-					GlobalScreen.unregisterNativeHook();
-				} catch (NativeHookException e1) {
-					e1.printStackTrace();
-				}
-            }
         } else if (e.getKeyCode() == NativeKeyEvent.VC_ALT_L || e.getKeyCode() == NativeKeyEvent.VC_ALT_R) {
         	keyalt = true;
-        	
-            if (keyd && keyctrl && keyalt) {
-            	shell.setVisible(true);
-            	try {
-					GlobalScreen.unregisterNativeHook();
-				} catch (NativeHookException e1) {
-					e1.printStackTrace();
-				}
-            }
         }
-		
 	}
 
 	@Override
@@ -104,8 +78,6 @@ public class MainGUI implements NativeKeyListener {
         } else if (e.getKeyCode() == NativeKeyEvent.VC_ALT_L || e.getKeyCode() == NativeKeyEvent.VC_ALT_R) {
         	keyalt = false;
         }
-		
-		
 	}
 
 	@Override

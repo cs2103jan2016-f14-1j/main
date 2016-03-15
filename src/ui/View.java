@@ -77,14 +77,10 @@ public class View {
 		            GlobalScreen.registerNativeHook();
 		        }
 		        catch (NativeHookException ex) {
-		            System.err.println("There was a problem registering the native hook.");
-		            System.err.println(ex.getMessage());
 		            System.exit(0);
 		        }
 
 		        GlobalScreen.addNativeKeyListener(new MainGUI());
-		        Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
-		        logger.setLevel(Level.OFF);
 			}
 	    });
 		
