@@ -238,5 +238,24 @@ public class Formatter {
 
 		return out.trim();
 	}
+	
+	/**
+	 * @return ArrayList<String> of dates detected
+	 */
+	public static ArrayList<String> extractDates(String input) {
+		ArrayList<String> as = new ArrayList<String>();
+		// TODO: regex to find dates and extract them like a boss
+		return as;
+	}
+	
+	/**
+	 * @return ArrayList<String> of times detected
+	 */
+	public static ArrayList<String> extractTimes(String input) {
+		ArrayList<String> as = new ArrayList<String>();
+		// TODO: regex to find dates and extract them like a boss
+		return as;
+	}
+	
 
 }

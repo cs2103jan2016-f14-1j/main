@@ -26,9 +26,12 @@ public class Keywords {
 	
 	public static final int TASK_ID = 0;
 	public static final int TASK_DESC = 1;
-	public static final int TASK_DATE = 2;
-	public static final int TASK_CATEGORIES = 3;
-	public static final int TASK_ISCOMPLETE = 4;
+	public static final int TASK_STARTDATE = 2;
+	public static final int TASK_ENDDATE = 3;
+	public static final int TASK_STARTTIME = 4;
+	public static final int TASK_ENDTIME = 5;
+	public static final int TASK_CATEGORIES = 6;
+	public static final int TASK_ISCOMPLETE = 7;
 	public static final int TASK_NOT_FOUND = -1;
 	public static final int TASK_BOTH = -2;
 	public static final int TASK_NOT_COMPLETED = 0;
@@ -37,4 +40,11 @@ public class Keywords {
 	public static final String FORMAT_DATE = "dd/MM/yyyy";
 	public static final String FORMAT_TIME = "hh:mm a";
 	public static final String FORMAT_DAY = "EEEEEEE";
+	
+	public static final String USER_FORMAT = "(#%s) %s %s %s";
+	// STORAGE_FORMAT	: 	[taskID]|[task]|[sdate]|[edate]|
+	//						[stime]|[etime]|[categories]|[isComplete]|
+	public static final String STORAGE_FORMAT = "%d|%s|%s|%s|%s|%s|%s|%d|";
+	// DATE FORMAT		:	[startDate] [endDate] [startTime] [endTime]
+	public static final String DATE_FORMAT = "%s %s %s %s";
 }

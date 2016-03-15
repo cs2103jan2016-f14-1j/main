@@ -57,7 +57,6 @@ public class Parser {
 	}
 
 	private String removeFirstWord(String userInput) {
-	
 		return (!userInput.contains(Keywords.SPACE_STRING)) ? Keywords.EMPTY_STRING
 				: userInput.split(" ", 2)[Keywords.SECOND_ELEMENT];
 	}
