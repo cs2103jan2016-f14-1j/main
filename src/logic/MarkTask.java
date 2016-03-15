@@ -26,7 +26,7 @@ public class MarkTask extends Functionality {
 		if (doesTaskExist(t)) {
 			return false;
 		}
-		t.setPriority();
+		t.togglePriority();
 		return true;
 	}
 	
