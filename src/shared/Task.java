@@ -18,9 +18,9 @@ public class Task {
 	private String endTime; 
 	private ArrayList<String> categories; 
 	private int isCompleted = 0; 
+	private int priority = 0;
 	private int intDate = Keywords.NO_DATE; // for sorting purposes 
 	private int intDateEnd = Keywords.NO_DATE;
-	private boolean priority = false;
 
 	public Task() {
 		id = 0;
@@ -29,7 +29,7 @@ public class Task {
 		isCompleted = 0;
 		intDate = Keywords.NO_DATE;
 		intDateEnd = Keywords.NO_DATE;
-		priority = false;
+		priority = 0;
 	}
 
 	public Task(String date, String taskName, ArrayList<String> cats) {
@@ -141,16 +141,16 @@ public class Task {
 		this.endDate = Formatter.fromIntToDDMMM(String.valueOf(intDate));
 	}
 
-	public boolean getPriority(){
+	public int getPriority(){
 		return this.priority;
 	}
 	
-	public void setPriority(){
-		if (this.priority) {
-			this.priority = false;
-		} else {
-			this.priority = true;
-		}
+	public void setPriority(int p) {
+		this.priority = p;
+	}
+	
+	public void togglePriority(){
+		this.priority = this.priority == 0 ? 1 : 0;
 	}
 	
 	/**
@@ -172,6 +172,7 @@ public class Task {
 		temp.setCategories(new ArrayList<String>(
 				Arrays.asList(properties.get(Keywords.TASK_CATEGORIES).split(Keywords.SPACE_STRING))));
 		temp.setIsCompleted(Integer.parseInt(properties.get(Keywords.TASK_ISCOMPLETE)));
+		temp.setPriority(Integer.parseInt(properties.get(Keywords.TASK_PRIORITY)));
 		temp.setTask(properties.get(Keywords.TASK_DESC));
 		return temp;
 	}
@@ -182,15 +183,15 @@ public class Task {
 	 * @return
 	 */
 	public static String formatObjectToString(Task task) {
-		String toString = String.format("",task.getId(),task.getTask(),task.getIntDate(),
-				task.getIntDateEnd(),task.getStartTime(),task.getEndTime());
-		for (String cat : task.getCategories()) {
-			toString += cat + Keywords.SPACE_STRING;
+		String cats = "";
+		for (String s : task.getCategories()) {
+			cats += s + Keywords.SPACE_STRING;
 		}
-		toString += Keywords.STORE_DELIMITER + task.getIsCompleted() + Keywords.STORE_DELIMITER 
-					+ task.getPriority() + Keywords.STORE_DELIMITER;
+		String toString = String.format(Keywords.STORAGE_FORMAT, task.getId(), 
+				task.getTask(), task.getIntDate(),
+				task.getIntDateEnd(), task.getStartTime(), task.getEndTime(),
+				cats, task.getIsCompleted(), task.getPriority());
 		return toString;
-
 	}
 
 	public String getStartDate() {

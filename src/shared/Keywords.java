@@ -53,7 +53,7 @@ public class Keywords {
 	public static final String USER_FORMAT = "(#%s) %s %s %s";
 	// STORAGE_FORMAT	: 	[taskID]|[task]|[sdate]|[edate]|
 	//						[stime]|[etime]|[categories]|[isComplete]|[priority]
-	public static final String STORAGE_FORMAT = "%d|%s|%s|%s|%s|%s|%s|%d|%s";
+	public static final String STORAGE_FORMAT = "%d|%s|%s|%s|%s|%s|%s|%d|%d|";
 	// DATE FORMAT		:	[startDate] [endDate] [startTime] [endTime]
 	public static final String DATE_FORMAT = "%s %s %s %s";
 	
