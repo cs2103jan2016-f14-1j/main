@@ -127,11 +127,10 @@ public class Controller {
 		
 		view.getCategoryTable().addListener(SWT.EraseItem, new Listener() {
 			public void handleEvent(Event event) {
-			/* indicate that we'll be drawing the foreground in the
-			PaintItem listener */
-			event.detail &= ~SWT.FOREGROUND;
+				event.detail &= ~SWT.FOREGROUND;
 			}
 			});
+			
 		}
 
 	private void displayList(ArrayList<Task> list) throws Exception {
@@ -148,37 +147,53 @@ public class Controller {
 		
 		Image image  = new Image(Display.getCurrent(), Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE_PATH));
 		
-		Listener paintListener = new Listener() {
+			Listener paintListener = new Listener() {
 		      public void handleEvent(Event event) {
 		    	  
 		    	Point pt = new Point(event.x, event.y);
 		        TableItem item = view.getMainTable().getItem(pt);
 		    	
 		        if(item.equals(firstItem)){
-		        switch (event.type) {
+			        switch (event.type) {
+				        case SWT.MeasureItem: {
+				          Rectangle rect = image.getBounds();
+				          event.width += rect.width;
+				          event.height = Math.max(event.height, rect.height + 2);
+				          break;
+				        }
+				        case SWT.PaintItem: {
+				          int x = event.width;
+				          Rectangle rect = image.getBounds();
+				          int offset = Math.max(0, (event.height - rect.height) / 2);
+				          event.gc.drawImage(image, x, event.y + offset);
+				          break;
+				        }
+			        }
+		        }
 		        
-		        case SWT.MeasureItem: {
-		          Rectangle rect = image.getBounds();
-		          event.width += rect.width;
-		          event.height = Math.max(event.height, rect.height + 2);
-		          break;
-		        }
-		        case SWT.PaintItem: {
-		          int x = event.width;
-		          Rectangle rect = image.getBounds();
-		          int offset = Math.max(0, (event.height - rect.height) / 2);
-		          event.gc.drawImage(image, x, event.y + offset);
-		          break;
-		        }
-		        }
-		        }
+		        /*else if (item.equals(firstItem)){
+		        	 switch (event.type) {
+		        	  case SWT.PaintItem: {
+		        		  TableItem item = (TableItem)event.item;
+		    			  String text = item.getText();
+		    			  textLayout.setText(text);
+		    				
+		    			  TextStyle styleForCatCount = new TextStyle(View.boldFont, View.orangeColor, null);
+		    			  textLayout.setStyle(styleForCatCount, text.lastIndexOf("-") + 1, text.length()+1);
+		    			  textLayout.draw(event.gc, event.x, event.y);
+				          break;
+				        }
+		        	 }
+		        }*/
 		      }
 		    };
+		    
 		    view.getMainTable().addListener(SWT.MeasureItem, paintListener);
 		    view.getMainTable().addListener(SWT.PaintItem, paintListener);
 		    	
 		for(Task task : list){
 			String taskIDandDesc = task.getUserFormat();
+			
 			/*
 			String formattedOutput = WordUtils.wrap(taskIDandDesc, WRAP_AROUND, "\n", true);
 			String outputArray[] = formattedOutput.split("\n");
@@ -211,27 +226,25 @@ public class Controller {
 				if(diffInDay == -1){
 					insertToHashMap(OVERDUE, taskIDandDesc);
 				} else if(diffInDay < 7){
-				if (diffInDay == 0){
-		    		insertToHashMap(TODAY, taskIDandDesc);
-		    	} else if (diffInDay == 1){
-		    		insertToHashMap(TOMORROW, taskIDandDesc);
-				} else {		
-					System.out.println("asdasd " + taskDate.getDay());
-					insertToHashMap(DEFAULT_DAYS[taskDate.getDay()], taskIDandDesc);
-				}
-				
+					if (diffInDay == 0){
+			    		insertToHashMap(TODAY, taskIDandDesc);
+			    	} else if (diffInDay == 1){
+			    		insertToHashMap(TOMORROW, taskIDandDesc);
+					} else {		
+						insertToHashMap(DEFAULT_DAYS[taskDate.getDay()], taskIDandDesc);
+					}
 			    } else {
 			    	insertToHashMap(OTHERS, taskIDandDesc);
 			    }
 			}
 		}
 		
-		insertIntoTable(OVERDUE);
+		insertIntoTable(OVERDUE, false);
+		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 		boolean thirdItem = false;
 		
 		for (String day : days) {
 			
-			mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 			
 			if(day.equals(TODAY)){
 
@@ -239,35 +252,30 @@ public class Controller {
 				mainItem.setText(day);
 				mainItem.setFont(View.headingFont);
 				mainItem.setForeground(View.orangeColor);
-				insertIntoTable(day);
+				insertIntoTable(day,false);
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				
 			} else if (day.equals(TOMORROW)){
 
+				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				mainItem.setText(day);
 				mainItem.setFont(View.headingFont);
 				mainItem.setForeground(View.orangeColor);
 				thirdItem = true;
-				insertIntoTable(day);
+				insertIntoTable(day,false);
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				
 			} else if (thirdItem){
 				
+				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				mainItem.setText(WEEK);
 				mainItem.setFont(View.headingFont);
 				mainItem.setForeground(View.orangeColor);
 				thirdItem = false;
-				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-				mainItem.setText(day);
-				mainItem.setFont(View.normalFont);
-				mainItem.setForeground(View.orangeColor);
-				insertIntoTable(day);
+				insertIntoTable(day,true);
 				
 			} else {
-				mainItem.setText(day);
-				mainItem.setFont(View.normalFont);
-				mainItem.setForeground(View.orangeColor);
-				insertIntoTable(day);
+				insertIntoTable(day,true);
 			}
 			
 			
@@ -278,7 +286,7 @@ public class Controller {
 		mainItem.setText(OTHERS);
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);
-		insertIntoTable(OTHERS);
+		insertIntoTable(OTHERS,false);
 
 	}
 
@@ -387,10 +395,10 @@ public class Controller {
 					displayCategory();
 					
 					try{
-					if(result == null){
-						displayHelp();
-					}
-					else if (result instanceof ArrayList<?>) {
+						/*
+						 * JM add displayHelp() here. 
+						 * */
+					if (result instanceof ArrayList<?>) {
 						// here might need handle is empty arraylist
 						displayList((ArrayList<Task>) result);
 					}else{
@@ -445,6 +453,7 @@ public class Controller {
 						public void run() {
 							Display.getDefault().asyncExec(new Runnable() {
 								public void run() {
+									view.getDateLabel().setText(getCurrentDate());
 									view.getTimeLabel().setText(getCurrentTime());
 								}
 							});
@@ -486,7 +495,7 @@ public class Controller {
 		DateFormat dayFormat = new SimpleDateFormat(Keywords.FORMAT_YEAR);
 		return Integer.parseInt(dayFormat.format(date));
 	}
-
+	
 	private void inputToHint() {
 		view.getInput().setText(View.GUI_HINT);
 		view.getInput().setForeground(View.hintColor);
@@ -511,11 +520,21 @@ public class Controller {
 	    } 
 	    return daysBetween;
 	}
-    
-	private void insertIntoTable(String key){
+	/*
+	private Calendar getHeaderDate(){
+		
+	}
+    */
+	private void insertIntoTable(String key, boolean week){
 		
 		TableItem mainItem;
 		if(putIntoDays.containsKey(key)){
+			if(week){
+				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+				mainItem.setText(key);
+				mainItem.setFont(View.normalFont);
+				mainItem.setForeground(View.orangeColor);
+			}
 			ArrayList<String> tempArrList = putIntoDays.get(key);
 			for(int i = 0; i < tempArrList.size(); i++){
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);

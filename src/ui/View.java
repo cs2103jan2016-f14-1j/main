@@ -46,10 +46,9 @@ public class View {
 	protected final static Color hintColor = Display.getDefault().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
 	protected final static Color normalColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
 	protected final static Color orangeColor = new Color (Display.getCurrent(), 255, 116, 23);
+	//protected final static Color orangeColor = Display.getDefault().getSystemColor(SWT.COLOR_RED);
 	protected final static Color whiteColor = Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
-	//protected final static Color blackGrayColor = new Color (Display.getCurrent(), 36, 45, 62);
 	protected final static Color blackGrayColor = new Color (Display.getCurrent(), 246, 246, 246);
-	//protected final static Color blackGrayColor = new Color (Display.getCurrent(), 35, 40, 45);
 	
 	protected final static Font normalFont = SWTResourceManager.getFont("Trebuchet MS", 9, SWT.NORMAL);
 	protected final static Font boldFont = SWTResourceManager.getFont("Trebuchet MS", 9, SWT.BOLD);

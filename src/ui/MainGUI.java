@@ -25,7 +25,8 @@ public class MainGUI implements NativeKeyListener {
 	private static Shell shell;
 
 	public static void main(String[] args) throws Exception {
-	
+	    
+		// Run startup.reg to add preference
 		String value = "\"javaw -jar " + System.getProperty("user.dir") + "\\"+ JAR_NAME +"\"";
 		WinRegistry.writeStringValue(WinRegistry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", KEY_NAME, value);
 		//WinRegistry.deleteValue(WinRegistry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "dotdotdot autorun key");

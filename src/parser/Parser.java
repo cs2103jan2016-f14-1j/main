@@ -50,7 +50,6 @@ public class Parser {
 			// TODO
 		case COMMAND_HELP:
 			// TODO
-			return null;
 		case COMMAND_VIEW:
 			return Logic.viewTask(inputWithoutCommandType);
 		case COMMAND_SEARCH:
