@@ -66,26 +66,21 @@ public class Controller {
 		days[1] = TOMORROW;
 		
 		String compareDay = getCurrentDay().toUpperCase();
-		int index;
-
-		if(compareDay.equals(DayOfWeek.TUESDAY)){
-			index = 2;
-		}else if(compareDay.equals(DayOfWeek.WEDNESDAY)){
-			index = 3;
-		}else if(compareDay.equals(DayOfWeek.THURSDAY)){
-			index = 4;
-		}else if(compareDay.equals(DayOfWeek.FRIDAY)){
-			index = 5;
-		}else if(compareDay.equals(DayOfWeek.SATURDAY)){
-			index = 6;
-		}else if(compareDay.equals(DayOfWeek.SUNDAY)){
-			index = 7;
-		} else {
-			index = 1;
+		int index = -1;
+		for(int i=0;i<DEFAULT_DAYS.length;i++){
+			if(compareDay.equals(DEFAULT_DAYS[i])){
+				index = i;
+				break;
+			}
 		}
 		
 		for(int i = STARTING_INDEX; i < days.length ;i++){
-			days[i] = DayOfWeek.values()[(index+i)%7].toString();
+			int z = (index+i)/(NUMBER_OF_DAYS+1);
+			if(z == 0){
+				days[i] = DEFAULT_DAYS[index+i];
+			} else {
+				days[i] = DEFAULT_DAYS[(index+i+1)%(NUMBER_OF_DAYS+1)];
+			}
 		}
 		
 		timer();
@@ -199,23 +194,20 @@ public class Controller {
 				}
 			}
 			*/
-			if(task.getDate().equals(Keywords.EMPTY_STRING)){
+			
+			// TODO change this shit to more than 1
+			Date taskDate = task.getDatetimes().get(0);
+			
+			if(taskDate == null){
 				insertToHashMap(OTHERS, taskIDandDesc);
 			} else {
-				
-				String tempDate = task.getDate();
-				String dayDate = tempDate.substring(0, tempDate.length() - 3);
-				
-				String monthDate =  tempDate.substring(dayDate.length());
-				Date month = new SimpleDateFormat("MMM", Locale.ENGLISH).parse(monthDate);
-				Calendar compareMonth = Calendar.getInstance();
-				compareMonth.setTime(month);
 			
+				System.out.println("here " + taskDate.getDay());
 				Calendar compareCalendar = Calendar.getInstance();
-			    compareCalendar.set(getCurrentYear(), compareMonth.get(Calendar.MONTH), Integer.parseInt(dayDate));
+			    compareCalendar.set(getCurrentYear(), taskDate.getMonth(), taskDate.getDate());
 			 
 			    int diffInDay = calculateDiffInDay(compareCalendar);
-			    compareCalendar.set(getCurrentYear(), compareMonth.get(Calendar.MONTH), Integer.parseInt(dayDate));
+			    compareCalendar.set(getCurrentYear(), taskDate.getMonth(), taskDate.getDate());
 			    
 				if(diffInDay == -1){
 					insertToHashMap(OVERDUE, taskIDandDesc);
@@ -225,8 +217,8 @@ public class Controller {
 		    	} else if (diffInDay == 1){
 		    		insertToHashMap(TOMORROW, taskIDandDesc);
 				} else {		
-					int tempDay = compareCalendar.get(Calendar.DAY_OF_WEEK);
-					insertToHashMap(DEFAULT_DAYS[tempDay].toString(), taskIDandDesc);
+					System.out.println("asdasd " + taskDate.getDay());
+					insertToHashMap(DEFAULT_DAYS[taskDate.getDay()], taskIDandDesc);
 				}
 				
 			    } else {
