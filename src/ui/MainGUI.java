@@ -7,7 +7,12 @@ import org.jnativehook.keyboard.NativeKeyListener;
 
 import java.util.concurrent.Executor;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 public class MainGUI implements NativeKeyListener {
@@ -26,6 +31,12 @@ public class MainGUI implements NativeKeyListener {
 		//WinRegistry.deleteValue(WinRegistry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "dotdotdot autorun key");
 		
 		Display display = new Display();
+		display.addFilter(SWT.KeyDown, new Listener() {
+            public void handleEvent(Event e) {
+                if(e.keyCode == SWT.ESC)
+					System.exit(0);
+            }
+        });
 		Controller controller = new Controller();
 		shell = controller.getView().getShell();
 		shell.open();

@@ -411,9 +411,6 @@ public class Controller {
 					view.getMainTable().setTopIndex(view.getMainTable().getTopIndex() + View.SCROLL_AMOUNT);
 					event.doit = false;
 					break;
-				case SWT.ESC:
-					System.exit(0);
-					break;
 				case SWT.BS:
 					if (isTextEmpty(input)) {
 						inputToHint();
