@@ -2,12 +2,23 @@ package logic;
 
 import java.util.ArrayList;
 
+import parser.Parser;
 import shared.*;
 import storage.Storage;
 
 public class Logic {
 	
-	public Logic(){
+	private static Logic logic;
+
+	// private constructor
+	private Logic() {
+	}
+	
+	public static Logic getInstance() {
+		if (logic == null) {
+			logic = new Logic();
+		}
+		return logic;
 	}
 	
 	public static boolean addTask(Task task) {

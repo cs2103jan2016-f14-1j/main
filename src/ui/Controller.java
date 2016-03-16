@@ -55,9 +55,9 @@ public class Controller {
 	private final static int STARTING_INDEX = 2;
 	
 	private View view;
-	private Parser parser = new Parser();
-	private Logic logic = new Logic();
-	private Storage storage = new Storage();
+	private Parser parser = Parser.getInstance();
+	private Logic logic = Logic.getInstance();
+	private Storage storage = Storage.getInstance();
 
 	public Controller() throws Exception {
 		view = new View();

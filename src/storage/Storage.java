@@ -1,6 +1,8 @@
 package storage;
 
 import java.util.ArrayList;
+
+import parser.Parser;
 import shared.Keywords;
 import shared.Task;
 
@@ -12,7 +14,10 @@ public class Storage {
 	//private static Categories categories;
 	//private static FreeIDs freeIDs;
 
-	public Storage() {
+	private static Storage storage;
+
+	// private constructor
+	private Storage() {
 		tasks = new ArrayList<Task>();
 		//categories = new Categories();
 		//freeIDs = new FreeIDs();
@@ -20,6 +25,13 @@ public class Storage {
 		FreeIDs.init();
 		History.initHistory();
 		ReadWrite.readTasksFromFile(tasks);
+	}
+	
+	public static Storage getInstance() {
+		if (storage == null) {
+			storage = new Storage();
+		}
+		return storage;
 	}
 
 	public static ArrayList<Task> getListOfTasks() {

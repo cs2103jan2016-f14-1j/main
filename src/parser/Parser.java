@@ -21,7 +21,19 @@ public class Parser {
 	private static final String COMMAND_UNDO = "undo";
 	private static final String COMMAND_HELP = "help";
 	private static final String COMMAND_SEARCH = "search";
+	private static Parser parser;
 
+	// private constructor
+	private Parser() {
+	}
+	
+	public static Parser getInstance() {
+		if (parser == null) {
+			parser = new Parser();
+		}
+		return parser;
+	}
+	
 	public ArrayList<Task> parse(String userInput) {
 		String commandType = getFirstWord(userInput).toLowerCase();
 		String inputWithoutCommandType = removeFirstWord(userInput);
