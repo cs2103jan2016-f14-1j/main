@@ -6,6 +6,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.TextLayout;
 import org.eclipse.swt.layout.FillLayout;
@@ -25,6 +26,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.time.Month;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +38,7 @@ public class View {
 	private final String GUI_TITLE = "Dotdotdot";
 	protected final static String GUI_HINT = "< Input ? or help to show available commands >";
 	protected final static String EMPTY_STRING = "";
-
+    private final static String APP_ICON = "images/logo.png";
 	protected final static Color hintColor = Display.getDefault().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
 	protected final static Color normalColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
 	protected final static Color orangeColor = new Color (Display.getCurrent(), 255, 116, 23);
@@ -47,6 +50,7 @@ public class View {
 	protected final static Font normalFont = SWTResourceManager.getFont("Trebuchet MS", 9, SWT.NORMAL);
 	protected final static Font boldFont = SWTResourceManager.getFont("Trebuchet MS", 9, SWT.BOLD);
 	protected final static Font headingFont = SWTResourceManager.getFont("Trebuchet MS", 12, SWT.BOLD);
+	protected final static Font italicFont = SWTResourceManager.getFont("Trebuchet MS", 9, SWT.BOLD);
 	
 	protected final static int BORDER_WIDTH = 2;
 	protected final static int SCROLL_AMOUNT = 5;
@@ -62,9 +66,12 @@ public class View {
 	public View(){
 
 		shell = new Shell(SWT.CLOSE | SWT.MIN | SWT.TITLE);
+		
 		shell.setBackground(whiteColor);
 		shell.setSize(725, 625);
 		shell.setText(GUI_TITLE);
+		shell.setImage(new Image(Display.getCurrent(), Thread.currentThread().getContextClassLoader().getResourceAsStream(APP_ICON)));
+		setCenterOfScreen();
 		// For shortcut command
 		shell.addListener(SWT.Close, new Listener() {
 			
@@ -198,5 +205,10 @@ public class View {
 	
 	public Label getNotification(){
 		return notification;
+	}
+	
+	public void setCenterOfScreen(){
+		Rectangle screenSize = Display.getCurrent().getPrimaryMonitor().getBounds();
+		shell.setLocation((screenSize.width - shell.getBounds().width) / 2, (screenSize.height - shell.getBounds().height) / 2);
 	}
 }

@@ -5,6 +5,8 @@ import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
+import java.util.concurrent.Executor;
+
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -22,11 +24,10 @@ public class MainGUI implements NativeKeyListener {
 		String value = "\"javaw -jar " + System.getProperty("user.dir") + "\\"+ JAR_NAME +"\"";
 		WinRegistry.writeStringValue(WinRegistry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", KEY_NAME, value);
 		//WinRegistry.deleteValue(WinRegistry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "dotdotdot autorun key");
-	
-		Display display = Display.getDefault();
+		
+		Display display = new Display();
 		Controller controller = new Controller();
 		shell = controller.getView().getShell();
-	    
 		shell.open();
 		shell.layout();
 		

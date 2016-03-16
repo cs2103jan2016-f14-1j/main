@@ -202,7 +202,6 @@ public class Controller {
 				insertToHashMap(OTHERS, taskIDandDesc);
 			} else {
 			
-				System.out.println("here " + taskDate.getDay());
 				Calendar compareCalendar = Calendar.getInstance();
 			    compareCalendar.set(getCurrentYear(), taskDate.getMonth(), taskDate.getDate());
 			 
@@ -289,72 +288,80 @@ public class Controller {
 		mainTable.removeAll();
 
 		TableItem mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		mainItem.setFont(View.headingFont);
+		mainItem.setForeground(View.orangeColor);
 		mainItem.setText("Adding tasks");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setText("add <TODO>");
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setText("add <TODO> (at | by | on | to) <date> [@category]");
+		mainItem.setText("add <TODO> (at | by | on | to) <date> [#category]");
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.ITALIC));
+		mainItem.setFont(View.italicFont);
 		mainItem.setText("Eg. add do CS2103 tutorial by Sun");
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.ITALIC));
-		mainItem.setText("      add buy milk by 15Feb @shopping");
+		mainItem.setFont(View.italicFont);
+		mainItem.setText("      add buy milk by 15Feb #shopping");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		mainItem.setFont(View.headingFont);
+		mainItem.setForeground(View.orangeColor);
 		mainItem.setText("Edit tasks");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setText("edit <task_ID#> to <date>");
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.ITALIC));
+		mainItem.setFont(View.italicFont);
 		mainItem.setText("Eg. edit 1 to 15Feb");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		mainItem.setFont(View.headingFont);
+		mainItem.setForeground(View.orangeColor);
 		mainItem.setText("Set priority");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setText("mark <task_ID#>");
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.ITALIC));
+		mainItem.setFont(View.italicFont);
 		mainItem.setText("Eg. set 2 to 10");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		mainItem.setFont(View.headingFont);
+		mainItem.setForeground(View.orangeColor);
 		mainItem.setText("Complete Tasks");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setText("do <TODO | task_ID#>");
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.ITALIC));
+		mainItem.setFont(View.italicFont);
 		mainItem.setText("Eg. do receive quest");
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.ITALIC));
+		mainItem.setFont(View.italicFont);
 		mainItem.setText("      do 1");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		mainItem.setFont(View.headingFont);
+		mainItem.setForeground(View.orangeColor);
 		mainItem.setText("View tasks");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setText("view <category>");
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.ITALIC));
+		mainItem.setFont(View.italicFont);
 		mainItem.setText("Eg. view shopping");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		mainItem.setFont(View.headingFont);
+		mainItem.setForeground(View.orangeColor);
 		mainItem.setText("Show help");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setText("[? | help | h]");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		mainItem.setFont(View.headingFont);
+	    mainItem.setForeground(View.orangeColor);
 		mainItem.setText("Undo previous command");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setText("[u | undo]");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		mainItem.setFont(View.headingFont);
+	    mainItem.setForeground(View.orangeColor);
 		mainItem.setText("Keyboard shortcuts");
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setText("Undo previous command: Ctrl+Z");
@@ -380,7 +387,10 @@ public class Controller {
 					displayCategory();
 					
 					try{
-					if (result instanceof ArrayList<?>) {
+					if(result == null){
+						displayHelp();
+					}
+					else if (result instanceof ArrayList<?>) {
 						// here might need handle is empty arraylist
 						displayList((ArrayList<Task>) result);
 					}else{
