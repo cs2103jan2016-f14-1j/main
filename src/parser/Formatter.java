@@ -243,6 +243,9 @@ public class Formatter extends Logger {
 					logf("getDateTimes, isTimeString", t);
 					if (as.get(Keywords.INDEX_STARTTIME) == null) {
 						as.set(Keywords.INDEX_STARTTIME, d);
+						if (as.get(Keywords.INDEX_STARTDATE) == null) {
+							as.set(Keywords.INDEX_STARTDATE, new Date()); // add today if time exist
+						}
 					} else {
 						as.set(Keywords.INDEX_ENDTIME, d);
 					}
