@@ -130,6 +130,10 @@ public class Task {
 	public int getIntDateEnd() {
 		return intDateEnd;
 	}
+	/**
+	 * sets intDate and datetimes[STARTDATE] 
+	 * @param intDate
+	 */
 	public void setIntDate(int intDate) {
 		this.intDate = intDate;
 		datetimes.set(INDEX_STARTDATE, Formatter.fromIntToDate(String.valueOf(intDate)));
