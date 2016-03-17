@@ -227,21 +227,44 @@ public class Formatter extends Logger {
 	
 	public static ArrayList<Date> getDateTimes(String s) {
 		ArrayList<Date> as = new ArrayList<Date>();
-		for (String t : breakByPreposition(s)) {
+		populateDatetimesArrayList(as);
+		for (String t : breakBySpacedPreposition(s)) {
+			logf("getDateTimes", t);
 			Date d = getDateFromString(t);
-			if (d != null) {
-				as.add(d);
-			}
-		}
-		// TODO: sam to fix three dates bug
-		if(as.size() == 2) as.add(Keywords.FIRST_ELEMENT, new Date());
-		while(as.size() < Keywords.MAX_DATES) as.add(null); //quickfix
-		
+			if (d != null) { // either date or time
+				if (isDateString(t)) {
+					logf("getDateTimes, isDateString", t);
+					if (as.get(Keywords.INDEX_STARTDATE) == null) {
+						as.set(Keywords.INDEX_STARTDATE, d);
+					} else {
+						as.set(Keywords.INDEX_ENDDATE, d);
+					}
+				} else { // if (isTimeString(t)) 
+					logf("getDateTimes, isTimeString", t);
+					if (as.get(Keywords.INDEX_STARTTIME) == null) {
+						as.set(Keywords.INDEX_STARTTIME, d);
+						if (as.get(Keywords.INDEX_STARTDATE) == null) {
+							as.set(Keywords.INDEX_STARTDATE, new Date()); // add today if time exist
+						}
+					} else {
+						as.set(Keywords.INDEX_ENDTIME, d);
+					}
+				}
+			}			
+		}		
 		return as;
 	}
+	private static void populateDatetimesArrayList(ArrayList<Date> as) {
+		for (int i = 0; i < 4; i++) {
+			as.add(null);
+		}
+	}
+	private static boolean isDateString(String s) {
+		return s.toLowerCase().matches(Keywords.REGEX_MONTH_EXIST);
+	}
 	
-	private static String[] breakByPreposition(String s) {
-		return s.split(Keywords.REGEX_PREPOSITIONS);
+	private static String[] breakBySpacedPreposition(String s) {
+		return s.split(Keywords.REGEX_PREPOSITIONS_WITH_SPACE);
 	}
 	public static Date getDateFromString(String s) {
 		List<Date> parse = new PrettyTimeParser().parse(s);
@@ -250,15 +273,16 @@ public class Formatter extends Logger {
 		} else if (s.toLowerCase().trim().matches(Keywords.REGEX_DATE)) {	
 			return convertToDate(s.trim());
 		}
+		logf("getDateFromString", String.format("%s (failed)", s));
 		return null;
 	}
 	/**
 	 * assumption: String d is valid date string of (dMMM | ddMMM)
 	 */
 	private static Date convertToDate(String d) {
-		DateFormat df = new SimpleDateFormat("ddMMM");
+		DateFormat df = new SimpleDateFormat(Keywords.DDMMM);
 		if (d.length() == 4) {
-			df = new SimpleDateFormat("dMMM");
+			df = new SimpleDateFormat(Keywords.DMMM);
 		}
 		try {
 			return df.parse(d);  

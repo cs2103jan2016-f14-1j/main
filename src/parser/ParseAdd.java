@@ -9,11 +9,10 @@ import java.util.List;
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 import org.ocpsoft.prettytime.nlp.parse.DateGroup;
 
-public class ParseAdd {
+public class ParseAdd extends Logger {
 
 	public static boolean addTask(String rawInput) {
 		String 	taskName = rawInput, 
-				date = Keywords.EMPTY_STRING, 
 				prep = Keywords.EMPTY_STRING;
 		ArrayList<String> inputParts = Formatter.breakString(rawInput), 
 				categories = new ArrayList<String>(),

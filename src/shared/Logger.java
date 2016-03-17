@@ -10,11 +10,11 @@ public class Logger {
 		System.out.println(String.format("%s %s", new Date(), s));
 	}
 	
-	protected static void logf(String s) {
+	protected static void logf(String className, String s) {
 		try {
 			BufferedWriter bufferWriter = 
-					new BufferedWriter(new FileWriter(Keywords.LOG_FILEPATH));
-			bufferWriter.write(String.format("%s %s\n", new Date(), s));
+					new BufferedWriter(new FileWriter(Keywords.LOG_FILEPATH, true));
+			bufferWriter.write(String.format("%s (%s): %s\n", className, new Date(), s));
 			bufferWriter.close();
 		} catch (IOException ex) {
 		}
