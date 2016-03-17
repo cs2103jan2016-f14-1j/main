@@ -120,7 +120,7 @@ public class Formatter extends Logger {
 			if (s.equals(Keywords.EMPTY_STRING)) {
 				continue;
 			} else {
-				out += Keywords.CATEGORY_PREPEND + s + Keywords.SPACE_STRING;
+				out += String.format("%s%s ", Keywords.CATEGORY_PREPEND, s);
 			}
 		}
 		return out.trim();
@@ -129,11 +129,16 @@ public class Formatter extends Logger {
 	public static String toCatsForStore(ArrayList<String> as) {
 		String out = "";
 		for (String s : as) {
-			out += s + Keywords.SPACE_STRING;
+			out += String.format("%s ", s);
 		}
 		return out.trim();
 	}
 	
+	/**
+	 * retrieve all Integer parseable IDs from String
+	 * @param rawInput
+	 * @return
+	 */
 	public static ArrayList<Integer> breakToIds(String rawInput) {
 		ArrayList<String> as = breakString(rawInput);
 		ArrayList<Integer> ai = new ArrayList<Integer>();
