@@ -16,8 +16,10 @@ import javax.swing.SwingUtilities;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -43,7 +45,7 @@ public class Controller {
 	private final static int NUMBER_OF_DAYS = 7;
 	private HashMap<String, ArrayList<String>> putIntoDays = new HashMap<>();
 	private static String [] days = new String[NUMBER_OF_DAYS];
-	private final static String [] DEFAULT_DAYS = new String[]{"","SUNDAY","MONDAY", "TUESDAY", "WEDNESDAY","THURSDAY", "FRIDAY", "SATURDAY"};
+	private final static String [] DEFAULT_DAYS = new String[]{"SATURDAY","SUNDAY","MONDAY", "TUESDAY", "WEDNESDAY","THURSDAY", "FRIDAY"};
 
 	
 	private final static String FILE_PATH = "images/warning-icon.png";
@@ -75,12 +77,8 @@ public class Controller {
 		}
 		
 		for(int i = STARTING_INDEX; i < days.length ;i++){
-			int z = (index+i)/(NUMBER_OF_DAYS+1);
-			if(z == 0){
-				days[i] = DEFAULT_DAYS[index+i];
-			} else {
-				days[i] = DEFAULT_DAYS[(index+i+1)%(NUMBER_OF_DAYS+1)];
-			}
+			
+			days[i] = DEFAULT_DAYS[(index+i)%(NUMBER_OF_DAYS)];
 		}
 		
 		timer();
@@ -144,7 +142,7 @@ public class Controller {
 		firstItem.setText(OVERDUE);
 		firstItem.setFont(View.headingFont);
 		firstItem.setForeground(View.orangeColor);
-		
+		/*
 		Image image  = new Image(Display.getCurrent(), Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE_PATH));
 		
 			Listener paintListener = new Listener() {
@@ -170,27 +168,12 @@ public class Controller {
 				        }
 			        }
 		        }
-		        
-		        /*else if (item.equals(firstItem)){
-		        	 switch (event.type) {
-		        	  case SWT.PaintItem: {
-		        		  TableItem item = (TableItem)event.item;
-		    			  String text = item.getText();
-		    			  textLayout.setText(text);
-		    				
-		    			  TextStyle styleForCatCount = new TextStyle(View.boldFont, View.orangeColor, null);
-		    			  textLayout.setStyle(styleForCatCount, text.lastIndexOf("-") + 1, text.length()+1);
-		    			  textLayout.draw(event.gc, event.x, event.y);
-				          break;
-				        }
-		        	 }
-		        }*/
 		      }
 		    };
 		    
 		    view.getMainTable().addListener(SWT.MeasureItem, paintListener);
 		    view.getMainTable().addListener(SWT.PaintItem, paintListener);
-		    	
+		    	*/
 		for(Task task : list){
 			String taskIDandDesc = task.getUserFormat();
 			
@@ -239,12 +222,14 @@ public class Controller {
 			}
 		}
 		
-		insertIntoTable(OVERDUE, false);
+		if(!insertIntoTable(OVERDUE, false)){
+			firstItem.setForeground(View.missingColor);
+		}
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+		TableItem thirdItemCell;
 		boolean thirdItem = false;
 		
 		for (String day : days) {
-			
 			
 			if(day.equals(TODAY)){
 
@@ -252,7 +237,10 @@ public class Controller {
 				mainItem.setText(day);
 				mainItem.setFont(View.headingFont);
 				mainItem.setForeground(View.orangeColor);
-				insertIntoTable(day,false);
+				
+				if(!insertIntoTable(day,false)){
+					mainItem.setForeground(View.missingColor);
+				}
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				
 			} else if (day.equals(TOMORROW)){
@@ -262,7 +250,9 @@ public class Controller {
 				mainItem.setFont(View.headingFont);
 				mainItem.setForeground(View.orangeColor);
 				thirdItem = true;
-				insertIntoTable(day,false);
+				if(!insertIntoTable(day,false)){
+					mainItem.setForeground(View.missingColor);
+				}
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				
 			} else if (thirdItem){
@@ -270,12 +260,17 @@ public class Controller {
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				mainItem.setText(WEEK);
 				mainItem.setFont(View.headingFont);
-				mainItem.setForeground(View.orangeColor);
+				mainItem.setForeground(View.missingColor);
 				thirdItem = false;
-				insertIntoTable(day,true);
+				if(insertIntoTable(day,true)){
+					mainItem.setForeground(View.orangeColor);
+				}
 				
 			} else {
-				insertIntoTable(day,true);
+	
+				if(insertIntoTable(day,true)){
+					mainItem.setForeground(View.orangeColor);
+				}
 			}
 			
 			
@@ -286,7 +281,9 @@ public class Controller {
 		mainItem.setText(OTHERS);
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);
-		insertIntoTable(OTHERS,false);
+		if(!insertIntoTable(OTHERS,false)){
+			mainItem.setForeground(View.missingColor);
+		}
 
 	}
 
@@ -381,11 +378,21 @@ public class Controller {
 	private void addKeyListener()  {
 
 		StyledText input = view.getInput();
+		input.addVerifyKeyListener(new VerifyKeyListener() {
+
+		    @Override
+		    public void verifyKey(VerifyEvent e) {
+		        if ((e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR)) {
+		           e.doit = false;
+		        }
+		    }
+		});
 		input.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent event) {
 
 				switch (event.keyCode) {
-
+				
+				case SWT.KEYPAD_CR:
 				case SWT.CR:
 					// SWT.CR : when "ENTER" key is pressed
 					String tempInput = input.getText();
@@ -525,7 +532,7 @@ public class Controller {
 		
 	}
     */
-	private void insertIntoTable(String key, boolean week){
+	private boolean insertIntoTable(String key, boolean week){
 		
 		TableItem mainItem;
 		if(putIntoDays.containsKey(key)){
@@ -540,7 +547,9 @@ public class Controller {
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				mainItem.setText(tempArrList.get(i));
 			}
-		}
+			return true;
+		} 
+		return false;
 	}
 	
 	private void insertToHashMap(String key, String value){
