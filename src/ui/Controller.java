@@ -43,7 +43,7 @@ public class Controller {
 	private static final int WRAP_AROUND = 40;
 
 	private final static int NUMBER_OF_DAYS = 7;
-	private HashMap<String, ArrayList<String>> putIntoDays = new HashMap<>();
+	private HashMap<String, ArrayList<Task>> putIntoDays = new HashMap<>();
 	private static String [] days = new String[NUMBER_OF_DAYS];
 	private final static String [] DEFAULT_DAYS = new String[]{"SATURDAY","SUNDAY","MONDAY", "TUESDAY", "WEDNESDAY","THURSDAY", "FRIDAY"};
 
@@ -55,6 +55,7 @@ public class Controller {
 	private final static String WEEK = "WEEK";
 	private final static String OTHERS = "OTHERS";
 	private final static int STARTING_INDEX = 2;
+	private final static int WHITESPACES = 2;
 	
 	private View view;
 	private Parser parser = Parser.getInstance();
@@ -77,7 +78,6 @@ public class Controller {
 		}
 		
 		for(int i = STARTING_INDEX; i < days.length ;i++){
-			
 			days[i] = DEFAULT_DAYS[(index+i)%(NUMBER_OF_DAYS)];
 		}
 		
@@ -175,7 +175,6 @@ public class Controller {
 		    view.getMainTable().addListener(SWT.PaintItem, paintListener);
 		    	
 		for(Task task : list){
-			String taskIDandDesc = task.getUserFormat();
 			
 			/*
 			String formattedOutput = WordUtils.wrap(taskIDandDesc, WRAP_AROUND, "\n", true);
@@ -197,7 +196,7 @@ public class Controller {
 			Date taskDate = task.getDatetimes().get(0);
 			
 			if(taskDate == null){
-				insertToHashMap(OTHERS, taskIDandDesc);
+				insertToHashMap(OTHERS, task);
 			} else {
 			
 				Calendar compareCalendar = Calendar.getInstance();
@@ -207,17 +206,17 @@ public class Controller {
 			    compareCalendar.set(getCurrentYear(), taskDate.getMonth(), taskDate.getDate());
 			    
 				if(diffInDay == -1){
-					insertToHashMap(OVERDUE, taskIDandDesc);
+					insertToHashMap(OVERDUE, task);
 				} else if(diffInDay < 7){
 					if (diffInDay == 0){
-			    		insertToHashMap(TODAY, taskIDandDesc);
+			    		insertToHashMap(TODAY, task);
 			    	} else if (diffInDay == 1){
-			    		insertToHashMap(TOMORROW, taskIDandDesc);
+			    		insertToHashMap(TOMORROW, task);
 					} else {		
-						insertToHashMap(DEFAULT_DAYS[taskDate.getDay()], taskIDandDesc);
+						insertToHashMap(DEFAULT_DAYS[taskDate.getDay()], task);
 					}
 			    } else {
-			    	insertToHashMap(OTHERS, taskIDandDesc);
+			    	insertToHashMap(OTHERS, task);
 			    }
 			}
 		}
@@ -228,7 +227,6 @@ public class Controller {
 		    view.getMainTable().removeListener(SWT.PaintItem, paintListener);
 		}
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-		TableItem thirdItemCell;
 		boolean thirdItem = false;
 		
 		for (String day : days) {
@@ -529,33 +527,34 @@ public class Controller {
 	    } 
 	    return daysBetween;
 	}
-	/*
-	private Calendar getHeaderDate(){
-		
-	}
-    */
+	
 	private boolean insertIntoTable(String key, boolean week){
 		
 		TableItem mainItem;
 		if(putIntoDays.containsKey(key)){
 			if(week){
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-				mainItem.setText(key);
+				DateFormat dayFormat = new SimpleDateFormat(Keywords.FORMAT_HEADER);
+				mainItem.setText(key + " - " + dayFormat.format(putIntoDays.get(key).get(0).getDatetimes().get(0)));
 				mainItem.setFont(View.normalFont);
 				mainItem.setForeground(View.orangeColor);
 			}
-			ArrayList<String> tempArrList = putIntoDays.get(key);
+			ArrayList<Task> tempArrList = putIntoDays.get(key);
 			for(int i = 0; i < tempArrList.size(); i++){
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-				mainItem.setText(tempArrList.get(i));
+				if(week){
+					mainItem.setText(removeDate(tempArrList.get(i).getUserFormat()));
+				} else {
+					mainItem.setText(tempArrList.get(i).getUserFormat());
+				}
 			}
 			return true;
 		} 
 		return false;
 	}
 	
-	private void insertToHashMap(String key, String value){
-		ArrayList<String> toAddList= new ArrayList<String>();
+	private void insertToHashMap(String key, Task value){
+		ArrayList<Task> toAddList= new ArrayList<Task>();
 		
 		if(putIntoDays.containsKey(key)){
 			toAddList = putIntoDays.get(key);
@@ -563,6 +562,10 @@ public class Controller {
 		
 		toAddList.add(value);
 		putIntoDays.put(key, toAddList);
+	}
+	
+	private String removeDate(String removeDate){
+		return removeDate.substring(0, removeDate.lastIndexOf("-") - WHITESPACES );
 	}
 	
 	public View getView() {
