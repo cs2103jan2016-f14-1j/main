@@ -61,6 +61,7 @@ public class Keywords {
 	public static final String FORMAT_DATE = "dd MMM yyyy";
 	public static final String FORMAT_TIME = "hh:mm a";
 	public static final String FORMAT_DAY = "EEEEEEE";
+	public static final String FORMAT_HEADER = "dd MMM";
 	public static final String FORMAT_YEAR = "yyyy";
 	
 	public static final String USER_FORMAT = "(#%s) %s %s %s";
