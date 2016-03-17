@@ -8,7 +8,7 @@ import shared.*;
 public class Parser {
 
 	public enum COMMAND_TYPE {
-		ADD, DO, DELETE, EDIT, DISPLAY, CLEAR, UNDO, HELP, INVALID, SEARCH
+		ADD, DO, DELETE, EDIT, DISPLAY, CLEAR, UNDO, HELP, INVALID, SEARCH, MARK
 	}
 
 	private static final String COMMAND_ADD = "add";
@@ -21,6 +21,7 @@ public class Parser {
 	private static final String COMMAND_UNDO = "undo";
 	private static final String COMMAND_HELP = "help";
 	private static final String COMMAND_SEARCH = "search";
+	private static final String COMMAND_MARK = "mark";
 	private static Parser parser;
 
 	// private constructor
@@ -66,6 +67,9 @@ public class Parser {
 			return Logic.viewTask(inputWithoutCommandType);
 		case COMMAND_SEARCH:
 			return Logic.searchTask(inputWithoutCommandType);
+		case COMMAND_MARK:
+			ParseMark.prioritise(inputWithoutCommandType);
+			break;
 		default:
 			// TODO
 		}
