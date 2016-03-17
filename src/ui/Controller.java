@@ -48,7 +48,11 @@ public class Controller {
 	private final static String [] DEFAULT_DAYS = new String[]{"SATURDAY","SUNDAY","MONDAY", "TUESDAY", "WEDNESDAY","THURSDAY", "FRIDAY"};
 
 	
-	private final static String FILE_PATH = "images/warning-icon.png";
+	private final static String WARNING_FILE_PATH = "images/warning-icon.png";
+	private final static String MARK_FILE_PATH = "images/star-icon.png";
+	private Image warningImage;
+    private Image starImage;
+    
 	private final static String OVERDUE = "OVERDUE";
 	private final static String TODAY = "TODAY";
 	private final static String TOMORROW = "TOMORROW";
@@ -64,6 +68,8 @@ public class Controller {
 
 	public Controller() throws Exception {
 		view = new View();
+		starImage  = new Image(Display.getCurrent(), Thread.currentThread().getContextClassLoader().getResourceAsStream(MARK_FILE_PATH));
+		warningImage  = new Image(Display.getCurrent(), Thread.currentThread().getContextClassLoader().getResourceAsStream(WARNING_FILE_PATH));
 		
 		days[0] = TODAY;
 		days[1] = TOMORROW;
@@ -143,36 +149,50 @@ public class Controller {
 		firstItem.setFont(View.headingFont);
 		firstItem.setForeground(View.orangeColor);
 		
-		Image image  = new Image(Display.getCurrent(), Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE_PATH));
-		
-			Listener paintListener = new Listener() {
-		      public void handleEvent(Event event) {
+		Listener paintListener = new Listener() {
+	      public void handleEvent(Event event) {
 		    	  
-		    	Point pt = new Point(event.x, event.y);
-		        TableItem item = view.getMainTable().getItem(pt);
-		    	
-		        if(item.equals(firstItem)){
-			        switch (event.type) {
-				        case SWT.MeasureItem: {
-				          Rectangle rect = image.getBounds();
-				          event.width += rect.width;
-				          event.height = Math.max(event.height, rect.height + 2);
-				          break;
-				        }
-				        case SWT.PaintItem: {
-				          int x = event.width;
-				          Rectangle rect = image.getBounds();
-				          int offset = Math.max(0, (event.height - rect.height) / 2);
-				          event.gc.drawImage(image, x, event.y + offset);
-				          break;
-				        }
-			        }
-		        }
-		      }
-		    };
+	    	Point pt = new Point(event.x, event.y);
+	    	TableItem item = view.getMainTable().getItem(pt);
+		   // item.
+		    if(item.equals(firstItem)){
+		        switch (event.type) {
+			        case SWT.MeasureItem: {
+			        	Rectangle rect = warningImage.getBounds();
+				        event.width += rect.width;
+				        event.height = Math.max(event.height, rect.height + 2);
+				        break;
+				    }
+			        case SWT.PaintItem: {
+		    	        int x = event.width;
+				        Rectangle rect = warningImage.getBounds();
+				        int offset = Math.max(0, (event.height - rect.height) / 2);
+				        event.gc.drawImage(warningImage, x, event.y + offset);
+				        break;
+				    }
+			    }
+		    } else if (item.getData()!=null){
+		    	switch (event.type) {
+		        case SWT.MeasureItem: {
+		        	Rectangle rect = starImage.getBounds();
+			        event.width += rect.width;
+			        event.height = Math.max(event.height, rect.height + 2);
+			        break;
+			    }
+		        case SWT.PaintItem: {
+	    	        int x = 7;
+			        Rectangle rect = starImage.getBounds();
+			        int offset = Math.max(0, (event.height - rect.height) / 2);
+			        event.gc.drawImage(starImage, x, event.y + offset + 1);
+			        break;
+			    }
+		     }
+		    }
+		  }
+		};
 		    
-		    view.getMainTable().addListener(SWT.MeasureItem, paintListener);
-		    view.getMainTable().addListener(SWT.PaintItem, paintListener);
+		view.getMainTable().addListener(SWT.MeasureItem, paintListener);
+	    view.getMainTable().addListener(SWT.PaintItem, paintListener);
 		    	
 		for(Task task : list){
 			
@@ -542,10 +562,16 @@ public class Controller {
 			ArrayList<Task> tempArrList = putIntoDays.get(key);
 			for(int i = 0; i < tempArrList.size(); i++){
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+				String whiteSpaces = "";
+				if(tempArrList.get(i).getPriority()== 1){
+					mainItem.setData(tempArrList.get(i));
+					whiteSpaces = "     ";
+				} 
+				
 				if(week){
-					mainItem.setText(removeDate(tempArrList.get(i).getUserFormat()));
+					mainItem.setText(whiteSpaces + removeDate(tempArrList.get(i).getUserFormat()));
 				} else {
-					mainItem.setText(tempArrList.get(i).getUserFormat());
+					mainItem.setText(whiteSpaces + tempArrList.get(i).getUserFormat());
 				}
 			}
 			return true;
