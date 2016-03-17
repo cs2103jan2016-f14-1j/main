@@ -142,7 +142,7 @@ public class Controller {
 		firstItem.setText(OVERDUE);
 		firstItem.setFont(View.headingFont);
 		firstItem.setForeground(View.orangeColor);
-		/*
+		
 		Image image  = new Image(Display.getCurrent(), Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE_PATH));
 		
 			Listener paintListener = new Listener() {
@@ -173,7 +173,7 @@ public class Controller {
 		    
 		    view.getMainTable().addListener(SWT.MeasureItem, paintListener);
 		    view.getMainTable().addListener(SWT.PaintItem, paintListener);
-		    	*/
+		    	
 		for(Task task : list){
 			String taskIDandDesc = task.getUserFormat();
 			
@@ -224,6 +224,8 @@ public class Controller {
 		
 		if(!insertIntoTable(OVERDUE, false)){
 			firstItem.setForeground(View.missingColor);
+			view.getMainTable().removeListener(SWT.MeasureItem, paintListener);
+		    view.getMainTable().removeListener(SWT.PaintItem, paintListener);
 		}
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 		TableItem thirdItemCell;
