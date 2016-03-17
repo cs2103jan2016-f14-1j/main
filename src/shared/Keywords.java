@@ -6,11 +6,14 @@ public class Keywords {
 	protected static final String REGEX_HELP = "(h|H|help|HELP|\\?)";
 	protected static final String REGEX_VIEW = "(view|v|V|VIEW)(.*)";
 	
-	public static final String REGEX_PREPOSITIONS = "(at|by|on|to|from)";
+	public static final String REGEX_PREPOSITIONS = "^(at|by|on|to|from)$";
+	public static final String REGEX_PREPOSITIONS_WITH_SPACE = "\\s(at|by|on|to|from)\\s";
 	public static final String REGEX_CATEGORIES = "(#)(.*)";
 	public static final String REGEX_DATE = 
 			"^(([1-9])|([0][1-9])|([1-2][0-9])|([3][0-1]))"
 			+ "(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)$";
+	public static final String REGEX_MONTH_EXIST = 
+			".*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).*";
 	public static final String EMPTY_STRING = "";
 	public static final String SPACE_STRING = " ";
 	public static final String DELIMITER = "\\|";
@@ -33,7 +36,7 @@ public class Keywords {
 	
 	public static final int FIRST_ELEMENT = 0;
 	public static final int SECOND_ELEMENT = 1;
-	public static final int MAX_DATES = 3;
+	public static final int MAX_DATES = 4;
 	public static final int YES = 1;
 	public static final int NO = 0;
 	
@@ -47,28 +50,34 @@ public class Keywords {
 	public static final int TASK_ID = 0;
 	public static final int TASK_DESC = 1;
 	public static final int TASK_STARTDATE = 2;
-	//public static final int TASK_ENDDATE = 3;
-	public static final int TASK_STARTTIME = 3;
-	public static final int TASK_ENDTIME = 4;
-	public static final int TASK_CATEGORIES = 5;
-	public static final int TASK_ISCOMPLETE = 6;
-	public static final int TASK_PRIORITY= 7;
+	public static final int TASK_ENDDATE = 3;
+	public static final int TASK_STARTTIME = 4;
+	public static final int TASK_ENDTIME = 5;
+	public static final int TASK_CATEGORIES = 6;
+	public static final int TASK_ISCOMPLETE = 7;
+	public static final int TASK_PRIORITY= 8;
 	public static final int TASK_NOT_FOUND = -1;
 	public static final int TASK_BOTH = -2;
 	public static final int TASK_NOT_COMPLETED = 0;
 	public static final int TASK_COMPLETED = 1;
+	public static final int INDEX_STARTDATE = 0;
+	public static final int INDEX_ENDDATE = 1;
+	public static final int INDEX_STARTTIME = 2;
+	public static final int INDEX_ENDTIME = 3;
 	
 	public static final String FORMAT_DATE = "dd MMM yyyy";
 	public static final String FORMAT_TIME = "hh:mm a";
 	public static final String FORMAT_DAY = "EEEEEEE";
 	public static final String FORMAT_HEADER = "dd MMM";
 	public static final String FORMAT_YEAR = "yyyy";
+	public static final String DDMMM = "ddMMM";
+	public static final String DMMM = "dMMM";
 	
 	public static final String USER_FORMAT = "(#%s) %s %s %s";
 	// STORAGE_FORMAT	: 	[taskID]|[task]|[sdate]|
 	//						[stime]|[etime]|[categories]|[isComplete]|[priority]
-	public static final String STORAGE_FORMAT = "%d|%s|%s|%s|%s|%s|%d|%d|";
-	// DATE FORMAT		:	[startDate] [startTime] [endTime]
-	public static final String DATE_FORMAT = "%s %s";
+	public static final String STORAGE_FORMAT = "%d|%s|%s|%s|%s|%s|%s|%d|%d|";
+	// DATE FORMAT		:	[startDate][endDate] [startTime][endTime]
+	public static final String DATE_FORMAT = "%s";
 	
 }

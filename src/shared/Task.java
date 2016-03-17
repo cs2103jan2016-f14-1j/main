@@ -9,11 +9,8 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class Task {
-	private final int INDEX_STARTDATE = 0;
-	//private final int INDEX_ENDDATE = 1;
-	private final int INDEX_STARTTIME = 1;
-	private final int INDEX_ENDTIME = 2;
-	private final SimpleDateFormat DATE_DISPLAY_FORMAT = new SimpleDateFormat("ddMMM");
+	
+	private final SimpleDateFormat DATE_DISPLAY_FORMAT = new SimpleDateFormat(Keywords.DDMMM);
 
 	private int id = 0; 
 	private String task; 
@@ -28,8 +25,7 @@ public class Task {
 	public Task() {
 		id = 0;
 		task = date = Keywords.EMPTY_STRING;
-		datetimes = new ArrayList<Date>();
-		initDatetimes();
+		initDatetimes(); // add null Dates into datetimes
 		categories = new ArrayList<String>();
 		intDate = Keywords.NO_DATE;
 		intDateEnd = Keywords.NO_DATE;
@@ -44,7 +40,7 @@ public class Task {
 		setTask(taskName);
 		setCategories(cats);
 		initIntDate();
-		//initIntDateEnd();
+		initIntDateEnd();
 	}
 	/**
 	 * @return task <String> to display to user
@@ -62,19 +58,16 @@ public class Task {
 				Formatter.toCatsForStore(categories), isCompleted, priority);
 	}
 	private String getDisplayDate() {
-		String sdate = datetimes.get(INDEX_STARTDATE) == null ? 
+		String sdate = datetimes.get(Keywords.INDEX_STARTDATE) == null ? 
 				Keywords.EMPTY_STRING :
-				String.format("- %s", 
-						DATE_DISPLAY_FORMAT.format(datetimes.get(INDEX_STARTDATE)));
-		String timeformat = getDisplayTime();
-		/*
-		String edate = datetimes.get(INDEX_ENDDATE) == null ? 
+				DATE_DISPLAY_FORMAT.format(datetimes.get(Keywords.INDEX_STARTDATE));
+		String edate = datetimes.get(Keywords.INDEX_ENDDATE) == null ? 
 				Keywords.EMPTY_STRING :
-				DATE_DISPLAY_FORMAT.format(datetimes.get(INDEX_ENDDATE));
-		*/
+				DATE_DISPLAY_FORMAT.format(datetimes.get(Keywords.INDEX_ENDDATE));
+		String timeFormat = getDisplayTimeRange();
+		String dateFormat = getDisplayDateRange(sdate, edate);
 		return String.format(Keywords.DATE_FORMAT, 
-				sdate, 
-				timeformat);
+				formatBothDateAndTime(dateFormat,timeFormat));
 	}
 	public void callInitDate(){
 		initIntDate();
@@ -83,13 +76,11 @@ public class Task {
 		intDate = Keywords.NO_DATE;
 	}
 	private void initIntDate() {
-		this.intDate = Formatter.fromDateToInt(datetimes.get(INDEX_STARTDATE));
+		this.intDate = Formatter.fromDateToInt(datetimes.get(Keywords.INDEX_STARTDATE));
 	}
-	/*
 	private void initIntDateEnd() {
-		this.intDateEnd = Formatter.fromDateToInt(datetimes.get(INDEX_ENDDATE));
+		this.intDateEnd = Formatter.fromDateToInt(datetimes.get(Keywords.INDEX_ENDDATE));
 	}
-	*/
 	public int getId() {
 		return id;
 	}
@@ -136,26 +127,24 @@ public class Task {
 	 */
 	public void setIntDate(int intDate) {
 		this.intDate = intDate;
-		datetimes.set(INDEX_STARTDATE, Formatter.fromIntToDate(String.valueOf(intDate)));
+		datetimes.set(Keywords.INDEX_STARTDATE, Formatter.fromIntToDate(String.valueOf(intDate)));
 	}
-	/*
 	private void setIntDateEnd(int intDate) {
 		this.intDateEnd = intDate;
-		datetimes.set(INDEX_ENDDATE, Formatter.fromIntToDate(String.valueOf(intDate)));
+		datetimes.set(Keywords.INDEX_ENDDATE, Formatter.fromIntToDate(String.valueOf(intDate)));
 	}
-	*/
 	private void setIntStartTime(String intTime) {
 		if (Integer.parseInt(intTime) == Keywords.NO_DATE) {
-			datetimes.set(INDEX_STARTTIME, null);
+			datetimes.set(Keywords.INDEX_STARTTIME, null);
 		} else {
-			datetimes.set(INDEX_STARTTIME, Formatter.getDateFromString(intTime));
+			datetimes.set(Keywords.INDEX_STARTTIME, Formatter.getDateFromString(intTime));
 		}
 	}
 	private void setIntEndTime(String intTime) {
 		if (Integer.parseInt(intTime) == Keywords.NO_DATE) {
-			datetimes.set(INDEX_ENDTIME, null);
+			datetimes.set(Keywords.INDEX_ENDTIME, null);
 		} else {
-			datetimes.set(INDEX_ENDTIME, Formatter.getDateFromString(intTime));
+			datetimes.set(Keywords.INDEX_ENDTIME, Formatter.getDateFromString(intTime));
 		}
 	}
 
@@ -184,7 +173,7 @@ public class Task {
 		Task temp = new Task();
 		temp.setId(Integer.parseInt(properties.get(Keywords.TASK_ID)));
 		temp.setIntDate(Integer.parseInt(properties.get(Keywords.TASK_STARTDATE)));
-		//temp.setIntDateEnd(Integer.parseInt(properties.get(Keywords.TASK_ENDDATE)));
+		temp.setIntDateEnd(Integer.parseInt(properties.get(Keywords.TASK_ENDDATE)));
 		temp.setIntStartTime(properties.get(Keywords.TASK_STARTTIME));
 		temp.setIntEndTime(properties.get(Keywords.TASK_ENDTIME));
 		temp.setCategories(new ArrayList<String>(
@@ -206,31 +195,31 @@ public class Task {
 			cats += s + Keywords.SPACE_STRING;
 		}
 		String toString = String.format(Keywords.STORAGE_FORMAT, task.getId(), 
-				task.getTask(), task.getIntDate(),
-				 task.getIntStartTime(), task.getIntEndTime(),
+				task.getTask(), task.getIntDate(), task.getIntDateEnd(),
+				task.getIntStartTime(), task.getIntEndTime(),
 				cats, task.getIsCompleted(), task.getPriority());
 		return toString;
 	}
 	
 	public void setStartTime(Date d) {
-		datetimes.set(INDEX_STARTTIME, d);
+		datetimes.set(Keywords.INDEX_STARTTIME, d);
 	}
 	public void setEndTime(Date d) {
-		datetimes.set(INDEX_ENDTIME, d);
+		datetimes.set(Keywords.INDEX_ENDTIME, d);
 	}
 	public int getIntStartTime() {
-		if (datetimes.get(INDEX_STARTTIME) == null) {
+		if (datetimes.get(Keywords.INDEX_STARTTIME) == null) {
 			return Keywords.NO_DATE;
 		}
-		return datetimes.get(INDEX_STARTTIME).getHours() * 100
-				+ datetimes.get(INDEX_STARTTIME).getMinutes();
+		return datetimes.get(Keywords.INDEX_STARTTIME).getHours() * 100
+				+ datetimes.get(Keywords.INDEX_STARTTIME).getMinutes();
 	}
 	public int getIntEndTime() {
-		if (datetimes.get(INDEX_ENDTIME) == null) {
+		if (datetimes.get(Keywords.INDEX_ENDTIME) == null) {
 			return Keywords.NO_DATE;
 		}
-		return datetimes.get(INDEX_ENDTIME).getHours() * 100
-				+ datetimes.get(INDEX_ENDTIME).getMinutes();
+		return datetimes.get(Keywords.INDEX_ENDTIME).getHours() * 100
+				+ datetimes.get(Keywords.INDEX_ENDTIME).getMinutes();
 	}
 
 	public ArrayList<Date> getDatetimes() {
@@ -242,12 +231,13 @@ public class Task {
 	}
 	
 	public void initDatetimes() {
+		datetimes = new ArrayList<Date>();
 		for (int i = 0; i < Keywords.MAX_DATES; i++) {
 			datetimes.add(null);
 		}
 	}
 	
-	public String getDisplayTime() {
+	private String getDisplayTimeRange() {
 		int startTime = getIntStartTime(), 
 			endTime = getIntEndTime(); 
 		if (startTime == Keywords.NO_DATE && endTime == Keywords.NO_DATE) {
@@ -257,5 +247,26 @@ public class Task {
 		} else {
 			return String.format("(%s - %s)", startTime, endTime);
 		}
+	}
+	private String getDisplayDateRange(String sdate, String edate) {
+		if (sdate.equals(Keywords.EMPTY_STRING)) {
+			return Keywords.EMPTY_STRING;
+		} else if (edate.equals(Keywords.EMPTY_STRING)) {
+			return String.format("%s", sdate);
+		} else {
+			return String.format("%s to %s", sdate, edate);
+		}
+	}
+	private String formatBothDateAndTime(String date, String time) {
+		if (date.equals(Keywords.EMPTY_STRING) && time.equals(Keywords.EMPTY_STRING)) {
+			return Keywords.EMPTY_STRING;
+		} else if (time.equals(Keywords.EMPTY_STRING)) {
+			return String.format("- %s", date);
+		} else if (date.equals(Keywords.EMPTY_STRING)) {
+			return String.format("- %s", time);
+		} else {
+			return String.format("- %s %s", date, time);
+		}
+		
 	}
 }
