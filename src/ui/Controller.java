@@ -3,12 +3,10 @@ package ui;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,8 +29,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.wb.swt.SWTResourceManager;
-
 import logic.*;
 import parser.*;
 import shared.*;
@@ -59,7 +55,7 @@ public class Controller {
 	private final static String WEEK = "WEEK";
 	private final static String OTHERS = "OTHERS";
 	private final static int STARTING_INDEX = 2;
-	private final static int WHITESPACES = 2;
+	private final static int WHITESPACES = 1;
 	
 	private View view;
 	private Parser parser = Parser.getInstance();
