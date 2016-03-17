@@ -250,7 +250,7 @@ public class Task {
 	public String getDisplayTime() {
 		int startTime = getIntStartTime(), 
 			endTime = getIntEndTime(); 
-		if (startTime == Keywords.NO_DATE && endTime == startTime) {
+		if (startTime == Keywords.NO_DATE && endTime == Keywords.NO_DATE) {
 			return Keywords.EMPTY_STRING;
 		} else if (endTime == Keywords.NO_DATE) {
 			return String.format("(%s)", startTime);
