@@ -8,6 +8,9 @@ public class Keywords {
 	
 	public static final String REGEX_PREPOSITIONS = "(at|by|on|to|from)";
 	public static final String REGEX_CATEGORIES = "(#)(.*)";
+	public static final String REGEX_DATE = 
+			"^(([1-9])|([0][1-9])|([1-2][0-9])|([3][0-1]))"
+			+ "(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)$";
 	public static final String EMPTY_STRING = "";
 	public static final String SPACE_STRING = " ";
 	public static final String DELIMITER = "\\|";
@@ -39,6 +42,7 @@ public class Keywords {
 	public static final int CONSTANT_DATE_BREAK = 32;
 	
 	public static final String FILENAME_FILEPATH = "test.txt";
+	public static final String LOG_FILEPATH = "log.txt";
 	
 	public static final int TASK_ID = 0;
 	public static final int TASK_DESC = 1;

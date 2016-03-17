@@ -1,15 +1,17 @@
 package parser;
 
 import shared.*;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 
-public class Formatter {
+public class Formatter extends Logger {
 	
 	public static ArrayList<String> breakString(String rawInput) {
 		try {
@@ -245,8 +247,24 @@ public class Formatter {
 		List<Date> parse = new PrettyTimeParser().parse(s);
 		if (!parse.isEmpty()) {
 			return parse.get(Keywords.FIRST_ELEMENT);
+		} else if (s.toLowerCase().trim().matches(Keywords.REGEX_DATE)) {	
+			return convertToDate(s.trim());
 		}
 		return null;
+	}
+	/**
+	 * assumption: String d is valid date string of (dMMM | ddMMM)
+	 */
+	private static Date convertToDate(String d) {
+		DateFormat df = new SimpleDateFormat("ddMMM");
+		if (d.length() == 4) {
+			df = new SimpleDateFormat("dMMM");
+		}
+		try {
+			return df.parse(d);  
+		} catch (Exception e) {
+		}
+		return null; // will never reach this statement
 	}
 
 }
