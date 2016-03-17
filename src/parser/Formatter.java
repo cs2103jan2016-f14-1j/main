@@ -100,12 +100,6 @@ public class Formatter extends Logger {
 		// TOOD: need to change after introducing preposition
 		return Integer.parseInt(date);
 	}
-	private String removePreposition(String date) {
-		if (date.equals(Keywords.EMPTY_STRING)) {
-			return date;
-		}
-		return date.split(" ", 2)[1];
-	}
 	private static boolean isDate(String date) {
 		try {
 			return Integer.parseInt(date) != Keywords.NO_DATE;
@@ -115,7 +109,7 @@ public class Formatter extends Logger {
 	}
 	
 	public static String toCatsForDisplay(ArrayList<String> as) {
-		String out = "";
+		String out = Keywords.EMPTY_STRING;
 		for (String s : as) {
 			if (s.equals(Keywords.EMPTY_STRING)) {
 				continue;
@@ -127,7 +121,7 @@ public class Formatter extends Logger {
 	}
 	
 	public static String toCatsForStore(ArrayList<String> as) {
-		String out = "";
+		String out = Keywords.EMPTY_STRING;
 		for (String s : as) {
 			out += String.format("%s ", s);
 		}
