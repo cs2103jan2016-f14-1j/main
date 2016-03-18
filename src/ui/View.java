@@ -2,44 +2,29 @@ package ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.graphics.TextLayout;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.time.Month;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import shared.*;
 
-public class View {
+public class View extends Logger{
 	
 	private Shell shell;
-	private final String GUI_TITLE = "Dotdotdot";
+	private String GUI_TITLE = "Dotdotdot";
 	protected final static String GUI_HINT = "< Input ? or help to show available commands >";
 	protected final static String EMPTY_STRING = "";
     private final static String APP_ICON = "images/logo.png";
@@ -66,12 +51,21 @@ public class View {
 	private Table categoryTable;
 	private Table mainTable;
 	
-	public View(){
-
+	public View() throws Exception {
+        
 		shell = new Shell(SWT.CLOSE | SWT.MIN | SWT.TITLE);
 		
 		shell.setBackground(whiteColor);
 		shell.setSize(725, 625);
+		
+		// GUI_TITLE = null;
+		logf("This is the GUI title","trying to get GUI title");
+		//To show tutor only
+		assert(GUI_TITLE != null);
+		if (GUI_TITLE==null){
+			throw new Exception("NO GUI TITLE");
+		}
+		
 		shell.setText(GUI_TITLE);
 		shell.setImage(new Image(Display.getCurrent(), Thread.currentThread().getContextClassLoader().getResourceAsStream(APP_ICON)));
 		setCenterOfScreen();

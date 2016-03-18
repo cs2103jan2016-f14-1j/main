@@ -21,6 +21,7 @@ public class ParseAdd extends Logger {
 		boolean hasCategory = Formatter.getCategories(categories, inputParts),
 				hasPreposition = Formatter.getPreposition(preposition, inputParts);	
 		
+		assert(rawInput!=null);
 		if (hasCategory && !hasPreposition) {
 			taskName = Formatter.getTaskNameWithCategories(rawInput);
 		} else if (hasPreposition) {

@@ -42,7 +42,7 @@ public class Controller {
 	private HashMap<String, ArrayList<Task>> putIntoDays = new HashMap<>();
 	private static String [] days = new String[NUMBER_OF_DAYS];
 	private final static String [] DEFAULT_DAYS = new String[]{"SATURDAY","SUNDAY","MONDAY", "TUESDAY", "WEDNESDAY","THURSDAY", "FRIDAY"};
-
+	private static boolean imageToFirstHeader = true;
 	
 	private final static String WARNING_FILE_PATH = "images/warning-icon.png";
 	private final static String MARK_FILE_PATH = "images/star-icon.png";
@@ -148,43 +148,44 @@ public class Controller {
 		Listener paintListener = new Listener() {
 	      public void handleEvent(Event event) {
 		    	  
-	    	Point pt = new Point(event.x, event.y);
-	    	TableItem item = view.getMainTable().getItem(pt);
-		   // item.
-		    if(item.equals(firstItem)){
-		        switch (event.type) {
-			        case SWT.MeasureItem: {
-			        	Rectangle rect = warningImage.getBounds();
-				        event.width += rect.width;
-				        event.height = Math.max(event.height, rect.height + 2);
-				        break;
+	    	TableItem item = (TableItem)event.item;
+		   
+			    if(item.equals(firstItem)){
+			        switch (event.type) {
+				        case SWT.MeasureItem: {
+				        	Rectangle rect = warningImage.getBounds();
+					        event.width += rect.width;
+					        event.height = Math.max(event.height, rect.height + 2);
+					        break;
+					    }
+				        case SWT.PaintItem: {
+			    	        int x = event.width;
+					        Rectangle rect = warningImage.getBounds();
+					        int offset = Math.max(0, (event.height - rect.height) / 2);
+					        event.gc.drawImage(warningImage, x, event.y + offset);
+					        break;
+					    }
 				    }
-			        case SWT.PaintItem: {
-		    	        int x = event.width;
-				        Rectangle rect = warningImage.getBounds();
-				        int offset = Math.max(0, (event.height - rect.height) / 2);
-				        event.gc.drawImage(warningImage, x, event.y + offset);
-				        break;
-				    }
+			        
+			    } else if (item.getData()!=null){
+			    	switch (event.type) {
+				        case SWT.MeasureItem: {
+				        	Rectangle rect = starImage.getBounds();
+					        event.width += rect.width;
+					        event.height = Math.max(event.height, rect.height + 2);
+					        break;
+					    }
+				        case SWT.PaintItem: {
+			    	        int x = 7;
+					        Rectangle rect = starImage.getBounds();
+					        int offset = Math.max(0, (event.height - rect.height) / 2);
+					        event.gc.drawImage(starImage, x, event.y + offset + 1);
+					        break;
+					    }
+			       }
 			    }
-		    } else if (item.getData()!=null){
-		    	switch (event.type) {
-		        case SWT.MeasureItem: {
-		        	Rectangle rect = starImage.getBounds();
-			        event.width += rect.width;
-			        event.height = Math.max(event.height, rect.height + 2);
-			        break;
-			    }
-		        case SWT.PaintItem: {
-	    	        int x = 7;
-			        Rectangle rect = starImage.getBounds();
-			        int offset = Math.max(0, (event.height - rect.height) / 2);
-			        event.gc.drawImage(starImage, x, event.y + offset + 1);
-			        break;
-			    }
-		     }
-		    }
-		  }
+			  }
+	       
 		};
 		    
 		view.getMainTable().addListener(SWT.MeasureItem, paintListener);
