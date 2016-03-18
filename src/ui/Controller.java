@@ -19,7 +19,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.TextLayout;
 import org.eclipse.swt.graphics.TextStyle;
@@ -42,7 +41,6 @@ public class Controller {
 	private HashMap<String, ArrayList<Task>> putIntoDays = new HashMap<>();
 	private static String [] days = new String[NUMBER_OF_DAYS];
 	private final static String [] DEFAULT_DAYS = new String[]{"SATURDAY","SUNDAY","MONDAY", "TUESDAY", "WEDNESDAY","THURSDAY", "FRIDAY"};
-	private static boolean imageToFirstHeader = true;
 	
 	private final static String WARNING_FILE_PATH = "images/warning-icon.png";
 	private final static String MARK_FILE_PATH = "images/star-icon.png";
