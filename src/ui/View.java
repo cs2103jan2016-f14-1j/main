@@ -24,7 +24,7 @@ import shared.*;
 public class View extends Logger{
 	
 	private Shell shell;
-	private String GUI_TITLE = "Dotdotdot";
+	private final String GUI_TITLE = "Dotdotdot";
 	protected final static String GUI_HINT = "< Input ? or help to show available commands >";
 	protected final static String EMPTY_STRING = "";
     private final static String APP_ICON = "images/logo.png";
@@ -57,15 +57,6 @@ public class View extends Logger{
 		
 		shell.setBackground(whiteColor);
 		shell.setSize(725, 625);
-		
-		// GUI_TITLE = null;
-		logf("This is the GUI title","trying to get GUI title");
-		//To show tutor only
-		assert(GUI_TITLE != null);
-		if (GUI_TITLE==null){
-			throw new Exception("NO GUI TITLE");
-		}
-		
 		shell.setText(GUI_TITLE);
 		shell.setImage(new Image(Display.getCurrent(), Thread.currentThread().getContextClassLoader().getResourceAsStream(APP_ICON)));
 		setCenterOfScreen();
