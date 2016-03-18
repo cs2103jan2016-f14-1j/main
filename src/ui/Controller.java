@@ -41,6 +41,7 @@ public class Controller {
 	private HashMap<String, ArrayList<Task>> putIntoDays = new HashMap<>();
 	private static String [] days = new String[NUMBER_OF_DAYS];
 	private final static String [] DEFAULT_DAYS = new String[]{"SATURDAY","SUNDAY","MONDAY", "TUESDAY", "WEDNESDAY","THURSDAY", "FRIDAY"};
+	private final Object object = new Object();
 	
 	private final static String WARNING_FILE_PATH = "images/warning-icon.png";
 	private final static String MARK_FILE_PATH = "images/star-icon.png";
@@ -165,7 +166,7 @@ public class Controller {
 					    }
 				    }
 			        
-			    } else if (item.getData()!=null){
+			    } else if (item.getData() == object){
 			    	switch (event.type) {
 				        case SWT.MeasureItem: {
 				        	Rectangle rect = starImage.getBounds();
@@ -559,7 +560,7 @@ public class Controller {
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				String whiteSpaces = "";
 				if(tempArrList.get(i).getPriority()== 1){
-					mainItem.setData(tempArrList.get(i));
+					mainItem.setData(object);
 					whiteSpaces = "     ";
 				} 
 				
