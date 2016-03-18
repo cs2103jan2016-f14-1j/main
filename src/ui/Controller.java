@@ -148,7 +148,6 @@ public class Controller {
 	      public void handleEvent(Event event) {
 		    	  
 	    	TableItem item = (TableItem)event.item;
-		   
 			    if(item.equals(firstItem)){
 			        switch (event.type) {
 				        case SWT.MeasureItem: {
@@ -166,7 +165,19 @@ public class Controller {
 					    }
 				    }
 			        
-			    } else if (item.getData() == object){
+			    }
+			  }
+	       
+		};
+		    
+		view.getMainTable().addListener(SWT.MeasureItem, paintListener);
+	    view.getMainTable().addListener(SWT.PaintItem, paintListener);
+	    
+	    Listener paintStarListener = new Listener() {
+		      public void handleEvent(Event event) {
+			    	  
+		    	TableItem item = (TableItem)event.item;
+		    	if (item.getData() == object){
 			    	switch (event.type) {
 				        case SWT.MeasureItem: {
 				        	Rectangle rect = starImage.getBounds();
@@ -183,13 +194,13 @@ public class Controller {
 					    }
 			       }
 			    }
-			  }
-	       
+		      }
+		       
 		};
-		    
-		view.getMainTable().addListener(SWT.MeasureItem, paintListener);
-	    view.getMainTable().addListener(SWT.PaintItem, paintListener);
-		    	
+		view.getMainTable().addListener(SWT.MeasureItem, paintStarListener);
+	    view.getMainTable().addListener(SWT.PaintItem, paintStarListener);
+	 
+	    
 		for(Task task : list){
 			
 			/*
