@@ -5,7 +5,10 @@ import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
+import java.awt.FileDialog;
 import java.util.concurrent.Executor;
+
+import javax.swing.JFrame;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -32,13 +35,22 @@ public class MainGUI implements NativeKeyListener {
 		//WinRegistry.deleteValue(WinRegistry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "dotdotdot autorun key");
 		
 		Display display = new Display();
+		Controller controller = new Controller();
 		display.addFilter(SWT.KeyDown, new Listener() {
             public void handleEvent(Event e) {
-                if(e.keyCode == SWT.ESC)
-					System.exit(0);
+            	switch(e.keyCode){ 
+	            	case SWT.ESC:{
+						System.exit(0);
+						break;
+	            	}
+	            	case SWT.ALT:
+	            	case 'e':{
+	            	    controller.writePathToFile();
+	            		break;
+	            	}
+            	}
             }
         });
-		Controller controller = new Controller();
 		shell = controller.getView().getShell();
 		shell.open();
 		shell.layout();

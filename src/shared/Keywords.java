@@ -44,8 +44,10 @@ public class Keywords {
 	public static final int CONSTANT_YEAR = 2016;
 	public static final int CONSTANT_DATE_BREAK = 32;
 	
-	public static final String FILENAME_FILEPATH = "test.txt";
+	public static final String SETTINGS_FILEPATH = "settings.ini";
+	public static String FILENAME_FILEPATH = "";
 	public static final String LOG_FILEPATH = "log.txt";
+	public static final String TASK_FILENAME = "task.txt";
 	
 	public static final int TASK_ID = 0;
 	public static final int TASK_DESC = 1;

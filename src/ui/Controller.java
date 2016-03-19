@@ -1,5 +1,11 @@
 package ui;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -22,6 +28,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.TextLayout;
 import org.eclipse.swt.graphics.TextStyle;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -88,6 +95,12 @@ public class Controller {
 		view.getDateLabel().setText(getCurrentDate());
 		view.getDayLabel().setText(getCurrentDay());
 		view.getTimeLabel().setText(getCurrentTime());
+		
+		readFileLocation();
+		if(Keywords.FILENAME_FILEPATH.equals(Keywords.EMPTY_STRING)){
+			writePathToFile();
+		}
+		
 		displayCategory();
 		displayList(Storage.getListOfUncompletedTasks());
 	}
@@ -600,6 +613,53 @@ public class Controller {
 	private String removeDate(String removeDate){
 		return removeDate.substring(0, removeDate.lastIndexOf("-") - WHITESPACES );
 	}
+	
+
+	private void readFileLocation(){
+		BufferedReader bufferReader = null;
+		try {
+			bufferReader = new BufferedReader(new FileReader(Keywords.SETTINGS_FILEPATH));
+			String currentLine = Keywords.EMPTY_STRING;
+			while ((currentLine = bufferReader.readLine()) != null) {
+				// Read first line as file location is there
+			    Keywords.FILENAME_FILEPATH = currentLine;
+			    break;
+			}
+		} catch (FileNotFoundException ex) {
+			// systemPrint(FILE_NOT_FOUND_ERROR_MSG);
+		} catch (IOException ex) {
+			// systemPrint(IO_ERROR_MSG);
+		} finally {
+			try {
+				if (bufferReader != null) {
+					bufferReader.close();
+				}
+			} catch (IOException ex) {
+				// systemPrint(IO_ERROR_MSG);
+			}
+		}
+	}
+	
+	public void writePathToFile() {
+		DirectoryDialog dialog = new DirectoryDialog(view.getShell());
+	    dialog.setFilterPath("c:\\"); // Windows specific
+	    String path = dialog.open();
+	    if(path==null){
+	    	Keywords.FILENAME_FILEPATH = Keywords.TASK_FILENAME;
+	    } else {
+	    	Keywords.FILENAME_FILEPATH = path + "\\" + Keywords.TASK_FILENAME;
+	    }
+	    
+		try {
+			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.SETTINGS_FILEPATH));
+			bufferWriter.write(Keywords.FILENAME_FILEPATH);
+			// bufferWriter.newLine();	
+			bufferWriter.close();
+		} catch (IOException ex) {
+			//systemPrint(IO_ERROR_MSG);
+		}
+	}
+
 	
 	public View getView() {
 		return view;
