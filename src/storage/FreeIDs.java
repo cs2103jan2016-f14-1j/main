@@ -16,6 +16,10 @@ public class FreeIDs {
 		freeIDs = new LinkedList<Integer>();
 	}
 	
+	public int getNextAvailID(){
+		return getNextAvailableID();
+	}
+	
 	protected static int getNextAvailableID() {
 		sortIDs();
 		if (freeIDs.isEmpty()) {
