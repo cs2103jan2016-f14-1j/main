@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-public class Task {
+public class Task extends Logger {
 	
 	private final SimpleDateFormat DATE_DISPLAY_FORMAT = new SimpleDateFormat(Keywords.DDMMM);
 
@@ -258,11 +258,13 @@ public class Task {
 		}
 	}
 	private String formatBothDateAndTime(String date, String time) {
+		assert(date != null && time != null);
+		logf("formatBothDateAndTime", String.format("%s (%s)", date, time));
 		if (date.equals(Keywords.EMPTY_STRING) && time.equals(Keywords.EMPTY_STRING)) {
 			return Keywords.EMPTY_STRING;
-		} else if (time.equals(Keywords.EMPTY_STRING)) {
+		} else if (time.equals(Keywords.EMPTY_STRING)) { // date != null
 			return String.format("- %s", date);
-		} else if (date.equals(Keywords.EMPTY_STRING)) {
+		} else if (date.equals(Keywords.EMPTY_STRING)) { // time != null
 			return String.format("- %s", time);
 		} else {
 			return String.format("- %s %s", date, time);

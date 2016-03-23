@@ -27,6 +27,7 @@ public class Logic {
 
 	public static boolean deleteTask(ArrayList<Integer> taskIDs, ArrayList<String> cats) {
 		return new DeleteTask().deleteTask(taskIDs, cats);
+		
 	}
 	
 	public static boolean doTask(ArrayList<Integer> taskIDs) {

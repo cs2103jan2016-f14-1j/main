@@ -55,7 +55,6 @@ public class Parser {
 		case COMMAND_EDIT:
 			returnValue = ParseEdit.editTask(inputWithoutCommandType);
 			break;
-		// TODO
 		case COMMAND_DISPLAY:
 			// TODO
 		case COMMAND_UNDO:
