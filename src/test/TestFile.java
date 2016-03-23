@@ -19,7 +19,11 @@ public class TestFile {
 	public void test() {
 		
 		// This is a test case for testing if the add function will add the following Strings
-		assertEquals(null, parser.parse("add addadd add"));
+	    parser.parse("add addadd add");
+	    // True to pass
+		assertEquals(true, parser.returnValue);
+		
+		//assertEquals();
 		
 	}
 
