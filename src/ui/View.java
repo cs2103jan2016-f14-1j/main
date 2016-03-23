@@ -98,7 +98,7 @@ public class View extends Logger{
 	        }
 	    });
 		
-		mainTable = new Table(shell, SWT.FULL_SELECTION);
+		mainTable = new Table(shell, SWT.FULL_SELECTION | SWT.NO_SCROLL | SWT.V_SCROLL);
 		mainTable.setFont(normalFont);
 		mainTable.setBounds(196, 10, 513, 489);
 		mainTable.addListener(SWT.Selection, new Listener()
