@@ -17,6 +17,11 @@ public class TestFile {
 	Storage storage = Storage.getInstance();
 	@Test
 	public void test() {
+/**
+ * This test class approaches exploratory and white box testing.
+ * Exploratory - design the test cases on the go. Do while testing
+ * White Box - knowing what the code is going to do. Test after that. 
+ * */		
 		
 /**
  * All add tests here
@@ -57,10 +62,11 @@ public class TestFile {
 		
 		parser.parse("delete 2");
 		assertEquals(true, Parser.returnValue);
-		assertEquals("Task(s) Deleted! (#2) task with date - 20Feb", Notification.getTitle() + " "+Notification.getMessage());
+		assertEquals("Task(s) Deleted! (#2) task with date  - 20Feb", Notification.getTitle() + " "+Notification.getMessage());
 		
 		parser.parse("delete 3");
 		assertEquals(true, Parser.returnValue);
+		assertEquals("Task(s) Deleted! (#3) task with date and category #test - 20Feb", Notification.getTitle() + " "+Notification.getMessage());
 		
 /**
  * All undo tests here
