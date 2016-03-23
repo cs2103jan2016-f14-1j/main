@@ -50,9 +50,9 @@ public class Parser {
 			ParseDelete.deleteTask(inputWithoutCommandType);
 			break;
 		case COMMAND_EDIT:
+			// TODO: not complete
 			ParseEdit.editTask(inputWithoutCommandType);
 			break;
-		// TODO
 		case COMMAND_DISPLAY:
 			// TODO
 		case COMMAND_UNDO:

@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import shared.Task;
 import storage.Storage;
+import shared.*;
 
-public class Functionality {
+public class Functionality extends Logger {
 
 	private ArrayList<Task> tasks = new ArrayList<Task>();
 	

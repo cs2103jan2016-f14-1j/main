@@ -230,6 +230,13 @@ public class Formatter extends Logger {
 		for (String t : breakBySpacedPreposition(s)) {
 			logf("getDateTimes", t);
 			Date d = getDateFromString(t);
+			if (as.get(Keywords.INDEX_STARTDATE) != null &&
+				as.get(Keywords.INDEX_ENDDATE) != null &&
+				as.get(Keywords.INDEX_STARTTIME) != null &&
+				as.get(Keywords.INDEX_ENDTIME) != null) {
+				logf("getDateTimes", "datetimes fully filled");
+				break; // all 4 datetimes filled up, exit loop
+			}
 			if (d != null) { // either date or time
 				if (isDateString(t)) {
 					logf("getDateTimes, isDateString", t);
