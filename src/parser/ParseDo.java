@@ -9,8 +9,6 @@ public class ParseDo {
 	public static boolean doTask(String rawInput) {
 		ArrayList<Integer> ids = Formatter.breakToIds(rawInput);
 		
-		Logic.doTask(ids);
-
-		return true;
+		return Logic.doTask(ids);
 	}
 }
