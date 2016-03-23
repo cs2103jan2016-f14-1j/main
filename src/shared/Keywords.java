@@ -46,7 +46,7 @@ public class Keywords {
 	
 	public static final String SETTINGS_FILEPATH = "settings.ini";
 	public static final String TASK_FILENAME = "task.txt";
-	public static String FILENAME_FILEPATH = TASK_FILENAME;
+	public static String FILENAME_FILEPATH = EMPTY_STRING;
 	public static final String LOG_FILEPATH = "log.txt";
 	
 	public static final int TASK_ID = 0;
