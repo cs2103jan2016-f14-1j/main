@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import parser.Parser;
 import shared.*;
@@ -34,8 +35,8 @@ public class Logic {
 		return new DoTask().doTask(taskIDs);
 	}
 	
-	public static boolean editTask(int taskId, ArrayList<String> properties) {
-		return new EditTask().editTask(taskId, properties);
+	public static boolean editTask(int taskId, Date date) {
+		return new EditTask().editTask(taskId, date);
 	}
 	
 	public static ArrayList<Task> viewTask(String input) {

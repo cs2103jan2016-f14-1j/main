@@ -13,7 +13,9 @@ public class ParseEdit {
 		// (1) edit <id(s)> to <date>
 		ArrayList<String> tempProp = new ArrayList<>();
 		tempProp.add(Formatter.getDateFromRaw(rawInput));
-		return Logic.editTask(Integer.parseInt(inputParts.get(Keywords.TASK_ID)),tempProp);
+		String s = Formatter.getAfterPreposition(rawInput);
+		return Logic.editTask(Integer.parseInt(inputParts.get(Keywords.TASK_ID)),
+				Formatter.getDateFromString(s));
 		// (2) edit <id> to <name>
 		// (3) edit <cat> to <date>
 		//Logic.editTask();

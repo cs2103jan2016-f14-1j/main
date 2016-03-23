@@ -296,5 +296,22 @@ public class Formatter extends Logger {
 		}
 		return null; // will never reach this statement
 	}
+	/**
+	 * assumption: String d is valid date string of (dMMM | ddMMM)
+	 */
+	public static String getAfterPreposition(String s) {
+		ArrayList<String> as = breakString(s);
+		String answer = "";
+		for (int i = as.size() - 1; i >= 0; i--) {
+			if (!isPreposition(as.get(i))) {
+				answer = as.get(i) + Keywords.EMPTY_STRING + answer;
+				System.out.println(as.get(i));
+			} else {
+				break;
+			}
+		}
+		System.out.println(answer);
+		return answer;
+	}
 
 }

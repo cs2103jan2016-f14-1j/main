@@ -3,6 +3,7 @@ package logic;
 import shared.*;
 import storage.Storage;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class EditTask extends Functionality {
 
@@ -15,12 +16,14 @@ public class EditTask extends Functionality {
 	 *            changes to be made to the task's date
 	 * @return it will return successful when a task is edited, else otherwise.
 	 */
-	public boolean editTask(int taskID, ArrayList<String> properties) {
+	public boolean editTask(int taskID, Date date) {
 		if (Storage.getTask(taskID) != null) {
 			//super.getTasks().add(Storage.getTask(taskID));
 			super.addToFuncTasks(Storage.getTask(taskID));
 			super.addToHistory("edit");
-			Storage.getTask(taskID).setDate(properties.get(0));
+			ArrayList<Date> dt = new ArrayList<Date>();
+			dt.add(date); dt.add(null); dt.add(null); dt.add(null);
+			Storage.getTask(taskID).setDateTimes(dt);
 			Storage.getTask(taskID).callInitDate();
 			Notification.setTitle(Keywords.MESSAGE_EDIT_SUCCESS);
 			Notification.setMessage(Storage.getTask(taskID).getUserFormat() + " has been edited!");
