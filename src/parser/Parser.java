@@ -74,7 +74,7 @@ public class Parser {
 			// TODO
 		}
 
-		return null;
+		return new Notification();
 	}
 
 	private String removeFirstWord(String userInput) {
