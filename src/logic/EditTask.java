@@ -22,8 +22,8 @@ public class EditTask extends Functionality {
 			super.addToHistory("edit");
 			Storage.getTask(taskID).setDate(properties.get(0));
 			Storage.getTask(taskID).callInitDate();
-				Notification.setTitle(Keywords.MESSAGE_EDIT_SUCCESS);
-				Notification.setMessage(Storage.getTask(taskID).getUserFormat() + " has been edited!");
+			Notification.setTitle(Keywords.MESSAGE_EDIT_SUCCESS);
+			Notification.setMessage(Storage.getTask(taskID).getUserFormat() + " has been edited!");
 			// Storage.getTask(taskID).setTask(properties.get(Keywords.TASK_DESC));
 		}
 		// Storage.getTask(taskID).setCategories((properties.get(Keywords.TASK_CATEGORIES));
