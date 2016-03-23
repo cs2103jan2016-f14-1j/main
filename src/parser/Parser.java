@@ -23,7 +23,9 @@ public class Parser {
 	private static final String COMMAND_SEARCH = "search";
 	private static final String COMMAND_MARK = "mark";
 	private static Parser parser;
-
+	// For JUnit testing
+	public static boolean returnValue;
+	
 	// private constructor
 	private Parser() {
 	}
@@ -38,25 +40,25 @@ public class Parser {
 	public ArrayList<Task> parse(String userInput) {
 		String commandType = getFirstWord(userInput).toLowerCase();
 		String inputWithoutCommandType = removeFirstWord(userInput);
-
+		returnValue = false;
+		
 		switch (commandType) {
 		case COMMAND_ADD:
-			ParseAdd.addTask(inputWithoutCommandType);
+			returnValue = ParseAdd.addTask(inputWithoutCommandType);
 			break;
 		case COMMAND_DO:
-			ParseDo.doTask(inputWithoutCommandType);
+			returnValue = ParseDo.doTask(inputWithoutCommandType);
 			break;
 		case COMMAND_DELETE:
-			ParseDelete.deleteTask(inputWithoutCommandType);
+			returnValue = ParseDelete.deleteTask(inputWithoutCommandType);
 			break;
 		case COMMAND_EDIT:
-			// TODO: not complete
-			ParseEdit.editTask(inputWithoutCommandType);
+			returnValue = ParseEdit.editTask(inputWithoutCommandType);
 			break;
 		case COMMAND_DISPLAY:
 			// TODO
 		case COMMAND_UNDO:
-			ParseUndo.undoTask();
+			returnValue = ParseUndo.undoTask();
 			break;
 		// TODO
 		case COMMAND_CLEAR:
@@ -64,11 +66,13 @@ public class Parser {
 		case COMMAND_HELP:
 			// TODO
 		case COMMAND_VIEW:
+			returnValue = true;
 			return Logic.viewTask(inputWithoutCommandType);
 		case COMMAND_SEARCH:
+			returnValue = true;
 			return Logic.searchTask(inputWithoutCommandType);
 		case COMMAND_MARK:
-			ParseMark.prioritise(inputWithoutCommandType);
+			returnValue = ParseMark.prioritise(inputWithoutCommandType);
 			break;
 		default:
 			// TODO

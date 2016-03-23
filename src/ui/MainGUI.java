@@ -24,7 +24,8 @@ public class MainGUI implements NativeKeyListener {
 	private final static String KEY_NAME = "dotdotdot autorun key"; 
 	private boolean keyd = false;
 	private boolean keyctrl = false;
-	private boolean keyalt = false;
+	private static boolean keyalt = false;
+	private static boolean keyE = false;
 	private static Shell shell;
 
 	public static void main(String[] args) throws Exception {
@@ -36,21 +37,46 @@ public class MainGUI implements NativeKeyListener {
 		
 		Display display = new Display();
 		Controller controller = new Controller();
+
 		display.addFilter(SWT.KeyDown, new Listener() {
+			
+			@Override
             public void handleEvent(Event e) {
-            	switch(e.keyCode){ 
-	            	case SWT.ESC:{
-						System.exit(0);
-						break;
-	            	}
-	            	case SWT.ALT:
-	            	case 'e':{
-	            	    controller.writePathToFile();
-	            		break;
-	            	}
+            	if(e.keyCode==SWT.ESC){
+            		System.exit(0);
             	}
+            	
+            	if(e.keyCode==SWT.ALT){
+            		keyalt = true;
+            	}
+            	
+            	if(e.keyCode=='e'){
+            		keyE = true;
+            	}
+            	
+            	if(keyalt && keyE){
+            		 controller.writePathToFile();
+            		 keyalt = false;
+            		 keyE = false;
+                }
+            	
+            	
             }
         });
+		display.addFilter(SWT.KeyUp, new Listener(){
+
+			@Override
+			public void handleEvent(Event e) {
+				if(e.keyCode=='e'){
+					keyE = false;
+				}
+				
+				if(e.keyCode==SWT.ALT){
+					keyalt = false;
+				}
+			}
+			
+		});
 		shell = controller.getView().getShell();
 		shell.open();
 		shell.layout();

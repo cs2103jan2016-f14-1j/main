@@ -64,9 +64,9 @@ public class Controller {
 	private final static int WHITESPACES = 1;
 	
 	private View view;
-	private Parser parser = Parser.getInstance();
-	private Logic logic = Logic.getInstance();
-	private Storage storage = Storage.getInstance();
+	private Parser parser;
+	private Logic logic;
+	private Storage storage;
 
 	public Controller() throws Exception {
 		view = new View();
@@ -100,6 +100,10 @@ public class Controller {
 		if(Keywords.FILENAME_FILEPATH.equals(Keywords.EMPTY_STRING)){
 			writePathToFile();
 		}
+		
+		parser = parser.getInstance();
+		logic = logic.getInstance();
+		storage = storage.getInstance();
 		
 		displayCategory();
 		displayList(Storage.getListOfUncompletedTasks());
@@ -625,6 +629,7 @@ public class Controller {
 			    Keywords.FILENAME_FILEPATH = currentLine;
 			    break;
 			}
+
 		} catch (FileNotFoundException ex) {
 			// systemPrint(FILE_NOT_FOUND_ERROR_MSG);
 		} catch (IOException ex) {

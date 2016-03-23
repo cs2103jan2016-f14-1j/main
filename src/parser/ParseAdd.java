@@ -30,9 +30,7 @@ public class ParseAdd extends Logger {
 		
 		Task task = new Task(datetimes, taskName, categories); 
 		
-		Logic.addTask(task);
-		
-		return true;
+		return Logic.addTask(task);
 	}
 
 }
