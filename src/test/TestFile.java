@@ -20,31 +20,36 @@ public class TestFile {
 		
 		// This is a test case for testing if the add function will add the following Strings
 	    parser.parse("add addadd add");
-	    // True to pass
 		assertEquals(true, Parser.returnValue);
+	    assertEquals("Add Successful! addadd add has been added!", Notification.getTitle() + " "+Notification.getMessage());
 	    
 		parser.parse("add task with date by 20Feb");
-	    // True to pass
 		assertEquals(true, Parser.returnValue);
-		
+		assertEquals("Add Successful! task with date has been added!", Notification.getTitle() + " "+Notification.getMessage());
+	    
 		parser.parse("add task with date and category #test by 20Feb");
-	    // True to pass
 		assertEquals(true, Parser.returnValue);
-		
+		assertEquals("Add Successful! task with date and category has been added!", Notification.getTitle() + " "+Notification.getMessage());
+	    
 		parser.parse("add task with date and category #test by 20Feb from 8pm");
 		assertEquals(true, Parser.returnValue);
+		assertEquals("Add Successful! task with date and category has been added!", Notification.getTitle() + " "+Notification.getMessage());
 		
 		parser.parse("add task with date and category #test by 20Feb from 8pm to 10pm");
 		assertEquals(true, Parser.returnValue);
+		assertEquals("Add Successful! task with date and category has been added!", Notification.getTitle() + " "+Notification.getMessage());
 		
 		parser.parse("add task with date and category #test by 20Feb to 25Feb");
 		assertEquals(true, Parser.returnValue);
+		assertEquals("Add Successful! task with date and category has been added!", Notification.getTitle() + " "+Notification.getMessage());
 		
 		parser.parse("delete 1");
 		assertEquals(true, Parser.returnValue);
+		assertEquals("Task(s) Deleted! (#1) addadd add  ", Notification.getTitle() + " "+Notification.getMessage());
 		
 		parser.parse("delete 2");
 		assertEquals(true, Parser.returnValue);
+		assertEquals("Task(s) Deleted! (#2) task with date - 20Feb", Notification.getTitle() + " "+Notification.getMessage());
 		
 		parser.parse("delete 3");
 		assertEquals(true, Parser.returnValue);
@@ -61,7 +66,7 @@ public class TestFile {
 		parser.parse("search task");
 		assertEquals(true, Parser.returnValue);
 		
-		parser.parse("view not done");
+		parser.parse("view");
 		assertEquals(true, Parser.returnValue);
 	
 		parser.parse("view done");
