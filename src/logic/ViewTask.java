@@ -14,7 +14,7 @@ public class ViewTask {
 	}
 
 	public ArrayList<Task> viewTasks(String input) {
-		if (input.equals(Keywords.EMPTY_STRING)) {
+		if (input.equals(Keywords.EMPTY_STRING) || input.equalsIgnoreCase("not done")) {
 			Notification.setTitle(String.format(Keywords.MESSAGE_VIEW_SUCCESS, "Default"));
 			return Storage.getListOfUncompletedTasks();
 		}
