@@ -17,26 +17,26 @@ public class DoTask extends Functionality {
 	 *         else otherwise.
 	 */
 
-	public boolean doTask(ArrayList<Integer> taskIds) {
-		boolean value = false;
+	public Notification doTask(ArrayList<Integer> taskIds) {
+		Notification n = new Notification();
 		if (taskIds.isEmpty()) {
-			Notification.setTitle(Keywords.MESSAGE_ERROR);
+			n.setTitle(Keywords.MESSAGE_ERROR);
 		} else if (taskIds.size() > 1) {
-			Notification.setTitle(Keywords.MESSAGE_COMPLETED_SUCCESS);
-			Notification.setMessage(taskIds.toString());
+			n.setTitle(Keywords.MESSAGE_COMPLETED_SUCCESS);
+			n.setMessage(taskIds.toString());
 		} else {
-			Notification.setTitle(Keywords.MESSAGE_COMPLETED_SUCCESS);
-			Notification.setMessage(Storage.getTask(taskIds.get(Keywords.FIRST_ELEMENT)).getUserFormat() + "done!");
+			n.setTitle(Keywords.MESSAGE_COMPLETED_SUCCESS);
+			n.setMessage(Storage.getTask(taskIds.get(Keywords.FIRST_ELEMENT)).getUserFormat() + "done!");
 		}
 		for (int taskID : taskIds) {
 			if (doTask(taskID)) {
-				value = true;
+				//changing in progress
 			}
 		}
 		// Add to history the action to be done
 		super.addToHistory("do");
 		super.synchronization();
-		return value;
+		return n;
 	}
 
 	private boolean doTask(int taskID) {

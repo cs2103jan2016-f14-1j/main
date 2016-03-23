@@ -16,7 +16,8 @@ public class EditTask extends Functionality {
 	 *            changes to be made to the task's date
 	 * @return it will return successful when a task is edited, else otherwise.
 	 */
-	public boolean editTask(int taskID, Date date) {
+	public Notification editTask(int taskID, Date date) {
+		Notification n = new Notification();
 		if (Storage.getTask(taskID) != null) {
 			//super.getTasks().add(Storage.getTask(taskID));
 			super.addToFuncTasks(Storage.getTask(taskID));
@@ -25,8 +26,8 @@ public class EditTask extends Functionality {
 			dt.add(date); dt.add(null); dt.add(null); dt.add(null);
 			Storage.getTask(taskID).setDateTimes(dt);
 			Storage.getTask(taskID).callInitDate();
-			Notification.setTitle(Keywords.MESSAGE_EDIT_SUCCESS);
-			Notification.setMessage(Storage.getTask(taskID).getUserFormat() + " has been edited!");
+			n.setTitle(Keywords.MESSAGE_EDIT_SUCCESS);
+			n.setMessage(Storage.getTask(taskID).getUserFormat() + " has been edited!");
 			// Storage.getTask(taskID).setTask(properties.get(Keywords.TASK_DESC));
 		}
 		// Storage.getTask(taskID).setCategories((properties.get(Keywords.TASK_CATEGORIES));
@@ -42,6 +43,6 @@ public class EditTask extends Functionality {
 		 * taskIndex, COMMAND.EDIT); return true;
 		 */
 		super.synchronization();
-		return true;
+		return n;
 	}
 }

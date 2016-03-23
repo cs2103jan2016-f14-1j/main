@@ -3,10 +3,11 @@ package parser;
 import java.util.ArrayList;
 
 import logic.Logic;
+import logic.Notification;
 import shared.Keywords;
 
 public class ParseEdit {
-	public static boolean editTask(String rawInput) {
+	public static Notification editTask(String rawInput) {
 		ArrayList<String> inputParts = Formatter.breakString(rawInput);
 		
 		// TODO: determine if date edit or description edit

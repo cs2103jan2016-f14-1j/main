@@ -22,37 +22,40 @@ public class Logic {
 		return logic;
 	}
 
-	public static boolean addTask(Task task) {
+	public static Notification addTask(Task task) {
 		return new AddTask().addTask(task);
 	}
 
-	public static boolean deleteTask(ArrayList<Integer> taskIDs, ArrayList<String> cats) {
-		return new DeleteTask().deleteTask(taskIDs, cats);
-		
+	public static Notification deleteTask(ArrayList<Integer> taskIDs, ArrayList<String> cats) {
+		return new DeleteTask().deleteTask(taskIDs, cats);	
 	}
 
-	public static boolean doTask(ArrayList<Integer> taskIDs) {
+	public static Notification doTask(ArrayList<Integer> taskIDs) {
 			return new DoTask().doTask(taskIDs);
 	}
 
-	public static boolean editTask(int taskId, Date date) {
+	public static Notification editTask(int taskId, Date date) {
 		return new EditTask().editTask(taskId, date);
 	}
 	
-	public static ArrayList<Task> viewTask(String input) {
+	public static ArrayList<Object> viewTask(String input) {
 		return new ViewTask().viewTasks(input);
 	}
 
-	public static boolean undoTask() {
+	public static Notification undoTask() {
 		return new UndoTask().undoTask();
 	}
 
-	public static boolean prioritise(ArrayList<Integer> taskIDs) {
+	public static Notification prioritise(ArrayList<Integer> taskIDs) {
 		return new MarkTask().prioritise(taskIDs);
 	}
 
-	public static ArrayList<Task> searchTask(String words) {
+	public static ArrayList<Object> searchTask(String words) {
 		return new SearchTask().searchTask(words);
+	}
+	
+	public static ArrayList<Task> getUncompletedTasks(){
+		return Storage.getListOfUncompletedTasks();
 	}
 
 }

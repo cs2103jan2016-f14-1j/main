@@ -7,18 +7,19 @@ import java.util.ArrayList;
 
 public class MarkTask extends Functionality {
 	
-	public boolean prioritise(ArrayList<Integer> taskIDs) {
+	public Notification prioritise(ArrayList<Integer> taskIDs) {
+		Notification  n = new Notification();
 		if (taskIDs.isEmpty()) {
-			Notification.setTitle(Keywords.MESSAGE_ERROR);
+			n.setTitle(Keywords.MESSAGE_ERROR);
 		} else {
 			for (int id : taskIDs) {
 				prioritise(id);
 			}
-			Notification.setTitle("Prioritised Successful!");
-			Notification.setMessage("Prioritised: " + taskIDs.toString());
+			n.setTitle("Prioritised Successful!");
+			n.setMessage("Prioritised: " + taskIDs.toString());
 		}
 		super.synchronization();
-		return true;
+		return n;
 	}
 	
 	private boolean prioritise(int id) {

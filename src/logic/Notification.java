@@ -1,26 +1,26 @@
 package logic;
 
 public class Notification {
-	private static String title = "";
-	private static String message = "";
+	private  String title = "";
+	private  String message = "";
 	
-	public static String getTitle() {
+	public String getTitle() {
 		return title;
 	}
 	
-	public static String getMessage() {
+	public String getMessage() {
 		return message;
 	}	
 	
-	public static void setTitle(String toUpdate) {
+	public void setTitle(String toUpdate) {
 		title = toUpdate;
 	}
 	
-	public static void setMessage(String toUpdate) {
+	public void setMessage(String toUpdate) {
 		message = toUpdate;
 	}
 
-	public static void clear() {
+	public void clear() {
 		title = "";
 		message = "";
 	}

@@ -5,20 +5,20 @@ import storage.Storage;
 
 public class AddTask extends Functionality {
 
-	public boolean addTask(Task task) {
+	public Notification addTask(Task task) {
 		if (task.getTask().isEmpty()) {
-			Notification.setTitle(Keywords.MESSAGE_ERROR);
-			return false;
+			setNTitle(Keywords.MESSAGE_ERROR);
+			return getNotification();
 		}
 
 		// Add to history the action to be done
-		Notification.setTitle(Keywords.MESSAGE_ADD_SUCCESS);
-		Notification.setMessage(task.getTask() + " has been added!");
+		setNTitle(Keywords.MESSAGE_ADD_SUCCESS);
+		setNMessage(task.getTask() + " has been added!");
 		Storage.addTaskToList(task);
 		super.addToFuncTasks(task);
 		super.addToHistory("add");
 		super.synchronization();
-		return true;
+		return getNotification();
 	}
 
 }

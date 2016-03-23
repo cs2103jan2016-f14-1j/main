@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import shared.Task;
 import storage.Storage;
 
-public class SearchTask {
+public class SearchTask extends Functionality{
 	
-	public ArrayList<Task> searchTask(String words){
+	public ArrayList<Object> searchTask(String words){
 		ArrayList<Task> result = new ArrayList<Task>();
 		for(Task t: Storage.getListOfTasks()){
 			if(t.getTask().contains(words)){
@@ -21,7 +21,10 @@ public class SearchTask {
 				}
 			}
 		}
-		return result;
+		ArrayList<Object> combined = new ArrayList<Object>();
+		combined.add(getNotification());
+		combined.add(result);
+		return combined;
 	}
 
 }

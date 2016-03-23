@@ -9,6 +9,7 @@ import shared.*;
 public class Functionality extends Logger {
 
 	private ArrayList<Task> tasks = new ArrayList<Task>();
+	private Notification notification = new Notification();
 	
 	protected void synchronization(){
 		Storage.writeTasksToFile();
@@ -34,4 +35,15 @@ public class Functionality extends Logger {
 		tasks.add(newt);
 	}
 	
+	protected void setNTitle(String title){
+		notification.setTitle(title);
+	}
+	
+	protected void setNMessage(String msg){
+		notification.setMessage(msg);
+	}
+	
+	protected Notification getNotification(){
+		return notification;
+	}
 }

@@ -3,6 +3,7 @@ package parser;
 import java.util.ArrayList;
 
 import logic.Logic;
+import logic.Notification;
 import shared.*;
 
 public class Parser {
@@ -25,55 +26,50 @@ public class Parser {
 	private static Parser parser;
 	// For JUnit testing
 	public static boolean returnValue;
-	
+
 	// private constructor
 	private Parser() {
 	}
-	
+
 	public static Parser getInstance() {
 		if (parser == null) {
 			parser = new Parser();
 		}
 		return parser;
 	}
-	
-	public ArrayList<Task> parse(String userInput) {
+
+	public Object parse(String userInput) {
 		String commandType = getFirstWord(userInput).toLowerCase();
 		String inputWithoutCommandType = removeFirstWord(userInput);
-		returnValue = false;
-		
+		Notification returnValue = new Notification();
+
 		switch (commandType) {
 		case COMMAND_ADD:
-			returnValue = ParseAdd.addTask(inputWithoutCommandType);
-			break;
+			return returnValue = ParseAdd.addTask(inputWithoutCommandType);
 		case COMMAND_DO:
-			returnValue = ParseDo.doTask(inputWithoutCommandType);
-			break;
+			return returnValue = ParseDo.doTask(inputWithoutCommandType);
 		case COMMAND_DELETE:
-			returnValue = ParseDelete.deleteTask(inputWithoutCommandType);
-			break;
+			return returnValue = ParseDelete.deleteTask(inputWithoutCommandType);
 		case COMMAND_EDIT:
-			returnValue = ParseEdit.editTask(inputWithoutCommandType);
-			break;
+			return returnValue = ParseEdit.editTask(inputWithoutCommandType);
 		case COMMAND_DISPLAY:
 			// TODO
 		case COMMAND_UNDO:
-			returnValue = ParseUndo.undoTask();
-			break;
-		// TODO
+			return returnValue = ParseUndo.undoTask();
+			// TODO
 		case COMMAND_CLEAR:
 			// TODO
 		case COMMAND_HELP:
+			return COMMAND_HELP;
 			// TODO
 		case COMMAND_VIEW:
-			returnValue = true;
+			// returnValue = true;
 			return Logic.viewTask(inputWithoutCommandType);
 		case COMMAND_SEARCH:
-			returnValue = true;
+			// returnValue = true;
 			return Logic.searchTask(inputWithoutCommandType);
 		case COMMAND_MARK:
-			returnValue = ParseMark.prioritise(inputWithoutCommandType);
-			break;
+			return returnValue = ParseMark.prioritise(inputWithoutCommandType);
 		default:
 			// TODO
 		}

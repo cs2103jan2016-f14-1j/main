@@ -9,22 +9,23 @@ import storage.Storage;
 
 public class UndoTask extends Functionality {
 
-	public boolean undoTask() {
+	public Notification undoTask() {
 		ArrayList<Task> t = Storage.getLastTasks();
 		String action = Storage.getLastAction();
+		Notification n = new Notification();
 		switch(action){
 		case "do":
 			for(Task task : t){
 				Storage.getTask(task.getId()).setIsCompleted(Keywords.TASK_NOT_COMPLETED);
 			}
-			printSuccessful("Complete command undone");
+			n = printSuccessful("Complete command undone");
 			break;
 		case "add":
 			for(Task task: t){
 				Storage.recycleId(task.getId());
 				Storage.removeTaskUsingTaskId(task.getId());
 			}
-			printSuccessful("Add command undone");
+			n = printSuccessful("Add command undone");
 			break;
 		case "edit":
 			for(Task task: t){
@@ -32,26 +33,28 @@ public class UndoTask extends Functionality {
 				Storage.getTask(task.getId()).setDate(task.getDate());
 				Storage.getTask(task.getId()).setIntDate(task.getIntDate());
 			}
-			printSuccessful("Edit command undone");
+			n = printSuccessful("Edit command undone");
 			break;
 		case "delete":
 			for(Task task:t){
 				Storage.addTaskToList(task);
 				Storage.removeSpecificId(task.getId());
 			}
-			printSuccessful("Delete command undone");
+			n = printSuccessful("Delete command undone");
 			break;
 		}
 		if(t == null){
-			Notification.setTitle("Undo Failed.");
-			Notification.setMessage("Nothing to undo!");
+			n.setTitle("Undo Failed.");
+			n.setMessage("Nothing to undo!");
 		}
 		super.synchronization();
-		return true;
+		return n;
 	}
 	
-	private void printSuccessful(String toUpdate){
-		Notification.setTitle("Undo Successful.");
-		Notification.setMessage(toUpdate);
+	private Notification printSuccessful(String toUpdate){
+		Notification n = new Notification();
+		n.setTitle("Undo Successful.");
+		n.setMessage(toUpdate);
+		return n;
 	}
 }

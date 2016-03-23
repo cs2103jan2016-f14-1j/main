@@ -19,7 +19,7 @@ public class ReadWrite {
 	protected static void readTasksFromFile(ArrayList<Task> at) {
 		BufferedReader bufferReader = null;
 		try {
-			bufferReader = new BufferedReader(new FileReader(Keywords.FILENAME_FILEPATH));
+			bufferReader = new BufferedReader(new FileReader(Keywords.TASK_FILENAME));
 			String currentLine = Keywords.EMPTY_STRING;
 			while ((currentLine = bufferReader.readLine()) != null) {
 				if (currentLine.contains(Keywords.STORE_DELIMITER)) {
@@ -45,7 +45,7 @@ public class ReadWrite {
 
 	protected static void writeTasksToFile(ArrayList<Task> at) {
 		try {
-			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.FILENAME_FILEPATH));
+			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.TASK_FILENAME));
 			for (int index = 0; index < at.size(); index++) {
 				bufferWriter.write(Task.formatObjectToString(at.get(index)));
 				bufferWriter.newLine();

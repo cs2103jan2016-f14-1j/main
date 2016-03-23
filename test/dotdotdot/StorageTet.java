@@ -12,6 +12,7 @@ import storage.Storage;
 
 public class StorageTet {
 
+	//White-Box testing
 	@Test
 	public void testAddTask() {
 		Storage s = Storage.getInstance();
@@ -25,7 +26,7 @@ public class StorageTet {
 	@Test
 	public void testRemoveTask(){
 		Storage s = Storage.getInstance();
-		//try adding a task to the storage list
+		//try remove a task to the storage list
 		Task task = new Task();
 		s.removeTaskFromList(0);
 		ArrayList<Task> ar = s.getListOfTasks();
