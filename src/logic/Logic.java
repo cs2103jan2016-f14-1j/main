@@ -2,6 +2,7 @@ package logic;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 
 import parser.Parser;
 import shared.*;
@@ -50,12 +51,20 @@ public class Logic {
 		return new MarkTask().prioritise(taskIDs);
 	}
 
-	public static ArrayList<Object> searchTask(String words) {
-		return new SearchTask().searchTask(words);
+	public static ArrayList<Object> searchTask(String words, boolean isPriortise, String date, ArrayList<String> categories) {
+		return new SearchTask().searchTask(words, isPriortise, date, categories);
 	}
 	
 	public static ArrayList<Task> getUncompletedTasks(){
 		return Storage.getListOfUncompletedTasks();
+	}
+	
+	public static ArrayList<String> getListOfCatWithCount(){
+		return Storage.getListOfCategoriesWithCount();
+	}
+	
+	public static LinkedList<String> viewHelp(){
+		return new ViewHelp().viewHelp();
 	}
 
 }

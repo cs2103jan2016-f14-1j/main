@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -107,7 +108,6 @@ public class Controller {
 		parser = parser.getInstance();
 		logic = logic.getInstance();
 		storage = storage.getInstance();
-
 		displayCategory();
 		displayList(Logic.getUncompletedTasks());
 	}
@@ -123,7 +123,7 @@ public class Controller {
 		view.getCategoryTable().removeAll();
 		TableItem categoryItem;
 
-		ArrayList<String> categories = Storage.getListOfCategoriesWithCount();
+		ArrayList<String> categories = Logic.getListOfCatWithCount();
 		for (int i = 0; i < categories.size(); i++) {
 			categoryItem = new TableItem(view.getCategoryTable(), SWT.NONE);
 			categoryItem.setText(categories.get(i));
@@ -328,7 +328,7 @@ public class Controller {
 
 	}
 
-	private void displayHelp() {
+	private void displayHelp(LinkedList<String> items) {
 
 		Table mainTable = view.getMainTable();
 		mainTable.removeAll();
@@ -336,83 +336,83 @@ public class Controller {
 		TableItem mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);
-		mainItem.setText("Adding tasks");
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setText("add <TODO>");
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setText("add <TODO> (at | by | on | to) <date> [#category]");
-		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(View.italicFont);
-		mainItem.setText("Eg. add do CS2103 tutorial by Sun");
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(View.italicFont);
-		mainItem.setText("      add buy milk by 15Feb #shopping");
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setFont(View.italicFont);
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);
-		mainItem.setText("Edit tasks");
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setText("edit <task_ID#> to <date>");
-		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(View.italicFont);
-		mainItem.setText("Eg. edit 1 to 15Feb");
-		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(View.headingFont);
-		mainItem.setForeground(View.orangeColor);
-		mainItem.setText("Set priority");
-		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setText("mark <task_ID#>");
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(View.italicFont);
-		mainItem.setText("Eg. set 2 to 10");
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);
-		mainItem.setText("Complete Tasks");
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setText("do <TODO | task_ID#>");
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(View.italicFont);
-		mainItem.setText("Eg. do receive quest");
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setFont(View.headingFont);
+		mainItem.setForeground(View.orangeColor);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(View.italicFont);
-		mainItem.setText("      do 1");
-		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(View.headingFont);
-		mainItem.setForeground(View.orangeColor);
-		mainItem.setText("View tasks");
-		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setText("view <category>");
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(View.italicFont);
-		mainItem.setText("Eg. view shopping");
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);
-		mainItem.setText("Show help");
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setText("[? | help | h]");
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setFont(View.headingFont);
-		mainItem.setForeground(View.orangeColor);
-		mainItem.setText("Undo previous command");
-		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setText("[u | undo]");
+		mainItem.setFont(View.italicFont);
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);
-		mainItem.setText("Keyboard shortcuts");
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setText("Undo previous command: Ctrl+Z");
+		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
-		mainItem.setText("Scroll through command history: \u2191 or \u2193");
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setFont(View.headingFont);
+		mainItem.setForeground(View.orangeColor);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setFont(View.headingFont);
+		mainItem.setForeground(View.orangeColor);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setText(items.poll());
 
 	}
 
@@ -443,8 +443,8 @@ public class Controller {
 					displayCategory();
 
 					try {
-						if (result instanceof String) {
-							displayHelp();
+						if (result instanceof LinkedList<?>) {
+							displayHelp((LinkedList<String>)result);
 						} else if (result instanceof ArrayList<?>) {
 							// here might need handle is empty arraylist
 							ArrayList<Object> re = (ArrayList<Object>) result;

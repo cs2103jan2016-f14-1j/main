@@ -24,6 +24,7 @@ public class Keywords {
 	public static final String MESSAGE_EDIT_SUCCESS = "Edit Successful!";
 	public static final String MESSAGE_COMPLETED_SUCCESS = "Task Completed!";
 	public static final String MESSAGE_VIEW_SUCCESS = "View By %s";
+	public static final String MESSAGE_HELP_SUCCESS = "Help Displayed!";
 	public static final String MESSAGE_ERROR = "Error!";
 	public static final String TASKID_PREPEND = "-";
 	public static final String CATEGORY_PREPEND = "#";

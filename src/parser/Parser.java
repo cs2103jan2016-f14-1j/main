@@ -60,14 +60,15 @@ public class Parser {
 		case COMMAND_CLEAR:
 			// TODO
 		case COMMAND_HELP:
-			return COMMAND_HELP;
+			return Logic.viewHelp();
 			// TODO
 		case COMMAND_VIEW:
 			// returnValue = true;
 			return Logic.viewTask(inputWithoutCommandType);
 		case COMMAND_SEARCH:
 			// returnValue = true;
-			return Logic.searchTask(inputWithoutCommandType);
+			ArrayList<Object> output = ParseSearch.filterInput(inputWithoutCommandType);
+			return Logic.searchTask((String)output.get(0), (boolean) output.get(1), (String) output.get(2), (ArrayList<String>)output.get(3));
 		case COMMAND_MARK:
 			return returnValue = ParseMark.prioritise(inputWithoutCommandType);
 		default:
