@@ -67,6 +67,7 @@ public class Keywords {
 	public static final int INDEX_ENDDATE = 1;
 	public static final int INDEX_STARTTIME = 2;
 	public static final int INDEX_ENDTIME = 3;
+	public static final int TOTAL_DATE = 2;
 	
 	public static final String FORMAT_DATE = "dd MMM yyyy";
 	public static final String FORMAT_TIME = "hh:mm a";

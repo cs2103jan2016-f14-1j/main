@@ -89,8 +89,12 @@ public class Controller {
 			}
 		}
 
+		Calendar today = Calendar.getInstance();
+		today.add(Calendar.DAY_OF_MONTH, 1);
+		
 		for (int i = STARTING_INDEX; i < days.length; i++) {
-			days[i] = DEFAULT_DAYS[(index + i) % (NUMBER_OF_DAYS)];
+			today.add(Calendar.DAY_OF_MONTH, 1);
+			days[i] = DEFAULT_DAYS[(index + i) % (NUMBER_OF_DAYS)] + " - " +  getHeaderFormat(today.getTime());
 		}
 
 		timer();
@@ -234,33 +238,53 @@ public class Controller {
 			 * outputArray[j]); } }
 			 */
 
-			// TODO change this shit to more than 1
-			Date taskDate = task.getDatetimes().get(0);
-
-			if (taskDate == null) {
-				insertToHashMap(OTHERS, task);
-			} else {
-
-				Calendar compareCalendar = Calendar.getInstance();
-				compareCalendar.set(getCurrentYear(), taskDate.getMonth(), taskDate.getDate());
-
-				int diffInDay = calculateDiffInDay(compareCalendar);
-				compareCalendar.set(getCurrentYear(), taskDate.getMonth(), taskDate.getDate());
-
-				if (diffInDay == -1) {
-					insertToHashMap(OVERDUE, task);
-				} else if (diffInDay < 7) {
-					if (diffInDay == 0) {
-						insertToHashMap(TODAY, task);
-					} else if (diffInDay == 1) {
-						insertToHashMap(TOMORROW, task);
-					} else {
-						insertToHashMap(DEFAULT_DAYS[taskDate.getDay()], task);
-					}
-				} else {
-					insertToHashMap(OTHERS, task);
+				Date startTaskDate = task.getDatetimes().get(Keywords.INDEX_STARTDATE);
+				Date endTaskDate = task.getDatetimes().get(Keywords.INDEX_ENDDATE);
+				
+				int lengthOfDays = 0;
+				
+				if(startTaskDate !=null && endTaskDate!=null){
+					Calendar convertStart = Calendar.getInstance();
+					convertStart.set(getCurrentYear(), startTaskDate.getMonth(), startTaskDate.getDate());
+					
+					Calendar convertEnd = Calendar.getInstance();
+					convertEnd.set(getCurrentYear(), endTaskDate.getMonth(), endTaskDate.getDate());
+					
+					lengthOfDays = calculateDiffInDay(convertStart, convertEnd);
 				}
-			}
+				
+				if (startTaskDate == null) {
+					insertToHashMap(OTHERS, task);
+				} else {
+	
+					for(int i = 0; i < lengthOfDays+1; i++){
+						Calendar compareCalendar = Calendar.getInstance();
+						compareCalendar.set(getCurrentYear(), startTaskDate.getMonth(), startTaskDate.getDate());
+						compareCalendar.add(Calendar.DAY_OF_MONTH, i);
+						
+						int diffInDay = calculateDiffInDay(Calendar.getInstance(),compareCalendar);
+						compareCalendar.set(getCurrentYear(), startTaskDate.getMonth(), startTaskDate.getDate());
+						compareCalendar.add(Calendar.DAY_OF_MONTH, i);
+						
+						if (diffInDay == -1) {
+							insertToHashMap(OVERDUE, task);
+						} else if (diffInDay < 7) {
+
+							if (diffInDay == 0) {
+								insertToHashMap(TODAY, task);
+							} else if (diffInDay == 1) {
+								insertToHashMap(TOMORROW, task);
+							} else {
+								Date tempDate = compareCalendar.getTime();
+								insertToHashMap(DEFAULT_DAYS[(tempDate.getDay()+1) %7] + " - " +  getHeaderFormat(tempDate), task);
+							}
+						} else {
+							insertToHashMap(OTHERS, task);
+							break;
+						}
+					}
+				}
+			
 		}
 
 		if (!insertIntoTable(OVERDUE, false)) {
@@ -539,6 +563,11 @@ public class Controller {
 		return dayFormat.format(date);
 	}
 
+	public String getHeaderFormat(Date date){
+		DateFormat dayFormat = new SimpleDateFormat(Keywords.FORMAT_HEADER);
+		return dayFormat.format(date);
+	}
+	
 	public int getCurrentYear() {
 		Date date = new Date();
 		DateFormat dayFormat = new SimpleDateFormat(Keywords.FORMAT_YEAR);
@@ -558,42 +587,70 @@ public class Controller {
 	private boolean isTextEmpty(StyledText t) {
 		return t.getText().length() == 0;
 	}
-
-	private int calculateDiffInDay(Calendar endDate) {
-		Calendar currDate = Calendar.getInstance();
+	
+	private int calculateDiffInDay(Calendar startDate, Calendar endDate) {
 		int daysBetween = -1;
 		endDate.add(Calendar.DAY_OF_MONTH, 1);
-		while (currDate.before(endDate)) {
-			currDate.add(Calendar.DAY_OF_MONTH, 1);
+		while (startDate.before(endDate)) {
+			startDate.add(Calendar.DAY_OF_MONTH, 1);
 			daysBetween++;
 		}
 		return daysBetween;
 	}
 
 	private boolean insertIntoTable(String key, boolean week) {
-
-		TableItem mainItem;
 		if (putIntoDays.containsKey(key)) {
 			if (week) {
-				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-				DateFormat dayFormat = new SimpleDateFormat(Keywords.FORMAT_HEADER);
-				mainItem.setText(key + " - " + dayFormat.format(putIntoDays.get(key).get(0).getDatetimes().get(0)));
-				mainItem.setFont(View.normalFont);
-				mainItem.setForeground(View.orangeColor);
+				TableItem headerItem = new TableItem(view.getMainTable(), SWT.NONE);
+				headerItem.setText(key);
+				headerItem.setFont(View.normalFont);
+				headerItem.setForeground(View.orangeColor);
 			}
 			ArrayList<Task> tempArrList = putIntoDays.get(key);
 			for (int i = 0; i < tempArrList.size(); i++) {
-				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+				final TableItem mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				String whiteSpaces = "";
 				if (tempArrList.get(i).getPriority() == 1) {
 					mainItem.setData(object);
-					whiteSpaces = "     ";
+					whiteSpaces = "      ";
 				}
 
 				if (week) {
-					mainItem.setText(whiteSpaces + removeDate(tempArrList.get(i).getUserFormat()));
+					mainItem.setText(whiteSpaces + tempArrList.get(i).getUserFormatNoDate());
 				} else {
-					mainItem.setText(whiteSpaces + tempArrList.get(i).getUserFormat());
+					
+					final TextLayout textLayout = new TextLayout(Display.getCurrent());  
+					String text = whiteSpaces + tempArrList.get(i).getUserFormat();
+					textLayout.setText(text);
+					
+					TextStyle styleDescription = new TextStyle(View.normalFont, null, null);
+					TextStyle styleDate = new TextStyle(View.normalFont, View.redColor, null);
+					
+					if(tempArrList.get(i).getDatetimes().get(0)!= null){
+						int seperatingIndex = whiteSpaces.length() + tempArrList.get(i).getUserFormatNoDate().length();
+						textLayout.setStyle(styleDescription, 0, seperatingIndex);
+						textLayout.setStyle(styleDate, seperatingIndex + 3, text.length());
+					} else {
+						textLayout.setStyle(styleDescription, 0, text.length());
+					}
+					
+					view.getMainTable().addListener(SWT.PaintItem, new Listener() {
+					      public void handleEvent(Event event) {
+					    	  if(event.item.equals(mainItem)){
+					    		  textLayout.draw(event.gc, event.x, event.y);
+					    	  }
+					      }
+					});
+					
+					final Rectangle textLayoutBounds = textLayout.getBounds();
+					    view.getMainTable().addListener(SWT.MeasureItem, new Listener() {
+					      public void handleEvent(Event e) {
+					    	  if(e.item.equals(mainItem)){
+						        e.width = textLayoutBounds.width + 2;
+						        e.height = textLayoutBounds.height + 2;
+					    	  }
+					      }
+					});
 				}
 			}
 			return true;
@@ -602,18 +659,16 @@ public class Controller {
 	}
 
 	private void insertToHashMap(String key, Task value) {
+		
 		ArrayList<Task> toAddList = new ArrayList<Task>();
-
+		
 		if (putIntoDays.containsKey(key)) {
 			toAddList = putIntoDays.get(key);
 		}
 
 		toAddList.add(value);
 		putIntoDays.put(key, toAddList);
-	}
-
-	private String removeDate(String removeDate) {
-		return removeDate.substring(0, removeDate.lastIndexOf("-") - WHITESPACES);
+		
 	}
 
 	private void readFileLocation() {

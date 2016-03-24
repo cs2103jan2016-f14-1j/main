@@ -42,6 +42,15 @@ public class Task extends Logger {
 		initIntDate();
 		initIntDateEnd();
 	}
+	
+	/**
+	 * @return task <String> to display to user
+	 */
+	public String getUserFormatNoDate() {		
+		return String.format(Keywords.USER_FORMAT,
+				id, task, Formatter.toCatsForDisplay(categories), Keywords.EMPTY_STRING).trim();
+	}
+	
 	/**
 	 * @return task <String> to display to user
 	 */
@@ -69,6 +78,7 @@ public class Task extends Logger {
 		return String.format(Keywords.DATE_FORMAT, 
 				formatBothDateAndTime(dateFormat,timeFormat));
 	}
+	
 	public void callInitDate(){
 		initIntDate();
 	}
