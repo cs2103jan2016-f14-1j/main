@@ -51,6 +51,12 @@ public class Logic {
 		return new MarkTask().prioritise(taskIDs);
 	}
 
+	public static Notification invalidCommand(){
+		Notification n = new Notification();
+		n.setInvalidMsg();
+		return n;
+	}
+
 	public static ArrayList<Object> searchTask(String words, boolean isPriortise, String date, ArrayList<String> categories) {
 		return new SearchTask().searchTask(words, isPriortise, date, categories);
 	}

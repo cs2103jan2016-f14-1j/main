@@ -1,5 +1,7 @@
 package logic;
 
+import shared.Keywords;
+
 public class Notification {
 	private  String title = "";
 	private  String message = "";
@@ -23,5 +25,9 @@ public class Notification {
 	public void clear() {
 		title = "";
 		message = "";
+	}
+
+	public void setInvalidMsg() {
+		title = Keywords.INVALID_COMMAND;
 	}
 }

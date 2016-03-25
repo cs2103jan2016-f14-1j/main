@@ -72,10 +72,8 @@ public class Parser {
 		case COMMAND_MARK:
 			return returnValue = ParseMark.prioritise(inputWithoutCommandType);
 		default:
-			// TODO
+			return returnValue = ParseInvalid.invalidCommand();
 		}
-
-		return new Notification();
 	}
 
 	private String removeFirstWord(String userInput) {
