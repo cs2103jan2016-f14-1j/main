@@ -1,18 +1,13 @@
 package logic;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
 import org.ocpsoft.prettytime.shade.edu.emory.mathcs.backport.java.util.Collections;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 import shared.*;
 import storage.Storage;
-import parser.Formatter;
 
 public class FreeSlots {
 	private ArrayList<Task> tasks = Storage.getListOfUncompletedTasks();
