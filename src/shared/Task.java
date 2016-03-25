@@ -66,7 +66,7 @@ public class Task extends Logger {
 				id, task, intDate, intDateEnd, getIntStartTime(), getIntEndTime(), 
 				Formatter.toCatsForStore(categories), isCompleted, priority);
 	}
-	private String getDisplayDate() {
+	public String getDisplayDate() {
 		String sdate = datetimes.get(Keywords.INDEX_STARTDATE) == null ? 
 				Keywords.EMPTY_STRING :
 				DATE_DISPLAY_FORMAT.format(datetimes.get(Keywords.INDEX_STARTDATE));
