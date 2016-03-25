@@ -19,16 +19,22 @@ public class DoTask extends Functionality {
 
 	public Notification doTask(ArrayList<Integer> taskIds) {
 		Notification n = new Notification();
-		if (taskIds.isEmpty()) {
+		ArrayList<Integer> validIds = new ArrayList<Integer>();
+		for (int id : taskIds) { // fliters out non-existent ids
+			if (Storage.getTask(id) != null) {
+				validIds.add(id);
+			}
+		}
+		if (validIds.isEmpty()) {
 			n.setTitle(Keywords.MESSAGE_ERROR);
-		} else if (taskIds.size() > 1) {
+		} else if (validIds.size() > 1) {
 			n.setTitle(Keywords.MESSAGE_COMPLETED_SUCCESS);
-			n.setMessage(taskIds.toString());
+			n.setMessage(validIds.toString());
 		} else {
 			n.setTitle(Keywords.MESSAGE_COMPLETED_SUCCESS);
-			n.setMessage(Storage.getTask(taskIds.get(Keywords.FIRST_ELEMENT)).getUserFormat() + "done!");
+			n.setMessage(Storage.getTask(validIds.get(Keywords.FIRST_ELEMENT)).getUserFormat() + "done!");
 		}
-		for (int taskID : taskIds) {
+		for (int taskID : validIds) {
 			if (doTask(taskID)) {
 				//changing in progress
 			}

@@ -16,6 +16,8 @@ public class DeleteTask extends Functionality {
 	 */
 	public Notification deleteTask(ArrayList<Integer> ids, ArrayList<String> cats) {
 		Notification n = new Notification();
+		ids = filterOutIds(ids);
+		cats = filterOutCats(cats);
 		if (ids.isEmpty() && cats.isEmpty()) {
 			n.setTitle(Keywords.MESSAGE_ERROR);
 		} else if (ids.size() + cats.size() > 1) {
@@ -42,6 +44,26 @@ public class DeleteTask extends Functionality {
 		deleteByIds(ids);
 		deleteByCats(cats);
 		return n;
+	}
+
+	private ArrayList<String> filterOutCats(ArrayList<String> cats) {
+		ArrayList<String> newList = new ArrayList<String>();
+		for (String cat : cats) {
+			if (Storage.containsCat(cat)) {
+				newList.add(cat);
+			}
+		}
+		return newList;
+	}
+
+	private ArrayList<Integer> filterOutIds(ArrayList<Integer> ids) {
+		ArrayList<Integer> validIds = new ArrayList<Integer>();
+		for (int id : ids) { // fliters out non-existent ids
+			if (Storage.getTask(id) != null) {
+				validIds.add(id);
+			}
+		}
+		return validIds;
 	}
 
 	/**

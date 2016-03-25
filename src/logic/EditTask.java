@@ -18,6 +18,11 @@ public class EditTask extends Functionality {
 	 */
 	public Notification editTask(int taskID, Date date) {
 		Notification n = new Notification();
+		if (!isValidId(taskID)) {
+			n.setTitle(Keywords.MESSAGE_ERROR);
+			n.setMessage(Keywords.INVALID_ID);
+			return n;
+		}
 		if (Storage.getTask(taskID) != null) {
 			//super.getTasks().add(Storage.getTask(taskID));
 			super.addToFuncTasks(Storage.getTask(taskID));
@@ -44,5 +49,12 @@ public class EditTask extends Functionality {
 		 */
 		super.synchronization();
 		return n;
+	}
+
+	private boolean isValidId(int taskID) {
+		if (Storage.getTask(taskID) == null) {
+			return false;
+		}
+		return true;
 	}
 }

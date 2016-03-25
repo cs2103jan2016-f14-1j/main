@@ -27,6 +27,7 @@ public class Keywords {
 	public static final String MESSAGE_HELP_SUCCESS = "Help Displayed!";
 	public static final String MESSAGE_ERROR = "Error!";
 	public static final String INVALID_COMMAND = "Invalid Command entered!";
+	public static final String INVALID_ID = "Invalid ID entered!";
 	public static final String TASKID_PREPEND = "-";
 	public static final String CATEGORY_PREPEND = "#";
 	

@@ -144,4 +144,14 @@ public class Storage {
 		return History.getLastAction();
 	}
 
+	public static boolean containsCat(String cat) {
+		boolean bool = false;
+		for (Task t : tasks) {
+			if (t.getCategories().contains(cat)){
+				bool = true;
+			}
+		}
+		return bool;
+	}
+
 }

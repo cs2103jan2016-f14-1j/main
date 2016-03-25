@@ -9,14 +9,22 @@ public class MarkTask extends Functionality {
 	
 	public Notification prioritise(ArrayList<Integer> taskIDs) {
 		Notification  n = new Notification();
-		if (taskIDs.isEmpty()) {
+		ArrayList<Integer> validIds = new ArrayList<Integer>();
+		for (int id : taskIDs) { // fliters out non-existent ids
+			if (Storage.getTask(id) != null) {
+				validIds.add(id);
+			}
+		}
+		if (validIds.isEmpty()) {
 			n.setTitle(Keywords.MESSAGE_ERROR);
+			n.setMessage(Keywords.INVALID_ID);
+			return n;
 		} else {
-			for (int id : taskIDs) {
+			for (int id : validIds) {
 				prioritise(id);
 			}
 			n.setTitle("Prioritised Successful!");
-			n.setMessage("Prioritised: " + taskIDs.toString());
+			n.setMessage("Prioritised: " + validIds.toString());
 		}
 		super.synchronization();
 		return n;
