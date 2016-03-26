@@ -27,7 +27,7 @@ public class ParseAdd extends Logger {
 			taskName = Formatter.getTaskNameWithPreposition(rawInput);
 			//prep = getFirstElementInArrayList(preposition);
 		}
-		
+	
 		Task task = new Task(datetimes, taskName, categories); 
 		
 		return Logic.addTask(task);

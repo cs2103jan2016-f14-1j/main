@@ -8,6 +8,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -15,6 +16,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
@@ -51,6 +53,9 @@ public class View extends Logger{
 	private Label timeLabel;
 	private Table categoryTable;
 	private Table mainTable;
+	
+	private Table popupTable;
+	private Shell popupShell;
 	
 	public View() throws Exception {
         
@@ -163,6 +168,18 @@ public class View extends Logger{
 		notification.setBackground(whiteColor);
 		notification.setBounds(196, 505, 513, 25);
 		
+		popupShell = new Shell(Display.getCurrent(), SWT.ON_TOP);
+		popupShell.setLayout(new FillLayout());
+		popupTable = new Table(popupShell, SWT.SINGLE | SWT.NO_SCROLL);
+		for (int i = 0; i < Keywords.AUTO_LENGTH; i++) {
+			new TableItem(popupTable, SWT.NONE);
+		}
+
+		
+	}
+	
+	public Shell getPopupShell(){
+		return popupShell;
 	}
 	
 	public Shell getShell(){
@@ -176,7 +193,11 @@ public class View extends Logger{
 	public Table getMainTable(){
 		return mainTable;
 	}
-
+	
+	public Table getPopupTable(){
+		return popupTable;
+	}
+	
 	public Label getDayLabel(){
 		return dayLabel;
 	}

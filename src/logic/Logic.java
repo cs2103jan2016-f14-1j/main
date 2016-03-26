@@ -35,8 +35,8 @@ public class Logic {
 			return new DoTask().doTask(taskIDs);
 	}
 
-	public static Notification editTask(int taskId, Date date) {
-		return new EditTask().editTask(taskId, date);
+	public static Notification editTask(int taskId, Task task) {
+		return new EditTask().editTask(taskId, task);
 	}
 	
 	public static ArrayList<Object> viewTask(String input) {
@@ -72,5 +72,8 @@ public class Logic {
 	public static LinkedList<String> viewHelp(){
 		return new ViewHelp().viewHelp();
 	}
-
+	
+	public static void updateFile(){
+		Storage.writeTasksToFile();
+	}
 }

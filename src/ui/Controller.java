@@ -29,6 +29,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.TextLayout;
 import org.eclipse.swt.graphics.TextStyle;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -443,6 +444,7 @@ public class Controller {
 	private void addKeyListener() {
 
 		StyledText input = view.getInput();
+		// To prevent extra line being entered
 		input.addVerifyKeyListener(new VerifyKeyListener() {
 
 			@Override
@@ -452,6 +454,8 @@ public class Controller {
 				}
 			}
 		});
+		
+		// http://git.eclipse.org/c/platform/eclipse.platform.swt.git/tree/examples/org.eclipse.swt.snippets/src/org/eclipse/swt/snippets/Snippet320.java
 		input.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent event) {
 
@@ -481,14 +485,19 @@ public class Controller {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-
+					
+					if (view.getPopupShell().isVisible() && view.getPopupTable().getSelectionIndex() != -1) {
+						input.setText(view.getPopupTable().getSelection()[0].getText());
+						view.getPopupShell().setVisible(false);
+					}
 
 					break;
-				case SWT.ARROW_UP:
+                
+				case SWT.PAGE_UP:
 					view.getMainTable().setTopIndex(view.getMainTable().getTopIndex() - View.SCROLL_AMOUNT);
 					event.doit = false;
 					break;
-				case SWT.ARROW_DOWN:
+				case SWT.PAGE_DOWN:
 					view.getMainTable().setTopIndex(view.getMainTable().getTopIndex() + View.SCROLL_AMOUNT);
 					event.doit = false;
 					break;
@@ -496,6 +505,20 @@ public class Controller {
 					if (isTextEmpty(input)) {
 						inputToHint();
 					}
+					break;
+				case SWT.ARROW_DOWN:
+					int index = (view.getPopupTable().getSelectionIndex() + 1) % view.getPopupTable().getItemCount();
+					view.getPopupTable().setSelection(index);
+					event.doit = false;
+					break;
+				case SWT.ARROW_UP:
+					index = view.getPopupTable().getSelectionIndex() - 1;
+					if (index < 0) index = view.getPopupTable().getItemCount() - 1;
+					view.getPopupTable().setSelection(index);
+					event.doit = false;
+					break;
+				case SWT.ESC:
+					view.getPopupShell().setVisible(false);
 					break;
 				default:
 					// removes hint and changes input back to normal
@@ -511,6 +534,44 @@ public class Controller {
 			}
 		});
 
+		input.addListener(SWT.Modify, event -> {
+			String string = input.getText();
+			if (string.length() == 0) {
+				view.getPopupShell().setVisible(false);
+			} else {
+				TableItem[] items = view.getPopupTable().getItems();
+				for (int i = 0; i < items.length; i++) {
+					items[i].setText(string + '-' + i + "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+				}
+				Rectangle textBounds = Display.getCurrent().map(view.getShell(), null, input.getBounds());
+				view.getPopupShell().setBounds(textBounds.x, textBounds.y + textBounds.height, textBounds.width, 120);
+				view.getPopupShell().setVisible(true);
+			}
+		});
+		
+		view.getPopupTable().addListener(SWT.DefaultSelection, event -> {
+			input.setText(view.getPopupTable().getSelection()[0].getText());
+			view.getPopupShell().setVisible(false);
+		});
+		
+		view.getPopupTable().addListener(SWT.KeyDown, event -> {
+			if (event.keyCode == SWT.ESC) {
+				view.getPopupShell().setVisible(false);
+			}
+		});
+
+		Listener focusOutListener = event -> Display.getCurrent().asyncExec(() -> {
+			if (Display.getCurrent().isDisposed()) return;
+			Control control = Display.getCurrent().getFocusControl();
+			if (control == null || (control != input && control != view.getPopupTable())) {
+				view.getPopupShell().setVisible(false);
+			}
+		});
+		
+		view.getPopupTable().addListener(SWT.FocusOut, focusOutListener);
+		input.addListener(SWT.FocusOut, focusOutListener);
+
+		view.getShell().addListener(SWT.Move, event -> view.getPopupShell().setVisible(false));
 	}
 
 	private void timer() {
@@ -715,6 +776,7 @@ public class Controller {
 		} catch (IOException ex) {
 			// systemPrint(IO_ERROR_MSG);
 		}
+		Logic.updateFile();
 	}
 
 	public View getView() {
