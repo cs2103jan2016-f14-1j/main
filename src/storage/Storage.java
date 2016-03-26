@@ -153,5 +153,11 @@ public class Storage {
 		}
 		return bool;
 	}
+	
+	//might need this for suggesting categories
+	// for now i assume UI calls storage to get this
+	public static ArrayList<String> getAllCategories(){
+		return Categories.getCategories(tasks);
+	}
 
 }

@@ -27,10 +27,9 @@ public class DeleteTask extends Functionality {
 				n.setMessage(ids.toString());
 			} else if (ids.isEmpty()) {
 
-				n.setMessage("All tasks under the following categories" + " have been deleted: " + cats.toString());
+				n.setMessage("Tasks under " + cats.toString() + " categories have been deleted!");
 			} else {
-				n.setMessage(ids.toString() + "\nAll tasks under the following" + " categories have been deleted: "
-						+ cats.toString());
+				n.setMessage("Tasks under " + cats.toString() + " categories have been deleted!");
 			}
 		} else {
 			n.setTitle(Keywords.MESSAGE_DELETE_SUCCESS);
@@ -38,7 +37,7 @@ public class DeleteTask extends Functionality {
 				Task t = Storage.getTask(ids.get(Keywords.FIRST_ELEMENT));
 				n.setMessage(t.getUserFormat());
 			} else {
-				n.setMessage("All tasks under the following categories" + " have been deleted: " + cats.toString());
+				n.setMessage("Tasks under " + cats.toString() + " categories have been deleted!");
 			}
 		}
 		deleteByIds(ids);
