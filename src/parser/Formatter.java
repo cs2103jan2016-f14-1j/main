@@ -305,12 +305,10 @@ public class Formatter extends Logger {
 		for (int i = as.size() - 1; i >= 0; i--) {
 			if (!isPreposition(as.get(i))) {
 				answer = as.get(i) + Keywords.EMPTY_STRING + answer;
-				System.out.println(as.get(i));
 			} else {
 				break;
 			}
 		}
-		System.out.println(answer);
 		return answer;
 	}
 
