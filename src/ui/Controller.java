@@ -238,7 +238,7 @@ public class Controller {
 			 * necessary white space to align tasks mainItem.setText(" " +
 			 * outputArray[j]); } }
 			 */
-
+				boolean added = false;
 				Date startTaskDate = task.getDatetimes().get(Keywords.INDEX_STARTDATE);
 				Date endTaskDate = task.getDatetimes().get(Keywords.INDEX_ENDDATE);
 				
@@ -259,6 +259,7 @@ public class Controller {
 				} else {
 	
 					for(int i = 0; i < lengthOfDays+1; i++){
+						
 						Calendar compareCalendar = Calendar.getInstance();
 						compareCalendar.set(getCurrentYear(), startTaskDate.getMonth(), startTaskDate.getDate());
 						compareCalendar.add(Calendar.DAY_OF_MONTH, i);
@@ -267,8 +268,11 @@ public class Controller {
 						compareCalendar.set(getCurrentYear(), startTaskDate.getMonth(), startTaskDate.getDate());
 						compareCalendar.add(Calendar.DAY_OF_MONTH, i);
 						
-						if (diffInDay == -1) {
+						if (diffInDay == -1 && !added) {
+						
 							insertToHashMap(OVERDUE, task);
+							added = true;
+							
 						} else if (diffInDay < 7) {
 
 							if (diffInDay == 0) {

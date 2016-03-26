@@ -45,7 +45,8 @@ public class ReadWrite {
 
 	protected static void writeTasksToFile(ArrayList<Task> at) {
 		try {
-			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.TASK_FILENAME));
+			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.FILENAME_FILEPATH));
+		
 			for (int index = 0; index < at.size(); index++) {
 				bufferWriter.write(Task.formatObjectToString(at.get(index)));
 				bufferWriter.newLine();

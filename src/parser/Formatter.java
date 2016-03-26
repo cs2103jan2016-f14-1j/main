@@ -313,5 +313,25 @@ public class Formatter extends Logger {
 		System.out.println(answer);
 		return answer;
 	}
+	
+	// For edit to
+	public static String getAfterFirstPrep(String s){
+		
+		ArrayList<String> as = breakString(s);
+		String answer = "";
+		boolean start = false;
+		for (int i = 0 ; i< as.size() ; i++) {
+			
+			if(start){
+				answer += as.get(i) + Keywords.SPACE_STRING;
+			}
+		
+			if (isPreposition(as.get(i))) {
+				start = true;
+			} 
+		}
+
+		return answer.trim();
+	}
 
 }
