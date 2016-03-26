@@ -238,7 +238,7 @@ public class Controller {
 			 * necessary white space to align tasks mainItem.setText(" " +
 			 * outputArray[j]); } }
 			 */
-
+				boolean added = false;
 				Date startTaskDate = task.getDatetimes().get(Keywords.INDEX_STARTDATE);
 				Date endTaskDate = task.getDatetimes().get(Keywords.INDEX_ENDDATE);
 				
@@ -259,6 +259,7 @@ public class Controller {
 				} else {
 	
 					for(int i = 0; i < lengthOfDays+1; i++){
+						
 						Calendar compareCalendar = Calendar.getInstance();
 						compareCalendar.set(getCurrentYear(), startTaskDate.getMonth(), startTaskDate.getDate());
 						compareCalendar.add(Calendar.DAY_OF_MONTH, i);
@@ -267,8 +268,11 @@ public class Controller {
 						compareCalendar.set(getCurrentYear(), startTaskDate.getMonth(), startTaskDate.getDate());
 						compareCalendar.add(Calendar.DAY_OF_MONTH, i);
 						
-						if (diffInDay == -1) {
+						if (diffInDay == -1 && !added) {
+						
 							insertToHashMap(OVERDUE, task);
+							added = true;
+							
 						} else if (diffInDay < 7) {
 
 							if (diffInDay == 0) {
@@ -534,44 +538,9 @@ public class Controller {
 			}
 		});
 
-		input.addListener(SWT.Modify, event -> {
-			String string = input.getText();
-			if (string.length() == 0) {
-				view.getPopupShell().setVisible(false);
-			} else {
-				TableItem[] items = view.getPopupTable().getItems();
-				for (int i = 0; i < items.length; i++) {
-					items[i].setText(string + '-' + i + "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
-				}
-				Rectangle textBounds = Display.getCurrent().map(view.getShell(), null, input.getBounds());
-				view.getPopupShell().setBounds(textBounds.x, textBounds.y + textBounds.height, textBounds.width, 120);
-				view.getPopupShell().setVisible(true);
-			}
-		});
 		
-		view.getPopupTable().addListener(SWT.DefaultSelection, event -> {
-			input.setText(view.getPopupTable().getSelection()[0].getText());
-			view.getPopupShell().setVisible(false);
-		});
+		setAutoComplete();
 		
-		view.getPopupTable().addListener(SWT.KeyDown, event -> {
-			if (event.keyCode == SWT.ESC) {
-				view.getPopupShell().setVisible(false);
-			}
-		});
-
-		Listener focusOutListener = event -> Display.getCurrent().asyncExec(() -> {
-			if (Display.getCurrent().isDisposed()) return;
-			Control control = Display.getCurrent().getFocusControl();
-			if (control == null || (control != input && control != view.getPopupTable())) {
-				view.getPopupShell().setVisible(false);
-			}
-		});
-		
-		view.getPopupTable().addListener(SWT.FocusOut, focusOutListener);
-		input.addListener(SWT.FocusOut, focusOutListener);
-
-		view.getShell().addListener(SWT.Move, event -> view.getPopupShell().setVisible(false));
 	}
 
 	private void timer() {
@@ -777,6 +746,52 @@ public class Controller {
 			// systemPrint(IO_ERROR_MSG);
 		}
 		Logic.updateFile();
+	}
+	
+	// Keep the arraylist at size 4
+	public void setAutoComplete(){
+		
+		
+		view.getInput().addListener(SWT.Modify, event -> {
+			String string = view.getInput().getText();
+			if (string.length() == 0) {
+				view.getPopupShell().setVisible(false);
+			} else {
+				// TODO : change to logic arraylist? keep at size 4, use variable string to pass stuff
+				TableItem[] items = view.getPopupTable().getItems();
+				ArrayList<String> logicArrList = new ArrayList<String>();
+				logicArrList.add("something");
+				for (int i = 0; i < logicArrList.size(); i++) {
+					items[i].setText(logicArrList.get(i));
+				}
+				Rectangle textBounds = Display.getCurrent().map(view.getShell(), null, view.getInput().getBounds());
+				view.getPopupShell().setBounds(textBounds.x, textBounds.y + textBounds.height, textBounds.width, 120);
+				view.getPopupShell().setVisible(true);
+			}
+		});
+		
+		view.getPopupTable().addListener(SWT.DefaultSelection, event -> {
+			view.getInput().setText(view.getPopupTable().getSelection()[0].getText());
+			view.getPopupShell().setVisible(false);
+		});
+		
+		view.getPopupTable().addListener(SWT.KeyDown, event -> {
+			if (event.keyCode == SWT.ESC) {
+				view.getPopupShell().setVisible(false);
+			}
+		});
+
+		Listener focusOutListener = event -> Display.getCurrent().asyncExec(() -> {
+			if (Display.getCurrent().isDisposed()) return;
+			Control control = Display.getCurrent().getFocusControl();
+			if (control == null || (control != view.getInput() && control != view.getPopupTable())) {
+				view.getPopupShell().setVisible(false);
+			}
+		});
+		
+		view.getPopupTable().addListener(SWT.FocusOut, focusOutListener);
+		view.getInput().addListener(SWT.FocusOut, focusOutListener);
+		view.getShell().addListener(SWT.Move, event -> view.getPopupShell().setVisible(false));
 	}
 
 	public View getView() {

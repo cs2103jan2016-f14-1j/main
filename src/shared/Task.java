@@ -238,6 +238,8 @@ public class Task extends Logger {
 
 	public void setDateTimes(ArrayList<Date> datetimes) {
 		this.datetimes = datetimes;
+		initIntDate();
+		initIntDateEnd();
 	}
 	
 	public void initDatetimes() {

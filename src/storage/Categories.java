@@ -89,4 +89,23 @@ public class Categories {
 		int count = (noOfTasksPerCat.get("Uncompleted") == null) ? 0 : noOfTasksPerCat.get("Uncompleted");
 		return new String("Uncompleted (" + count + ")");
 	}
+	
+	//might need this for getting suggested categories
+	public static ArrayList<String> getCategories(ArrayList<Task> tasks) {
+		ArrayList<String> catNames = new ArrayList<String>();
+		if (tasks.isEmpty()){
+			return catNames;
+		}
+		for (Task t : tasks) {
+			if (t.getCategories().isEmpty()){
+				continue;
+			}
+			for (String cat : t.getCategories()) {
+				if(!catNames.contains(cat)) {
+					catNames.add(cat);
+				}
+			}
+		}
+		return catNames;
+	}
 }
