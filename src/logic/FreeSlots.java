@@ -12,30 +12,27 @@ import storage.Storage;
 public class FreeSlots {
 	private ArrayList<Task> tasks = Storage.getListOfUncompletedTasks();
 	private ArrayList<Task> tasksOnDate = new ArrayList<Task>();
-	private ArrayList<Integer> availSlots = new ArrayList<Integer>();
-	//FORMAT: ["when to when", ... ]
+	//FORMAT: ["xxxxH to xxxxH", ... ]
 	private ArrayList<String> freeSlots = new ArrayList<String>();
 	
-	private HashMap<Integer, Boolean> timeSlots = initTimeSlot();
+	private HashMap<Integer, ArrayList<Integer>> timeSlots = initTimeSlot();
 	
-	private HashMap<Integer, Boolean> initTimeSlot() {
-		HashMap<Integer, Boolean> hm = new HashMap<Integer, Boolean>(24);
+	private HashMap<Integer, ArrayList<Integer>> initTimeSlot() {
+		HashMap<Integer, ArrayList<Integer>> hm = new HashMap<Integer, ArrayList<Integer>>(24);
 		for (int i = 0; i < hm.size(); i++) {
-			hm.put(i, false);
+			ArrayList<Integer> mins = createNewMinList();
+			hm.put(i, mins);
 		}
 		return hm;
 	}
+	
 	// assume input is displayDate format e.g. 27Feb, 02Mar
 	public ArrayList<String> getFreeSlots(String input) {
 		return compileFreeSlots(input);
 	}
 	
 	private ArrayList<String> compileFreeSlots(String input) {
-		for (Task t : tasks) {
-			if (t.getDisplayDate().equalsIgnoreCase(input)) {
-				tasksOnDate.add(t);
-			}
-		}
+		filterDateTask(tasks, input);
 		if (tasksOnDate.isEmpty()) {
 			return freeSlots; // null list means all time slots available
 		} else {
@@ -45,48 +42,153 @@ public class FreeSlots {
 				if (startT != null){ //either only one timing or range timing
 					Date endT = dateTimes.get(Keywords.INDEX_ENDTIME);
 					if (endT != null) {
-						for (int i = startT.getHours(); i < endT.getHours(); i++) {
-							timeSlots.put(i, true);
+						for (int i = startT.getHours(); i < endT.getHours()+1; i++) {
+							ArrayList<Integer> mins = timeSlots.get(i);
+							if (i == startT.getHours() && i == endT.getHours()) {
+								// if the time blocked is 4.30pm-4.45pm
+								ArrayList<Integer> temp = new ArrayList<Integer>(mins.subList(0, startT.getMinutes()));
+								temp.addAll(mins.subList(endT.getMinutes(), mins.size()));
+								mins = temp;
+								timeSlots.replace(i, mins);
+							}
+							if (i == startT.getHours()){
+								if (startT.getMinutes() == 0) {
+									mins.clear();
+									mins.add(0); 
+									// if list only got 0 then whole hour blocked, but can still stop at that hour
+									// e.g. 4pm-5pm blocked but can still do 3pm-4pm
+									timeSlots.replace(i, mins);
+								} else {
+									mins = new ArrayList<Integer>(mins.subList(0, startT.getMinutes()));
+									timeSlots.replace(i, mins);
+								}
+							} else if (i == endT.getHours()) {
+								if (endT.getMinutes() == 0) {
+									break;
+								}
+								mins = new ArrayList<Integer>(mins.subList(endT.getMinutes(), mins.size()));
+								timeSlots.replace(i, mins);
+							} else {
+								mins.clear();
+								mins.add(0);
+								timeSlots.replace(i, mins);
+							}
 						}
 					} else {
-						timeSlots.put(startT.getHours(), true);
+						ArrayList<Integer> mins = timeSlots.get(startT.getHours());
+						mins.clear();
+						mins.add(0); 
+						timeSlots.replace(startT.getHours(), mins);
 					}
 				}
 			}
-			for (int key : timeSlots.keySet()){
-				if (!timeSlots.get(key)) {
-					availSlots.add(key);
-				}
-			}
-			if (availSlots.isEmpty()) {
-				freeSlots.add(Keywords.EMPTY_STRING); //empty string means no free slots already
-				return freeSlots;
-			}
-			Collections.sort(availSlots);
-			int start = availSlots.get(Keywords.FIRST_ELEMENT);
-			int curr = start;
-			for (int i : availSlots) {
-				if (i == curr) {
+			int startTRange = 0; // will be in the format 0000
+			int endTRange = 0;
+			boolean started = false;
+			for (int key = 0; key < 24; key++) {
+				int totalMinSize = timeSlots.get(key).size();
+				if (totalMinSize == 1){
+					if (started) {
+						endTRange = key * 100;
+						freeSlots.add(toTimeString(startTRange, endTRange));
+						startTRange = (key + 1) * 100;
+						endTRange = (key + 1) * 100;
+						started = false;
+						continue;
+					}
+					startTRange = (key+1) * 100;
 					continue;
-				} else if (curr == i-1){
-					curr = i;
-				} else {
-					if (curr == start) {
-						if (curr > 9) {
-							freeSlots.add(String.format("%d00H", curr));
-						}
-						freeSlots.add(String.format("0%d00H", curr));
+				}
+				if (started) {
+					endTRange = key * 100;
+					if (totalMinSize == 60) {
+						endTRange = (key + 1) * 100;
+						continue;
 					} else {
-						if (start > 9) {
-							freeSlots.add(String.format("%d00H to %d00H", start, curr));
-						} else if (curr > 9) {
-							freeSlots.add(String.format("0%d00H to %d00H", start, curr));
+						for (int i = 0; i < totalMinSize-1; i++) {
+							if (timeSlots.get(key).get(i)+1 != timeSlots.get(key).get(i+1)) {
+								freeSlots.add(toTimeString(startTRange, endTRange));
+								startTRange = (key * 100) + timeSlots.get(key).get(i+1);
+								endTRange = (key * 100) + timeSlots.get(key).get(i+1);
+								started = false;
+								continue;
+							}
+							endTRange = (key * 100) + timeSlots.get(key).get(i+1);
 						}
-						freeSlots.add(String.format("0%d00H to 0%d00H", start, curr));
+					}
+				} else {
+					if (totalMinSize == 60) {
+						started = true;
+						startTRange = key * 100;
+						endTRange = key * 100;
+						continue;
+					} else {
+						startTRange = timeSlots.get(key).get(0);
+						endTRange = timeSlots.get(key).get(0);
+						for (int i = 0; i < totalMinSize-1; i++) {
+							if (timeSlots.get(key).get(i)+1 != timeSlots.get(key).get(i+1)) {
+								freeSlots.add(toTimeString(startTRange, endTRange));
+								startTRange = (key * 100) + timeSlots.get(key).get(i+1);
+								endTRange = (key * 100) + timeSlots.get(key).get(i+1);
+								continue;
+							}
+							endTRange = (key * 100) + timeSlots.get(key).get(i+1);
+						}
+						started = true;
 					}
 				}
 			}
 		}
 		return freeSlots;
+	}
+	
+	private String toTimeString(int startTRange, int endTRange) {
+		String sString = "";
+		String eString = "";
+		if (startTRange >= 1000) {
+			sString = String.format("%dH", startTRange);
+		} else {
+			if (startTRange < 100) {
+				sString = String.format("00%dH", startTRange);
+			} else if (startTRange < 10) {
+				sString = String.format("000%dH", startTRange);
+			} else {
+				sString = String.format("0%dH", startTRange);
+			}
+		}
+		
+		if (startTRange == endTRange) {
+			return sString;
+		}
+		
+		if (endTRange >= 1000) {
+			eString = String.format("%dH", endTRange);
+		} else {
+			if (endTRange < 100) {
+				eString = String.format("00%dH", endTRange);
+			} else if (endTRange < 10) {
+				eString = String.format("000%dH", endTRange);
+			} else {
+				eString = String.format("0%dH", endTRange);
+			}
+		}
+		return sString + " to " + eString;
+	}
+
+	private void filterDateTask(ArrayList<Task> tasks, String input) {
+		for (Task t : tasks) {
+			if (t.getDisplayDate().equalsIgnoreCase(input)) {
+				tasksOnDate.add(t);
+			}
+		}
+	}
+	
+	//populate mins arraylist
+	private ArrayList<Integer> createNewMinList() {
+		ArrayList<Integer> mins = new ArrayList<Integer>();
+		for (int i = 0; i < 60; i++){ 
+			mins.add(i);
+		}
+		return mins;
 	}
 }
