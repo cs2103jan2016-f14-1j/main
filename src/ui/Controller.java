@@ -759,7 +759,7 @@ public class Controller {
 				// TODO : change to logic arraylist? keep at size 4, use variable string to pass stuff
 				TableItem[] items = view.getPopupTable().getItems();
 				// currently this is the way to get suggested categories
-				ArrayList<String> logicArrList = Storage.getAllCategories();
+				ArrayList<String> logicArrList = Logic.getCatNames();
 				//logicArrList.add("something");
 				for (int i = 0; i < logicArrList.size(); i++) {
 					items[i].setText(logicArrList.get(i));
