@@ -76,4 +76,8 @@ public class Logic {
 	public static void updateFile(){
 		Storage.writeTasksToFile();
 	}
+	
+	public static ArrayList<String> getCatNames(){
+		return Storage.getAllCategories();
+	}
 }

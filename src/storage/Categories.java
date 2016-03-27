@@ -101,8 +101,8 @@ public class Categories {
 				continue;
 			}
 			for (String cat : t.getCategories()) {
-				if(!catNames.contains(cat)) {
-					catNames.add(cat);
+				if(!catNames.contains("#"+cat)) {
+					catNames.add("#"+cat);
 				}
 			}
 		}
