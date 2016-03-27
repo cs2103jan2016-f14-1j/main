@@ -752,15 +752,16 @@ public class Controller {
 	public void setAutoComplete(){
 			
 		view.getInput().addListener(SWT.Modify, event -> {
-			String string = view.getInput().getText();
-			if (string.length() == 0) {
+			String tempInput = view.getInput().getText();
+			if (tempInput.length() == 0) {
 				view.getPopupShell().setVisible(false);
 			} else {
-				// TODO : change to logic arraylist? keep at size 4, use variable string to pass stuff
 				TableItem[] items = view.getPopupTable().getItems();
-				// currently this is the way to get suggested categories
+				// guys this is the key listener
+				// TODO: edit accordingly to parse return object
+				Object outList = parser.parse(tempInput);
 				ArrayList<String> logicArrList = Logic.getCatNames();
-				//logicArrList.add("something");
+				// 
 				for (int i = 0; i < logicArrList.size(); i++) {
 					items[i].setText(logicArrList.get(i));
 				}
