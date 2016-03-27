@@ -57,7 +57,7 @@ public class Logic {
 		return n;
 	}
 
-	public static ArrayList<Object> searchTask(String words, boolean isPriortise, String date, ArrayList<String> categories) {
+	public static ArrayList<Object> searchTask(String words, int isPriortise, int date, ArrayList<String> categories) {
 		return new SearchTask().searchTask(words, isPriortise, date, categories);
 	}
 	
