@@ -750,8 +750,7 @@ public class Controller {
 	
 	// Keep the arraylist at size 4
 	public void setAutoComplete(){
-		
-		
+			
 		view.getInput().addListener(SWT.Modify, event -> {
 			String string = view.getInput().getText();
 			if (string.length() == 0) {
