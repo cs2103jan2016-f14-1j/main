@@ -65,7 +65,7 @@ public class Controller {
 	private final static String OTHERS = "OTHERS";
 	private final static int STARTING_INDEX = 2;
 	private final static int WHITESPACES = 1;
-
+	
 	private View view;
 	private Parser parser;
 	private Logic logic;
@@ -467,34 +467,40 @@ public class Controller {
 
 				case SWT.KEYPAD_CR:
 				case SWT.CR:
-					// SWT.CR : when "ENTER" key is pressed
-					String tempInput = input.getText();
-					inputToHint();
-
-					Object result = parser.parse(tempInput);
-					displayCategory();
-
-					try {
-						if (result instanceof LinkedList<?>) {
-							displayHelp((LinkedList<String>)result);
-						} else if (result instanceof ArrayList<?>) {
-							// here might need handle is empty arraylist
-							ArrayList<Object> re = (ArrayList<Object>) result;
-							displayNotification((Notification) re.get(0));
-							displayList((ArrayList<Task>) re.get(1));
-						} else {
-							displayList(Logic.getUncompletedTasks());
-							displayNotification((Notification) result);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					
 					
 					if (view.getPopupShell().isVisible() && view.getPopupTable().getSelectionIndex() != -1) {
+						inputToNormal();
 						input.setText(view.getPopupTable().getSelection()[0].getText());
-						view.getPopupShell().setVisible(false);
+						input.setSelection(view.getPopupTable().getSelection()[0].getText().length());
+					
+					} else {
+						// SWT.CR : when "ENTER" key is pressed
+						String tempInput = input.getText();
+						inputToHint();
+						Object result = parser.parse(tempInput);
+						displayCategory();
+	
+						try {
+							if (result instanceof LinkedList<?>) {
+								displayHelp((LinkedList<String>)result);
+							} else if (result instanceof ArrayList<?>) {
+								// here might need handle is empty arraylist
+								ArrayList<Object> re = (ArrayList<Object>) result;
+								displayNotification((Notification) re.get(0));
+								displayList((ArrayList<Task>) re.get(1));
+							} else {
+								displayList(Logic.getUncompletedTasks());
+								displayNotification((Notification) result);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
+						
 					}
-
+					view.getPopupShell().setVisible(false);
+					
 					break;
                 
 				case SWT.PAGE_UP:
@@ -508,6 +514,7 @@ public class Controller {
 				case SWT.BS:
 					if (isTextEmpty(input)) {
 						inputToHint();
+						view.getPopupShell().setVisible(false);
 					}
 					break;
 				case SWT.ARROW_DOWN:
@@ -748,7 +755,7 @@ public class Controller {
 		Logic.updateFile();
 	}
 	
-	// Keep the arraylist at size 4
+	
 	public void setAutoComplete(){
 			
 		view.getInput().addListener(SWT.Modify, event -> {
@@ -757,14 +764,12 @@ public class Controller {
 				view.getPopupShell().setVisible(false);
 			} else {
 				TableItem[] items = view.getPopupTable().getItems();
-				// guys this is the key listener
-				// TODO: edit accordingly to parse return object
-				Object outList = parser.parse(tempInput);
-				ArrayList<String> logicArrList = Logic.getCatNames();
-				// 
-				for (int i = 0; i < logicArrList.size(); i++) {
-					items[i].setText(logicArrList.get(i));
+				ArrayList<String> outList = parser.parseAuto(tempInput);
+	
+				for (int i = 0; i < outList.size(); i++) {
+					items[i].setText(outList.get(i));
 				}
+	
 				Rectangle textBounds = Display.getCurrent().map(view.getShell(), null, view.getInput().getBounds());
 				view.getPopupShell().setBounds(textBounds.x, textBounds.y + textBounds.height, textBounds.width, 120);
 				view.getPopupShell().setVisible(true);
@@ -774,6 +779,8 @@ public class Controller {
 		view.getPopupTable().addListener(SWT.DefaultSelection, event -> {
 			view.getInput().setText(view.getPopupTable().getSelection()[0].getText());
 			view.getPopupShell().setVisible(false);
+			inputToNormal();
+			view.getInput().setSelection(view.getPopupTable().getSelection()[0].getText().length());
 		});
 		
 		view.getPopupTable().addListener(SWT.KeyDown, event -> {

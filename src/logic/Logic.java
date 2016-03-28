@@ -24,7 +24,10 @@ public class Logic {
 	}
 
 	public static Notification addTask(Task task) {
-		return new AddTask().addTask(task);
+		Notification n = new AddTask().addTask(task);
+		ArrayList<String> fS = FreeSlots.getFreeSlots(task.getDate());
+		System.out.println(fS);
+		return n;
 	}
 
 	public static Notification deleteTask(ArrayList<Integer> taskIDs, ArrayList<String> cats) {
@@ -79,5 +82,9 @@ public class Logic {
 	
 	public static ArrayList<String> getCatNames(){
 		return Storage.getAllCategories();
+	}
+	
+	public static ArrayList<String> findCompletions(String word){
+		return Storage.findCompletions(word);
 	}
 }

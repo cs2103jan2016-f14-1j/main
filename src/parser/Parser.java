@@ -1,10 +1,12 @@
 package parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import logic.Logic;
 import logic.Notification;
 import shared.*;
+import storage.LoadWords;
 
 public class Parser {
 
@@ -38,6 +40,21 @@ public class Parser {
 		return parser;
 	}
 
+	public ArrayList<String> parseAuto(String userInput){
+		ArrayList<String> toReturn = new ArrayList<String>();
+		ArrayList<String> findLastWord = new ArrayList<String>(Arrays.asList(userInput.split(Keywords.SPACE_STRING)));
+		toReturn = Logic.findCompletions(findLastWord.get(findLastWord.size()-1));
+		String sentence = "";
+		for(int i =0; i <findLastWord.size()-1;i++){
+			sentence+=findLastWord.get(i)+" ";
+		}
+		ArrayList<String> newSentences = new ArrayList<String>();
+		for(String word :toReturn){
+			newSentences.add(sentence+word);
+		}
+		return newSentences;
+	}
+	
 	public Object parse(String userInput) {
 		String commandType = getFirstWord(userInput).toLowerCase();
 		String inputWithoutCommandType = removeFirstWord(userInput);
