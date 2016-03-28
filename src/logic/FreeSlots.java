@@ -177,7 +177,7 @@ public class FreeSlots {
 
 	private void filterDateTask(ArrayList<Task> tasks, String input) {
 		for (Task t : tasks) {
-			if (t.getDisplayDate().equalsIgnoreCase(input)) {
+			if (t.getDisplayDate().equalsIgnoreCase(input) && t.getIsCompleted() != Keywords.TASK_COMPLETED) {
 				tasksOnDate.add(t);
 			}
 		}
