@@ -108,7 +108,11 @@ public class FreeSlots {
 				if (started) {
 					endTRange = key * 100;
 					if (totalMinSize == 60) {
-						endTRange = (key + 1) * 100;
+						if (key == 23) {
+							endTRange = (key * 100) + 59;
+						} else {
+							endTRange = (key + 1) * 100;
+						}
 						continue;
 					} else {
 						for (int i = 0; i < totalMinSize-1; i++) {
