@@ -471,6 +471,7 @@ public class Controller {
 					if (view.getPopupShell().isVisible() && view.getPopupTable().getSelectionIndex() != -1) {
 						input.setText(view.getPopupTable().getSelection()[0].getText());
 						view.getPopupShell().setVisible(false);
+						inputToNormal();
 					} else {
 						// SWT.CR : when "ENTER" key is pressed
 						String tempInput = input.getText();
