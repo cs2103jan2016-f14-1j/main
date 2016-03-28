@@ -219,9 +219,7 @@ public class Formatter extends Logger {
 				}
 			} else { // checkDate == 0
 				if (!tempDate.isEmpty()) {
-					System.out.println("outer: "+tempDate);
 					if (getDateFromString(tempDate) != null) {
-						System.out.println("inner: "+tempDate);
 						break;
 					}
 					outArray.add(tempDate.trim());
