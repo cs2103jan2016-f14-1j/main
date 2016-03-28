@@ -53,7 +53,9 @@ public class FreeSlots {
 								ArrayList<Integer> temp = new ArrayList<Integer>(mins.subList(0, startT.getMinutes()));
 								temp.addAll(mins.subList(endT.getMinutes(), mins.size()));
 								mins = temp;
+								System.out.println(temp.toString());
 								timeSlots.replace(i, mins);
+								break;
 							}
 							if (i == startT.getHours()){
 								if (startT.getMinutes() == 0) {
@@ -111,10 +113,10 @@ public class FreeSlots {
 					} else {
 						for (int i = 0; i < totalMinSize-1; i++) {
 							if (timeSlots.get(key).get(i)+1 != timeSlots.get(key).get(i+1)) {
-								freeSlots.add(toTimeString(startTRange, endTRange));
+								freeSlots.add(toTimeString(startTRange, endTRange+1));
 								startTRange = (key * 100) + timeSlots.get(key).get(i+1);
 								endTRange = (key * 100) + timeSlots.get(key).get(i+1);
-								started = false;
+								started = true;
 								continue;
 							}
 							endTRange = (key * 100) + timeSlots.get(key).get(i+1);
