@@ -80,8 +80,4 @@ public class Logic {
 	public static ArrayList<String> getCatNames(){
 		return Storage.getAllCategories();
 	}
-	
-	public static ArrayList<String> findCompletions(String word){
-		return Storage.findCompletions(word);
-	}
 }
