@@ -11,9 +11,6 @@ public class Storage {
 	// FORMAT OF EACH TASK: [taskID]|[task]|[sdate]|[edate]|
 	//						[stime]|[etime]|[categories]|[isComplete]|[priority]
 	private static ArrayList<Task> tasks;
-	//private static Categories categories;
-	//private static FreeIDs freeIDs;
-
 	private static Storage storage;
 
 	// private constructor
@@ -21,6 +18,7 @@ public class Storage {
 		tasks = new ArrayList<Task>();
 		//categories = new Categories();
 		//freeIDs = new FreeIDs();
+		LoadWords.init();
 		Categories.init();
 		FreeIDs.init();
 		History.initHistory();
@@ -158,6 +156,10 @@ public class Storage {
 	// for now i assume UI calls storage to get this
 	public static ArrayList<String> getAllCategories(){
 		return Categories.getCategories(tasks);
+	}
+	
+	public static ArrayList<String> findCompletions(String word){
+		return LoadWords.findCompletions(word);
 	}
 
 }

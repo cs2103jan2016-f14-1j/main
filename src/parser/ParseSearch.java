@@ -44,6 +44,7 @@ public class ParseSearch {
 		int dateStart = -1;
 		if (date != null) {
 			dateStart = Formatter.fromDateToInt(date);
+			System.out.println(date.toString());
 		}
 		// int dateEnd =
 		// Formatter.fromDateToInt(dates.get(Keywords.INDEX_ENDDATE));
