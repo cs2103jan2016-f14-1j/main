@@ -468,15 +468,16 @@ public class Controller {
 				case SWT.KEYPAD_CR:
 				case SWT.CR:
 					
+					
 					if (view.getPopupShell().isVisible() && view.getPopupTable().getSelectionIndex() != -1) {
+						
 						input.setText(view.getPopupTable().getSelection()[0].getText());
-						view.getPopupShell().setVisible(false);
-						inputToNormal();
 						input.setSelection(view.getPopupTable().getSelection()[0].getText().length());
+						
+					
 					} else {
 						// SWT.CR : when "ENTER" key is pressed
 						String tempInput = input.getText();
-						inputToHint();
 	
 						Object result = parser.parse(tempInput);
 						displayCategory();
@@ -499,6 +500,9 @@ public class Controller {
 						
 						
 					}
+					view.getPopupShell().setVisible(false);
+					inputToHint();
+					
 					break;
                 
 				case SWT.PAGE_UP:
@@ -512,6 +516,7 @@ public class Controller {
 				case SWT.BS:
 					if (isTextEmpty(input)) {
 						inputToHint();
+						view.getPopupShell().setVisible(false);
 					}
 					break;
 				case SWT.ARROW_DOWN:
