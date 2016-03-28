@@ -38,6 +38,11 @@ public class Parser {
 		return parser;
 	}
 
+	public ArrayList<String> parseAuto(String userInput){
+		ArrayList<String> toReturn = new ArrayList<String>();
+		return toReturn;
+	}
+	
 	public Object parse(String userInput) {
 		String commandType = getFirstWord(userInput).toLowerCase();
 		String inputWithoutCommandType = removeFirstWord(userInput);
