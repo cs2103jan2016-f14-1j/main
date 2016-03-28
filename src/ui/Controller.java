@@ -470,15 +470,14 @@ public class Controller {
 					
 					
 					if (view.getPopupShell().isVisible() && view.getPopupTable().getSelectionIndex() != -1) {
-						
+						inputToNormal();
 						input.setText(view.getPopupTable().getSelection()[0].getText());
 						input.setSelection(view.getPopupTable().getSelection()[0].getText().length());
-						
 					
 					} else {
 						// SWT.CR : when "ENTER" key is pressed
 						String tempInput = input.getText();
-	
+						inputToHint();
 						Object result = parser.parse(tempInput);
 						displayCategory();
 	
@@ -501,7 +500,6 @@ public class Controller {
 						
 					}
 					view.getPopupShell().setVisible(false);
-					inputToHint();
 					
 					break;
                 
