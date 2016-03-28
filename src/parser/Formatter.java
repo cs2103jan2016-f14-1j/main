@@ -203,17 +203,51 @@ public class Formatter extends Logger {
 	 * @return String without commandType and preposition/date
 	 */
 	public static String getTaskNameWithPreposition(String taskName) {
-		String out = Keywords.EMPTY_STRING;
 		ArrayList<String> as = breakString(taskName);
-		for (String s : as) {
-			if (!isPreposition(s) && !isCategory(s)) {
-				out += s + Keywords.SPACE_STRING;
-			} else if (isPreposition(s)) {
-				break;
+		ArrayList<String> outArray = new ArrayList<String>();
+		int checkDate = 0;
+		String tempDate = Keywords.EMPTY_STRING;
+		for (String s : as) {		
+			if (checkDate != 0) {
+				if (isPreposition(s)) {
+					outArray.add(tempDate.trim());
+					checkDate = 2;
+				} else {
+					tempDate += s + Keywords.SPACE_STRING;
+					checkDate--;
+					continue;
+				}
+			} else { // checkDate == 0
+				if (!tempDate.isEmpty()) {
+					System.out.println("outer: "+tempDate);
+					if (getDateFromString(tempDate) != null) {
+						System.out.println("inner: "+tempDate);
+						break;
+					}
+					outArray.add(tempDate.trim());
+				}
+				tempDate = Keywords.EMPTY_STRING;
 			}
+			if (isPreposition(s)) {
+				checkDate = 2;
+			}
+			outArray.add(s);
 		}
-
+		if (!tempDate.isEmpty() && getDateFromString(tempDate) != null) {
+			removeLastElement(outArray); // removes the previously added preposition
+		}
+		
+		return convertArrayListToString(outArray);
+	}
+	private static String convertArrayListToString(ArrayList<String> as) {
+		String out = Keywords.EMPTY_STRING;
+		for (String s : as) {
+			out += s + Keywords.SPACE_STRING;
+		}
 		return out.trim();
+	}
+	private static void removeLastElement(ArrayList as) {
+		as.remove(as.size() - 1);
 	}
 	
 	public static boolean hasPrepositionOn(String s) {
@@ -319,11 +353,9 @@ public class Formatter extends Logger {
 		String answer = "";
 		boolean start = false;
 		for (int i = 0 ; i< as.size() ; i++) {
-			
-			if(start){
+			if (start) {
 				answer += as.get(i) + Keywords.SPACE_STRING;
 			}
-		
 			if (isPreposition(as.get(i))) {
 				start = true;
 			} 

@@ -27,12 +27,12 @@ public class ParseEdit {
 				
 		if (hasCategory && !hasPreposition ) {
 			taskName = Formatter.getTaskNameWithCategories(tempStr);
-		} else if (Formatter.getDateFromString(tempStr)==null){
+		} else if (Formatter.getDateFromString(tempStr) == null){
 			taskName = tempStr;
 		} else if (hasPreposition) {
 			taskName = Formatter.getTaskNameWithPreposition(tempStr);
 		}
 	
-		return Logic.editTask(ids, datetimes,taskName,categories);
+		return Logic.editTask(ids, datetimes, taskName, categories);
 	}
 }
