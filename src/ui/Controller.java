@@ -463,20 +463,19 @@ public class Controller {
 		input.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent event) {
 
+				String tempInput = input.getText();
+				
 				switch (event.keyCode) {
 
 				case SWT.KEYPAD_CR:
 				case SWT.CR:
-					
-					
+				
 					if (view.getPopupShell().isVisible() && view.getPopupTable().getSelectionIndex() != -1) {
 						inputToNormal();
 						input.setText(view.getPopupTable().getSelection()[0].getText());
 						input.setSelection(view.getPopupTable().getSelection()[0].getText().length());
-					
 					} else {
 						// SWT.CR : when "ENTER" key is pressed
-						String tempInput = input.getText();
 						inputToHint();
 						Object result = parser.parse(tempInput);
 						displayCategory();
@@ -512,20 +511,23 @@ public class Controller {
 					event.doit = false;
 					break;
 				case SWT.BS:
-					if (isTextEmpty(input)) {
-						inputToHint();
-						view.getPopupShell().setVisible(false);
-					}
+					setAutoCompleteContent(tempInput);
 					break;
 				case SWT.ARROW_DOWN:
-					int index = (view.getPopupTable().getSelectionIndex() + 1) % view.getPopupTable().getItemCount();
+					int index = 0;
+					if(view.getPopupTable().getItemCount()!=0){
+					index = (view.getPopupTable().getSelectionIndex() + 1) % view.getPopupTable().getItemCount();
 					view.getPopupTable().setSelection(index);
+					}
 					event.doit = false;
 					break;
 				case SWT.ARROW_UP:
+					if(view.getPopupTable().getItemCount()!=0){
 					index = view.getPopupTable().getSelectionIndex() - 1;
 					if (index < 0) index = view.getPopupTable().getItemCount() - 1;
-					view.getPopupTable().setSelection(index);
+						view.getPopupTable().setSelection(index);
+					}
+					input.setSelection(tempInput.length());
 					event.doit = false;
 					break;
 				case SWT.ESC:
@@ -540,12 +542,13 @@ public class Controller {
 							input.setSelection(1);
 						}
 					}
+					
+					setAutoCompleteContent(tempInput);
 					break;
 				}
 			}
 		});
 
-		
 		setAutoComplete();
 		
 	}
@@ -756,30 +759,34 @@ public class Controller {
 	}
 	
 	
+	public void setAutoCompleteContent(String tempInput){
+		if (tempInput.length() == 0) {
+			inputToHint();
+			view.getPopupShell().setVisible(false);
+		} else {
+			view.getPopupTable().removeAll();
+			ArrayList<String> outList = parser.parseAuto(tempInput);
+				for (int i = 1; i <= Keywords.AUTO_LENGTH; i++) {
+					if(outList.size()-i < 0){
+						break;
+					} else {
+						TableItem autoItem = new TableItem(view.getPopupTable(), SWT.NONE);
+						autoItem.setText(outList.get(outList.size()-i));
+					}
+				}
+				
+			Rectangle textBounds = Display.getCurrent().map(view.getShell(), null, view.getInput().getBounds());
+			view.getPopupShell().setBounds(textBounds.x, textBounds.y + textBounds.height, textBounds.width, View.AUTO_HEIGHT * view.getPopupTable().getItemCount());
+			view.getPopupShell().setVisible(true);
+		}
+	}
+	
 	public void setAutoComplete(){
 			
-		view.getInput().addListener(SWT.Modify, event -> {
-			String tempInput = view.getInput().getText();
-			if (tempInput.length() == 0) {
-				view.getPopupShell().setVisible(false);
-			} else {
-				TableItem[] items = view.getPopupTable().getItems();
-				ArrayList<String> outList = parser.parseAuto(tempInput);
-	
-				for (int i = 0; i < outList.size(); i++) {
-					items[i].setText(outList.get(i));
-				}
-	
-				Rectangle textBounds = Display.getCurrent().map(view.getShell(), null, view.getInput().getBounds());
-				view.getPopupShell().setBounds(textBounds.x, textBounds.y + textBounds.height, textBounds.width, 120);
-				view.getPopupShell().setVisible(true);
-			}
-		});
-		
 		view.getPopupTable().addListener(SWT.DefaultSelection, event -> {
+			inputToNormal();
 			view.getInput().setText(view.getPopupTable().getSelection()[0].getText());
 			view.getPopupShell().setVisible(false);
-			inputToNormal();
 			view.getInput().setSelection(view.getPopupTable().getSelection()[0].getText().length());
 		});
 		

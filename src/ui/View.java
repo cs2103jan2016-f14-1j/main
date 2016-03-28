@@ -45,6 +45,7 @@ public class View extends Logger{
 	
 	protected final static int BORDER_WIDTH = 2;
 	protected final static int SCROLL_AMOUNT = 5;
+	protected final static int AUTO_HEIGHT = 30;
 	
 	private StyledText input;
 	private Label dayLabel;
@@ -174,8 +175,6 @@ public class View extends Logger{
 		for (int i = 0; i < Keywords.AUTO_LENGTH; i++) {
 			new TableItem(popupTable, SWT.NONE);
 		}
-
-		
 	}
 	
 	public Shell getPopupShell(){
