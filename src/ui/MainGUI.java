@@ -25,9 +25,9 @@ public class MainGUI implements NativeKeyListener {
 	private final static String JAR_NAME = "dotdotdot.jar"; 
 	private final static String KEY_NAME = "dotdotdot autorun key"; 
 
-	private boolean keyd = false;
-	private boolean keyctrl = false;
-	private static boolean keyalt = false;
+	private boolean keyD = false;
+	private boolean keyCtrl = false;
+	private static boolean keyAlt = false;
 	private static boolean keyE = false;
 	private static Shell shell;
 
@@ -45,6 +45,17 @@ public class MainGUI implements NativeKeyListener {
 	    
 		Display display = new Display();
 		Controller controller = new Controller();
+		
+		// For alt tab bug
+		display.addFilter(SWT.FocusOut, new Listener(){
+
+			@Override
+			public void handleEvent(Event e) {
+				keyAlt = false;
+				keyE = false;
+			}
+			
+		});
 
 		display.addFilter(SWT.KeyDown, new Listener() {
 			
@@ -55,16 +66,16 @@ public class MainGUI implements NativeKeyListener {
             	}
             	
             	if(e.keyCode==SWT.ALT){
-            		keyalt = true;
+            		keyAlt = true;
             	}
             	
             	if(e.keyCode=='e'){
             		keyE = true;
             	}
             	
-            	if(keyalt && keyE){
+            	if(keyAlt && keyE){
             		 controller.writePathToFile();
-            		 keyalt = false;
+            		 keyAlt = false;
             		 keyE = false;
                 }
             	
@@ -80,7 +91,7 @@ public class MainGUI implements NativeKeyListener {
 				}
 				
 				if(e.keyCode==SWT.ALT){
-					keyalt = false;
+					keyAlt = false;
 				}
 			}
 			
@@ -100,8 +111,8 @@ public class MainGUI implements NativeKeyListener {
 	public void nativeKeyPressed(NativeKeyEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getKeyCode() == NativeKeyEvent.VC_D) {
-            keyd = true;
-            if (keyd && keyctrl && keyalt) {
+            keyD = true;
+            if (keyD && keyCtrl && keyAlt) {
     	        
                	Display.getDefault().asyncExec(
                			new Runnable(){
@@ -117,13 +128,13 @@ public class MainGUI implements NativeKeyListener {
     					e1.printStackTrace();
     				}
             }
-            keyd = false;
-            keyctrl = false;
-            keyalt = false;
+            keyD = false;
+            keyCtrl = false;
+            keyAlt = false;
         } else if (e.getKeyCode() == NativeKeyEvent.VC_CONTROL_L || e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
-        	keyctrl = true;
+        	keyCtrl = true;
         } else if (e.getKeyCode() == NativeKeyEvent.VC_ALT_L || e.getKeyCode() == NativeKeyEvent.VC_ALT_R) {
-        	keyalt = true;
+        	keyAlt = true;
         }
 	}
 
@@ -131,11 +142,11 @@ public class MainGUI implements NativeKeyListener {
 	public void nativeKeyReleased(NativeKeyEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getKeyCode() == NativeKeyEvent.VC_D) {
-            keyd = false;
+            keyD = false;
         } else if (e.getKeyCode() == NativeKeyEvent.VC_CONTROL_L || e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
-        	keyctrl = false;
+        	keyCtrl = false;
         } else if (e.getKeyCode() == NativeKeyEvent.VC_ALT_L || e.getKeyCode() == NativeKeyEvent.VC_ALT_R) {
-        	keyalt = false;
+        	keyAlt = false;
         }
 	}
 
