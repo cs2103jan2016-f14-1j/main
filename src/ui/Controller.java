@@ -2,6 +2,7 @@ package ui;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -104,15 +105,16 @@ public class Controller {
 		view.getDateLabel().setText(getCurrentDate());
 		view.getDayLabel().setText(getCurrentDay());
 		view.getTimeLabel().setText(getCurrentTime());
-
+		
 		readFileLocation();
-		if (Keywords.FILENAME_FILEPATH.equals(Keywords.EMPTY_STRING)) {
+		if (Keywords.filePath.equals(Keywords.EMPTY_STRING)) {
 			writePathToFile();
 		}
 
 		parser = parser.getInstance();
 		logic = logic.getInstance();
 		storage = storage.getInstance();
+		
 		displayCategory();
 		displayList(Logic.getUncompletedTasks());
 	}
@@ -711,21 +713,21 @@ public class Controller {
 		
 	}
 
-	private void readFileLocation() {
+	private void readFileLocation() throws IOException {
 		BufferedReader bufferReader = null;
 		try {
-			bufferReader = new BufferedReader(new FileReader(Keywords.SETTINGS_FILEPATH));
+			bufferReader = new BufferedReader(new FileReader(Keywords.settingsPath));
 			String currentLine = Keywords.EMPTY_STRING;
 			while ((currentLine = bufferReader.readLine()) != null) {
 				// Read first line as file location is there
-				Keywords.FILENAME_FILEPATH = currentLine;
+				Keywords.filePath = currentLine;
 				break;
 			}
 
 		} catch (FileNotFoundException ex) {
+			File f = new File(Keywords.settingsPath);
+			f.createNewFile();
 			// systemPrint(FILE_NOT_FOUND_ERROR_MSG);
-		} catch (IOException ex) {
-			// systemPrint(IO_ERROR_MSG);
 		} finally {
 			try {
 				if (bufferReader != null) {
@@ -741,21 +743,28 @@ public class Controller {
 		DirectoryDialog dialog = new DirectoryDialog(view.getShell());
 		dialog.setFilterPath("c:\\"); // Windows specific
 		String path = dialog.open();
-		if (path == null) {
-			Keywords.FILENAME_FILEPATH = Keywords.TASK_FILENAME;
-		} else {
-			Keywords.FILENAME_FILEPATH = path + "\\" + Keywords.TASK_FILENAME;
-		}
-
+		
 		try {
-			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.SETTINGS_FILEPATH));
-			bufferWriter.write(Keywords.FILENAME_FILEPATH);
-			// bufferWriter.newLine();
+			if (path != null) {
+				File oldFile = new File(Keywords.filePath);
+				if(oldFile.exists()){
+					oldFile.delete();
+				}
+				Keywords.filePath = path + "\\" + Keywords.TASK_FILENAME;
+			} else {
+				if(Keywords.filePath.equals(Keywords.EMPTY_STRING)){
+					Keywords.filePath = Keywords.currLocation + Keywords.TASK_FILENAME;
+				}
+			}
+			
+			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.settingsPath));
+			bufferWriter.write(Keywords.filePath);
 			bufferWriter.close();
-		} catch (IOException ex) {
+			Logic.updateFile();
+			
+		} catch (Exception ex) {
 			// systemPrint(IO_ERROR_MSG);
 		}
-		Logic.updateFile();
 	}
 	
 	

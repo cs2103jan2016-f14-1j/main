@@ -5,6 +5,8 @@ import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
+import shared.Keywords;
+
 import java.awt.FileDialog;
 import java.util.concurrent.Executor;
 
@@ -22,6 +24,7 @@ public class MainGUI implements NativeKeyListener {
 	
 	private final static String JAR_NAME = "dotdotdot.jar"; 
 	private final static String KEY_NAME = "dotdotdot autorun key"; 
+
 	private boolean keyd = false;
 	private boolean keyctrl = false;
 	private static boolean keyalt = false;
@@ -30,11 +33,16 @@ public class MainGUI implements NativeKeyListener {
 
 	public static void main(String[] args) throws Exception {
 	    
+		Keywords.currLocation = MainGUI.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString();
+		Keywords.currLocation = Keywords.currLocation.replace(Keywords.OLD_FILE_DELIMITER, Keywords.NEW_FILE_DELIMITER);
+		Keywords.currLocation = Keywords.currLocation.substring(Keywords.currLocation.indexOf(Keywords.NEW_FILE_DELIMITER) + 1, Keywords.currLocation.lastIndexOf(Keywords.NEW_FILE_DELIMITER)+1);
 		// Run startup.reg to add preference
-		String value = "\"javaw -jar " + System.getProperty("user.dir") + "\\"+ JAR_NAME +"\"";
+		String value = "\"" + Keywords.currLocation + JAR_NAME +"\"";
 		WinRegistry.writeStringValue(WinRegistry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", KEY_NAME, value);
 		//WinRegistry.deleteValue(WinRegistry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "dotdotdot autorun key");
 		
+		Keywords.settingsPath = Keywords.currLocation + Keywords.settingsPath;
+	    
 		Display display = new Display();
 		Controller controller = new Controller();
 

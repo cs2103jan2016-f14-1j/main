@@ -18,6 +18,8 @@ public class Keywords {
 	public static final String SPACE_STRING = " ";
 	public static final String DELIMITER = "\\|";
 	public static final String STORE_DELIMITER = "|";
+	public static final String NEW_FILE_DELIMITER = "\\";
+	public static final String OLD_FILE_DELIMITER = "/";
 	
 	public static final String MESSAGE_DELETE_SUCCESS = "Task(s) Deleted!";
 	public static final String MESSAGE_ADD_SUCCESS = "Add Successful!";
@@ -47,10 +49,12 @@ public class Keywords {
 	public static final int CONSTANT_YEAR = 2016;
 	public static final int CONSTANT_DATE_BREAK = 32;
 	
-	public static final String SETTINGS_FILEPATH = "settings.ini";
+	
+	public static String settingsPath =  "settings.ini";
 	public static final String TASK_FILENAME = "task.txt";
-	public static String FILENAME_FILEPATH = EMPTY_STRING;
+	public static String filePath = EMPTY_STRING;
 	public static final String LOG_FILEPATH = "log.txt";
+	public static String currLocation = EMPTY_STRING;
 	
 	public static final int TASK_ID = 0;
 	public static final int TASK_DESC = 1;
