@@ -222,9 +222,7 @@ public class Formatter extends Logger {
 				}
 			} else { // checkDate == 0
 				if (!tempDate.isEmpty()) {
-					System.out.println("outer: "+tempDate);
 					if (getDateFromString(tempDate) != null) {
-						System.out.println("inner: "+tempDate);
 						break;
 					}
 					outArray.add(tempDate.trim());
@@ -266,7 +264,7 @@ public class Formatter extends Logger {
 		populateDatetimesArrayList(as);
 		for (String t : breakBySpacedPreposition(s)) {
 			logf("getDateTimes", t);
-			Date d = getDateFromString(t);
+			Date d = getDateFromString(escapeSpecialCharacters(t));
 			if (as.get(Keywords.INDEX_STARTDATE) != null &&
 				as.get(Keywords.INDEX_ENDDATE) != null &&
 				as.get(Keywords.INDEX_STARTTIME) != null &&
@@ -296,6 +294,9 @@ public class Formatter extends Logger {
 			}			
 		}		
 		return as;
+	}
+	private static String escapeSpecialCharacters(String s) {
+		return s.replaceAll("(~)", "\\$1");
 	}
 	private static void populateDatetimesArrayList(ArrayList<Date> as) {
 		for (int i = 0; i < 4; i++) {
