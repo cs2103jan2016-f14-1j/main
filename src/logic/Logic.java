@@ -25,7 +25,7 @@ public class Logic {
 
 	public static Notification addTask(Task task) {
 		Notification n = new AddTask().addTask(task);
-		ArrayList<String> fS = FreeSlots.getFreeSlots(task.getDate());
+		ArrayList<String> fS = FreeSlots.getFreeSlots(task.getIntDate());
 		System.out.println(fS);
 		return n;
 	}
