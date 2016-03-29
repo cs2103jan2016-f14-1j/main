@@ -150,32 +150,17 @@ public class FreeSlots {
 	private static String toTimeString(int startTRange, int endTRange) {
 		String sString = "";
 		String eString = "";
-		if (startTRange >= 1000) {
-			sString = String.format("%dH", startTRange);
+		int sHour = startTRange / 100 == 0 ? 12 : startTRange / 100;
+		if (startTRange < 1200) {
+			sString = String.format("%d:%02dam", sHour, startTRange % 100);
 		} else {
-			if (startTRange >= 100) {
-				sString = String.format("0%dH", startTRange);
-			} else if (startTRange >= 10) {
-				sString = String.format("00%dH", startTRange);
-			} else {
-				sString = String.format("000%dH", startTRange);
-			}
+			sString = String.format("%d:%02dpm", sHour - 12 == 0 ? 12 : sHour - 12, startTRange % 100);
 		}
-		
-		if (startTRange == endTRange) {
-			return sString;
-		}
-		
-		if (endTRange >= 1000) {
-			eString = String.format("%dH", endTRange);
+		int eHour = endTRange / 100 == 0 ? 12 : endTRange / 100;
+		if (endTRange < 1200) {
+			eString = String.format("%d:%02dam", eHour, endTRange % 100);
 		} else {
-			if (endTRange >= 100) {
-				eString = String.format("0%dH", endTRange);
-			} else if (endTRange >= 10) {
-				eString = String.format("00%dH", endTRange);
-			} else {
-				eString = String.format("000%dH", endTRange);
-			}
+			eString = String.format("%d:%02dpm", eHour - 12 == 0 ? 12 : eHour - 12, endTRange % 100);
 		}
 		return sString + " to " + eString;
 	}
