@@ -18,7 +18,7 @@ public class EditTask extends Functionality {
 	 */
 	public Notification editTask(ArrayList<Integer> taskIDs, ArrayList<Date> datetimes , String task, ArrayList<String> categories) {
 		Notification n = new Notification();
-		for(int z = 0 ; z<taskIDs.size(); z++){
+		for(int z = 0 ; z < taskIDs.size(); z++){
 			if (!isValidId(taskIDs.get(z))) {
 				n.setTitle(Keywords.MESSAGE_ERROR);
 				n.setMessage(Keywords.INVALID_ID);

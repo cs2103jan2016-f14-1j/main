@@ -255,9 +255,10 @@ public class Task extends Logger {
 		if (startTime == Keywords.NO_DATE && endTime == Keywords.NO_DATE) {
 			return Keywords.EMPTY_STRING;
 		} else if (endTime == Keywords.NO_DATE) {
-			return String.format("(%s)", startTime);
+			return String.format("(%s)", getHumanReadableTimeFromIntTime(startTime));
 		} else {
-			return String.format("(%s - %s)", startTime, endTime);
+			return String.format("(%s - %s)", getHumanReadableTimeFromIntTime(startTime), 
+					getHumanReadableTimeFromIntTime(endTime));
 		}
 	}
 	private String getDisplayDateRange(String sdate, String edate) {
@@ -280,6 +281,15 @@ public class Task extends Logger {
 			return String.format("- %s", time);
 		} else {
 			return String.format("- %s %s", date, time);
+		}
+		
+	}
+	private String getHumanReadableTimeFromIntTime(int time) {
+		int hour = time / 100 == 0 ? 12 : time / 100;
+		if (time < 1200) {
+			return String.format("%d:%02dam", hour, time % 100);
+		} else {
+			return String.format("%d:%02dpm", hour - 12 == 0 ? 12 : hour - 12, time % 100);
 		}
 		
 	}

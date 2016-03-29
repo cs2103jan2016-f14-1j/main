@@ -8,9 +8,10 @@ public class Sorter {
 	/**
 	 * 
 	 * @param ArrayList<Task>
-	 * @return sorted by intDate attribute, in ascending order
+	 * @return sorted by intStartTime then intDate, in ascending order
 	 */
 	public static ArrayList<Task> sortByDate(ArrayList<Task> at) {
+		Collections.sort(at, (t1, t2) -> t1.getIntStartTime() - t2.getIntStartTime());
 		Collections.sort(at, (t1, t2) -> t1.getIntDate() - t2.getIntDate());
 		return at;
 	}

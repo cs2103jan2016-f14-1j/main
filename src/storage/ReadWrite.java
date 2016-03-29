@@ -20,6 +20,7 @@ public class ReadWrite {
 		BufferedReader bufferReader = null;
 		try {
 			bufferReader = new BufferedReader(new FileReader(Keywords.filePath));
+
 			String currentLine = Keywords.EMPTY_STRING;
 			while ((currentLine = bufferReader.readLine()) != null) {
 				if (currentLine.contains(Keywords.STORE_DELIMITER)) {

@@ -98,7 +98,7 @@ public class Parser {
 
 	private String removeFirstWord(String userInput) {
 		return (!userInput.contains(Keywords.SPACE_STRING)) ? Keywords.EMPTY_STRING
-				: userInput.split(" ", 2)[Keywords.SECOND_ELEMENT].trim();
+				: userInput.split(Keywords.SPACE_STRING, 2)[Keywords.SECOND_ELEMENT].trim();
 	}
 
 	private String getFirstWord(String userInput) {

@@ -203,17 +203,52 @@ public class Formatter extends Logger {
 	 * @return String without commandType and preposition/date
 	 */
 	public static String getTaskNameWithPreposition(String taskName) {
-		String out = Keywords.EMPTY_STRING;
 		ArrayList<String> as = breakString(taskName);
-		for (String s : as) {
-			if (!isPreposition(s) && !isCategory(s)) {
-				out += s + Keywords.SPACE_STRING;
-			} else if (isPreposition(s)) {
-				break;
+		ArrayList<String> outArray = new ArrayList<String>();
+		int checkDate = 0;
+		String tempDate = Keywords.EMPTY_STRING;
+		for (String s : as) {		
+			if (checkDate != 0) {
+				if (isPreposition(s)) {
+					outArray.add(tempDate.trim());
+					checkDate = 2;
+				} else {
+					tempDate += s + Keywords.SPACE_STRING;
+					checkDate--;
+					if (getDateFromString(tempDate) != null) {
+						break;
+					}
+					continue;
+				}
+			} else { // checkDate == 0
+				if (!tempDate.isEmpty()) {
+					if (getDateFromString(tempDate) != null) {
+						break;
+					}
+					outArray.add(tempDate.trim());
+				}
+				tempDate = Keywords.EMPTY_STRING;
 			}
+			if (isPreposition(s)) {
+				checkDate = 2;
+			}
+			outArray.add(s);
 		}
-
+		if (!tempDate.isEmpty() && getDateFromString(tempDate) != null) {
+			removeLastElement(outArray); // removes the previously added preposition
+		}
+		
+		return convertArrayListToString(outArray);
+	}
+	private static String convertArrayListToString(ArrayList<String> as) {
+		String out = Keywords.EMPTY_STRING;
+		for (String s : as) {
+			out += s + Keywords.SPACE_STRING;
+		}
 		return out.trim();
+	}
+	private static void removeLastElement(ArrayList as) {
+		as.remove(as.size() - 1);
 	}
 	
 	public static boolean hasPrepositionOn(String s) {
@@ -229,7 +264,7 @@ public class Formatter extends Logger {
 		populateDatetimesArrayList(as);
 		for (String t : breakBySpacedPreposition(s)) {
 			logf("getDateTimes", t);
-			Date d = getDateFromString(t);
+			Date d = getDateFromString(escapeSpecialCharacters(t));
 			if (as.get(Keywords.INDEX_STARTDATE) != null &&
 				as.get(Keywords.INDEX_ENDDATE) != null &&
 				as.get(Keywords.INDEX_STARTTIME) != null &&
@@ -259,6 +294,9 @@ public class Formatter extends Logger {
 			}			
 		}		
 		return as;
+	}
+	private static String escapeSpecialCharacters(String s) {
+		return s.replaceAll("(~)", "\\$1");
 	}
 	private static void populateDatetimesArrayList(ArrayList<Date> as) {
 		for (int i = 0; i < 4; i++) {
@@ -305,12 +343,10 @@ public class Formatter extends Logger {
 		for (int i = as.size() - 1; i >= 0; i--) {
 			if (!isPreposition(as.get(i))) {
 				answer = as.get(i) + Keywords.EMPTY_STRING + answer;
-				System.out.println(as.get(i));
 			} else {
 				break;
 			}
 		}
-		System.out.println(answer);
 		return answer;
 	}
 	
@@ -320,12 +356,10 @@ public class Formatter extends Logger {
 		ArrayList<String> as = breakString(s);
 		String answer = "";
 		boolean start = false;
-		for (int i = 0 ; i< as.size() ; i++) {
-			
-			if(start){
+		for (int i = 0 ; i < as.size() ; i++) {
+			if (start) {
 				answer += as.get(i) + Keywords.SPACE_STRING;
 			}
-		
 			if (isPreposition(as.get(i))) {
 				start = true;
 			} 

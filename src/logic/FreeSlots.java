@@ -28,12 +28,12 @@ public class FreeSlots {
 	}
 	
 	// assume input is displayDate format e.g. 27Feb, 02Mar
-	public static ArrayList<String> getFreeSlots(String input) {
+	public static ArrayList<String> getFreeSlots(int input) {
 		//initTimeSlot();
 		return compileFreeSlots(input);
 	}
 	
-	private static ArrayList<String> compileFreeSlots(String input) {
+	private static ArrayList<String> compileFreeSlots(int input) {
 		initTimeSlot();
 		freeSlots.clear();
 		filterDateTask(tasks, input);
@@ -53,7 +53,6 @@ public class FreeSlots {
 								ArrayList<Integer> temp = new ArrayList<Integer>(mins.subList(0, startT.getMinutes()));
 								temp.addAll(mins.subList(endT.getMinutes(), mins.size()));
 								mins = temp;
-								System.out.println(temp.toString());
 								timeSlots.replace(i, mins);
 								break;
 							}
@@ -80,11 +79,6 @@ public class FreeSlots {
 								timeSlots.replace(i, mins);
 							}
 						}
-					} else {
-						ArrayList<Integer> mins = timeSlots.get(startT.getHours());
-						mins.clear();
-						mins.add(0); 
-						timeSlots.replace(startT.getHours(), mins);
 					}
 				}
 			}
@@ -186,19 +180,22 @@ public class FreeSlots {
 		return sString + " to " + eString;
 	}
 
-	private static void filterDateTask(ArrayList<Task> tasks, String input) {
+	private static void filterDateTask(ArrayList<Task> tasks, int input) {
+		tasksOnDate.clear();
 		for (Task t : tasks) {
-			// get display date might be buggy/wrong format!
-			if (t.getDate().equalsIgnoreCase(input) && t.getIsCompleted() != Keywords.TASK_COMPLETED) {
-				tasksOnDate.add(t);
+			if (t.getDatetimes().get(3) == null) { // no time range ignore
+				continue;
+			} else if (t.getIntDateEnd() != 999) { // have range of dates
+				if (input > t.getIntDate() && input < t.getIntDateEnd()) {
+					tasksOnDate.add(t);
+				} else {
+					continue;
+				}
+			} else { // start date only
+				if (t.getIntDate() == input && t.getIsCompleted() != Keywords.TASK_COMPLETED) {
+					tasksOnDate.add(t);
+				}
 			}
 		}
 	}
-	
-	/** populate mins arraylist
-	private static void createNewMinList(ArrayList<Integer> mins) {
-		for (int i = 0; i < 60; i++){ 
-			mins.add(i);
-		}
-	} */
 }
