@@ -215,11 +215,16 @@ public class Formatter extends Logger {
 				} else {
 					tempDate += s + Keywords.SPACE_STRING;
 					checkDate--;
+					if (getDateFromString(tempDate) != null) {
+						break;
+					}
 					continue;
 				}
 			} else { // checkDate == 0
 				if (!tempDate.isEmpty()) {
+					System.out.println("outer: "+tempDate);
 					if (getDateFromString(tempDate) != null) {
+						System.out.println("inner: "+tempDate);
 						break;
 					}
 					outArray.add(tempDate.trim());
@@ -350,7 +355,7 @@ public class Formatter extends Logger {
 		ArrayList<String> as = breakString(s);
 		String answer = "";
 		boolean start = false;
-		for (int i = 0 ; i< as.size() ; i++) {
+		for (int i = 0 ; i < as.size() ; i++) {
 			if (start) {
 				answer += as.get(i) + Keywords.SPACE_STRING;
 			}
