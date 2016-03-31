@@ -213,7 +213,9 @@ public class Formatter extends Logger {
 					outArray.add(tempDate.trim());
 					checkDate = 2;
 				} else {
-					tempDate += s + Keywords.SPACE_STRING;
+					if (!isCategory(s)) {
+						tempDate += s + Keywords.SPACE_STRING;
+					}
 					checkDate--;
 					if (getDateFromString(tempDate) != null) {
 						break;
@@ -236,6 +238,8 @@ public class Formatter extends Logger {
 		}
 		if (!tempDate.isEmpty() && getDateFromString(tempDate) != null) {
 			removeLastElement(outArray); // removes the previously added preposition
+		} else if (!tempDate.isEmpty()) {
+			outArray.add(tempDate);
 		}
 		
 		return convertArrayListToString(outArray);
