@@ -20,12 +20,12 @@ public class ParseEdit {
 		ArrayList<String> categories = new ArrayList<String>();
 		ArrayList<String> preposition = new ArrayList<String>();
 				
-		ArrayList<Date> datetimes = Formatter.getDateTimes(tempStr);
+		ArrayList<Date> datetimes = Formatter.getDateTimes(rawInput);
 
 		boolean hasCategory = Formatter.getCategories(categories, inputParts),
 				hasPreposition = Formatter.getPreposition(preposition, inputParts);
 				
-		if (hasCategory && !hasPreposition ) {
+		if (hasCategory && !hasPreposition) {
 			taskName = Formatter.getTaskNameWithCategories(tempStr);
 		} else if (Formatter.getDateFromString(tempStr) == null){
 			taskName = tempStr;

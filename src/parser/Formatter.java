@@ -242,12 +242,14 @@ public class Formatter extends Logger {
 			outArray.add(tempDate);
 		}
 		
-		return convertArrayListToString(outArray);
+		return convertArrayListToStringWithoutCategories(outArray);
 	}
-	private static String convertArrayListToString(ArrayList<String> as) {
+	private static String convertArrayListToStringWithoutCategories(ArrayList<String> as) {
 		String out = Keywords.EMPTY_STRING;
 		for (String s : as) {
-			out += s + Keywords.SPACE_STRING;
+			if (!s.matches(Keywords.REGEX_CATEGORIES)) {
+				out += s + Keywords.SPACE_STRING;
+			}
 		}
 		return out.trim();
 	}
