@@ -262,9 +262,9 @@ public class Formatter extends Logger {
 	public static ArrayList<Date> getDateTimes(String s) {
 		ArrayList<Date> as = new ArrayList<Date>();
 		populateDatetimesArrayList(as);
-		for (String t : breakBySpacedPreposition(s)) {
+		for (String t : breakBySpacedPrepositionWithoutFirstElement(s)) {
 			logf("getDateTimes", t);
-			Date d = getDateFromString(escapeSpecialCharacters(t));
+			Date d = getDateFromString(handleSpecialCharacters(t));
 			if (as.get(Keywords.INDEX_STARTDATE) != null &&
 				as.get(Keywords.INDEX_ENDDATE) != null &&
 				as.get(Keywords.INDEX_STARTTIME) != null &&
@@ -295,6 +295,10 @@ public class Formatter extends Logger {
 		}		
 		return as;
 	}
+	private static String handleSpecialCharacters(String s) {
+		String out = s.replaceAll("#[\\S]*[\\s]{0,1}", Keywords.EMPTY_STRING);
+		return escapeSpecialCharacters(out);
+	}
 	private static String escapeSpecialCharacters(String s) {
 		return s.replaceAll("(~)", "\\$1");
 	}
@@ -307,8 +311,11 @@ public class Formatter extends Logger {
 		return s.toLowerCase().matches(Keywords.REGEX_MONTH_EXIST);
 	}
 	
-	private static String[] breakBySpacedPreposition(String s) {
-		return s.split(Keywords.REGEX_PREPOSITIONS_WITH_SPACE);
+	private static ArrayList<String> breakBySpacedPrepositionWithoutFirstElement(String s) {
+		ArrayList<String> as = new ArrayList<String>(
+				Arrays.asList(s.split(Keywords.REGEX_PREPOSITIONS_WITH_SPACE)));
+		as.remove(Keywords.FIRST_ELEMENT);
+		return as;
 	}
 	public static Date getDateFromString(String s) {
 		List<Date> parse = new PrettyTimeParser().parse(s);
