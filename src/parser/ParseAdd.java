@@ -11,6 +11,7 @@ import org.ocpsoft.prettytime.nlp.parse.DateGroup;
 
 public class ParseAdd extends Logger {
 
+	private static Task task;
 	public static Notification addTask(String rawInput) {
 	
 		String 	taskName = rawInput, 
@@ -29,9 +30,13 @@ public class ParseAdd extends Logger {
 			//prep = getFirstElementInArrayList(preposition);
 		}
 	
-		Task task = new Task(datetimes, taskName, categories); 
+		task = new Task(datetimes, taskName, categories); 
 		
 		return Logic.addTask(task);
 	}
-
+	
+	//for JUnit Test
+	public static Task getTask(){
+		return task;
+	}
 }

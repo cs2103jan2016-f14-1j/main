@@ -293,4 +293,23 @@ public class Task extends Logger {
 		}
 		
 	}
+	
+	//For JUnit Testing Purposes
+	public boolean like(Task b){
+		boolean isCat = true, isDate=true;
+		for(String cat: b.getCategories()){
+			if(!categories.contains(cat)){
+				isCat = false;
+				break;
+			}
+		}
+		
+		for(Date d:b.getDatetimes()){
+			if(!datetimes.contains(d)){
+				isDate = false;
+				break;
+			}
+		}
+		return (this.date.equals(b.getDate()) && this.task.equals(b.getTask())&& this.intDate == b.getIntDate() && isCat && isDate)? true: false; 
+	}
 }

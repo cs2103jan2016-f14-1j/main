@@ -32,7 +32,6 @@ public class MainGUI implements NativeKeyListener {
 	private static Shell shell;
 
 	public static void main(String[] args) throws Exception {
-	    
 		Keywords.currLocation = MainGUI.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString();
 		Keywords.currLocation = Keywords.currLocation.replace(Keywords.OLD_FILE_DELIMITER, Keywords.NEW_FILE_DELIMITER);
 		Keywords.currLocation = Keywords.currLocation.substring(Keywords.currLocation.indexOf(Keywords.NEW_FILE_DELIMITER) + 1, Keywords.currLocation.lastIndexOf(Keywords.NEW_FILE_DELIMITER)+1);
