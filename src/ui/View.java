@@ -119,7 +119,7 @@ public class View extends Logger{
 	        	invisibleButton.forceFocus();
 	        }
 	    });
-		
+	
 		input = new StyledText(shell, SWT.NONE);
 		input.setFont(normalFont);
 		input.setTopMargin(8);

@@ -161,6 +161,8 @@ public class Controller {
 		view.getCategoryTable().addListener(SWT.EraseItem, new Listener() {
 			public void handleEvent(Event event) {
 				event.detail &= ~SWT.FOREGROUND;
+				// MouseOver:
+				event.detail &= ~SWT.HOT;
 			}
 		});
 
@@ -172,7 +174,7 @@ public class Controller {
 		list = Sorter.sortByDate(list);
 		TableItem mainItem;
 		putIntoDays.clear();
-
+		
 		final TableItem firstItem = new TableItem(view.getMainTable(), SWT.NONE);
 		firstItem.setText(OVERDUE);
 		firstItem.setFont(View.headingFont);
@@ -308,6 +310,8 @@ public class Controller {
 			view.getMainTable().removeListener(SWT.PaintItem, paintListener);
 		}
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+		mainItem.setText("                                                                                                  ");
+		
 		boolean thirdItem = false;
 
 		for (String day : days) {
@@ -323,7 +327,7 @@ public class Controller {
 					mainItem.setForeground(View.missingColor);
 				}
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-
+				
 			} else if (day.equals(TOMORROW)) {
 
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
@@ -335,7 +339,7 @@ public class Controller {
 					mainItem.setForeground(View.missingColor);
 				}
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-
+				
 			} else if (thirdItem) {
 
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
@@ -356,15 +360,15 @@ public class Controller {
 
 		}
 
-		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+		mainItem = new TableItem(view.getMainTable(), SWT.NONE);	
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 		mainItem.setText(OTHERS);
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);
 		if (!insertIntoTable(OTHERS, false)) {
 			mainItem.setForeground(View.missingColor);
-		}
-
+		}	
+		
 	}
 
 	private void displayHelp(LinkedList<String> items) {
