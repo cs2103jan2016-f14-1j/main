@@ -45,7 +45,7 @@ public class Keywords {
 	public static final int YES = 1;
 	public static final int NO = 0;
 	
-	public static final int NO_DATE = 999;
+	public static final int NO_DATE = 9999;
 	public static final int CONSTANT_YEAR = 2016;
 	public static final int CONSTANT_DATE_BREAK = 32;
 	

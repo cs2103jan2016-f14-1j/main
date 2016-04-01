@@ -204,13 +204,23 @@ public class Task extends Logger {
 		for (String s : task.getCategories()) {
 			cats += s + Keywords.SPACE_STRING;
 		}
+		String stime, etime;
+		stime = convertToTimeStringWithPrependedZeroes(task.getIntStartTime());
+		etime = convertToTimeStringWithPrependedZeroes(task.getIntEndTime());
 		String toString = String.format(Keywords.STORAGE_FORMAT, task.getId(), 
 				task.getTask(), task.getIntDate(), task.getIntDateEnd(),
-				task.getIntStartTime(), task.getIntEndTime(),
+				stime, etime,
 				cats, task.getIsCompleted(), task.getPriority());
 		return toString;
 	}
-	
+	private static String convertToTimeStringWithPrependedZeroes(int time) {
+		if (time < 100) {
+			return String.format("00%d", time); 
+		} else if (time < 1000) {
+			return String.format("0%d", time); 
+		}
+		return String.format("%d", time); 
+	}
 	public void setStartTime(Date d) {
 		datetimes.set(Keywords.INDEX_STARTTIME, d);
 	}
