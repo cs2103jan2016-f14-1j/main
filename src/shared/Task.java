@@ -214,12 +214,7 @@ public class Task extends Logger {
 		return toString;
 	}
 	private static String convertToTimeStringWithPrependedZeroes(int time) {
-		if (time < 100) {
-			return String.format("00%d", time); 
-		} else if (time < 1000) {
-			return String.format("0%d", time); 
-		}
-		return String.format("%d", time); 
+		return String.format("%04d", time); 
 	}
 	public void setStartTime(Date d) {
 		datetimes.set(Keywords.INDEX_STARTTIME, d);
