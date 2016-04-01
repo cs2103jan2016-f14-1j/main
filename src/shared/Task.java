@@ -200,18 +200,21 @@ public class Task extends Logger {
 	 * @return
 	 */
 	public static String formatObjectToString(Task task) {
-		String cats = Keywords.EMPTY_STRING;
-		for (String s : task.getCategories()) {
-			cats += s + Keywords.SPACE_STRING;
-		}
-		String stime, etime;
-		stime = convertToTimeStringWithPrependedZeroes(task.getIntStartTime());
-		etime = convertToTimeStringWithPrependedZeroes(task.getIntEndTime());
+		String cats = convertToCategoriesString(task.getCategories());
+		String stime = convertToTimeStringWithPrependedZeroes(task.getIntStartTime());
+		String etime = convertToTimeStringWithPrependedZeroes(task.getIntEndTime());
 		String toString = String.format(Keywords.STORAGE_FORMAT, task.getId(), 
 				task.getTask(), task.getIntDate(), task.getIntDateEnd(),
 				stime, etime,
 				cats, task.getIsCompleted(), task.getPriority());
 		return toString;
+	}
+	private static String convertToCategoriesString(ArrayList<String> as) {
+		String cats = Keywords.EMPTY_STRING;
+		for (String s : as) {
+			cats += s + Keywords.SPACE_STRING;
+		}
+		return cats;
 	}
 	private static String convertToTimeStringWithPrependedZeroes(int time) {
 		return String.format("%04d", time); 
