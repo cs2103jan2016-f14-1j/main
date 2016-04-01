@@ -693,7 +693,7 @@ public class Controller {
 						textLayout.setText(text);
 						
 						TextStyle styleDescription = new TextStyle(View.normalFont, null, null);
-						TextStyle styleDate = new TextStyle(View.normalFont, View.redColor, null);
+						TextStyle styleDate = new TextStyle(View.normalFont, View.dateColor, null);
 						
 						if(tempArrList.get(i).getDatetimes().get(0)!= null){
 							int seperatingIndex = whiteSpaces.length() + tempArrList.get(i).getUserFormatNoDate().length();
