@@ -107,9 +107,6 @@ public class Controller {
 		view.getTimeLabel().setText(getCurrentTime());
 		
 		readFileLocation();
-		if (Keywords.filePath.equals(Keywords.EMPTY_STRING)) {
-			writePathToFile();
-		}
 
 		parser = parser.getInstance();
 		logic = logic.getInstance();
@@ -746,28 +743,20 @@ public class Controller {
 		
 		try {
 			if (path != null) {
-				File oldFile = new File(Keywords.filePath);
-				if(oldFile.exists()){
-					oldFile.delete();
-				}
+				
 				Keywords.filePath = path + "\\" + Keywords.TASK_FILENAME;
-			} else {
-				if(Keywords.filePath.equals(Keywords.EMPTY_STRING)){
-					Keywords.filePath = Keywords.currLocation + Keywords.TASK_FILENAME;
-				}
-			}
 			
-			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.settingsPath));
-			bufferWriter.write(Keywords.filePath);
-			bufferWriter.close();
+				BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.settingsPath));
+				bufferWriter.write(Keywords.filePath);
+				bufferWriter.close();
+				
+				File currFile = new File(Keywords.filePath);
 			
-			File currFile = new File(Keywords.filePath);
-		
-			Logic.updateFile(currFile.exists());
+				Logic.updateFile(currFile.exists());
 			
-			if(parser != null && storage != null && logic !=null){
 				displayCategory();
 				displayList(Logic.getUncompletedTasks());		
+			
 			}
 			
 		} catch (Exception ex) {
