@@ -76,8 +76,12 @@ public class Logic {
 		return new ViewHelp().viewHelp();
 	}
 	
-	public static void updateFile(){
-		Storage.writeTasksToFile();
+	public static void updateFile(boolean fileExists){
+		if(fileExists){
+			Storage.readTasksFromFile();
+		} else {
+			Storage.writeTasksToFile();
+		}
 	}
 	
 	public static ArrayList<String> getCatNames(){

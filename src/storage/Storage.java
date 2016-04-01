@@ -113,6 +113,7 @@ public class Storage {
 	}
 
 	public static void readTasksFromFile() {
+		tasks.clear();
 		ReadWrite.readTasksFromFile(tasks);
 	}
 

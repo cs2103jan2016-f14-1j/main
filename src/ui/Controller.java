@@ -760,7 +760,15 @@ public class Controller {
 			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.settingsPath));
 			bufferWriter.write(Keywords.filePath);
 			bufferWriter.close();
-			Logic.updateFile();
+			
+			File currFile = new File(Keywords.filePath);
+		
+			Logic.updateFile(currFile.exists());
+			
+			if(parser != null && storage != null && logic !=null){
+				displayCategory();
+				displayList(Logic.getUncompletedTasks());		
+			}
 			
 		} catch (Exception ex) {
 			// systemPrint(IO_ERROR_MSG);
