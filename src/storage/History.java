@@ -29,6 +29,12 @@ public class History {
 		return actionList.poll();
 	}
 	
+	protected static ArrayList<Task> getLastTasksNoRemove(){
+		if(historyList.isEmpty()){
+			return null;
+		}
+		return historyList.peek();
+	}
 	
 	protected static void addActionToHistory(ArrayList<Task> t, String action){
 		historyList.addFirst(t);

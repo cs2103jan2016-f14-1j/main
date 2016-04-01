@@ -112,8 +112,8 @@ public class Controller {
 		logic = logic.getInstance();
 		storage = storage.getInstance();
 		
-		displayCategory();
 		displayList(Logic.getUncompletedTasks());
+		displayCategory();
 	}
 
 	private void displayNotification(Notification notify) {
@@ -128,9 +128,20 @@ public class Controller {
 		TableItem categoryItem;
 
 		ArrayList<String> categories = Logic.getListOfCatWithCount();
+	
 		for (int i = 0; i < categories.size(); i++) {
 			categoryItem = new TableItem(view.getCategoryTable(), SWT.NONE);
 			categoryItem.setText(categories.get(i));
+			for(int z =0 ; z < ViewTask.getCategories().size() ; z++){
+				
+				String compareCategory = categories.get(i);
+				compareCategory = compareCategory.substring(0, compareCategory.indexOf(Keywords.SPACE_STRING));
+				
+				if(ViewTask.getCategories().get(z).equals(compareCategory)){
+					categoryItem.setBackground(View.newColor);
+					break;
+				}
+			}
 		}
 
 		final TextLayout textLayout = new TextLayout(Display.getCurrent());
@@ -477,8 +488,7 @@ public class Controller {
 						// SWT.CR : when "ENTER" key is pressed
 						inputToHint();
 						Object result = parser.parse(tempInput);
-						displayCategory();
-	
+						
 						try {
 							if (result instanceof LinkedList<?>) {
 								displayHelp((LinkedList<String>)result);
@@ -495,6 +505,7 @@ public class Controller {
 							e.printStackTrace();
 						}
 						
+						displayCategory();
 						
 					}
 					view.getPopupShell().setVisible(false);
@@ -645,7 +656,11 @@ public class Controller {
 				headerItem.setFont(View.normalFont);
 				headerItem.setForeground(View.orangeColor);
 			}
+			
 			ArrayList<Task> tempArrList = putIntoDays.get(key);
+	
+			ArrayList<Task> lastTasks = Logic.getLastTasks();
+			
 			for (int i = 0; i < tempArrList.size(); i++) {
 				final TableItem mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				String whiteSpaces = "";
@@ -653,44 +668,56 @@ public class Controller {
 					mainItem.setData(object);
 					whiteSpaces = "      ";
 				}
-
-				if (week) {
-					mainItem.setText(whiteSpaces + tempArrList.get(i).getUserFormatNoDate());
-				} else {
-					
-					final TextLayout textLayout = new TextLayout(Display.getCurrent());  
-					String text = whiteSpaces + tempArrList.get(i).getUserFormat();
-					textLayout.setText(text);
-					
-					TextStyle styleDescription = new TextStyle(View.normalFont, null, null);
-					TextStyle styleDate = new TextStyle(View.normalFont, View.redColor, null);
-					
-					if(tempArrList.get(i).getDatetimes().get(0)!= null){
-						int seperatingIndex = whiteSpaces.length() + tempArrList.get(i).getUserFormatNoDate().length();
-						textLayout.setStyle(styleDescription, 0, seperatingIndex);
-						textLayout.setStyle(styleDate, seperatingIndex + 3, text.length());
-					} else {
-						textLayout.setStyle(styleDescription, 0, text.length());
+				
+				if(lastTasks != null){
+					for(int k =0; k< lastTasks.size(); k++){
+						if(lastTasks.get(k).getId() == tempArrList.get(i).getId()){
+							mainItem.setBackground(View.newColor);
+							mainItem.setFont(View.boldFont);
+						}
 					}
-					
-					view.getMainTable().addListener(SWT.PaintItem, new Listener() {
-					      public void handleEvent(Event event) {
-					    	  if(event.item.equals(mainItem)){
-					    		  textLayout.draw(event.gc, event.x, event.y);
-					    	  }
-					      }
-					});
-					
-					final Rectangle textLayoutBounds = textLayout.getBounds();
-					    view.getMainTable().addListener(SWT.MeasureItem, new Listener() {
-					      public void handleEvent(Event e) {
-					    	  if(e.item.equals(mainItem)){
-						        e.width = textLayoutBounds.width + 2;
-						        e.height = textLayoutBounds.height + 2;
-					    	  }
-					      }
-					});
 				}
+				
+					if (week) {
+						
+						mainItem.setText(whiteSpaces + tempArrList.get(i).getUserFormatNoDate());
+						
+					} else {
+						
+						final TextLayout textLayout = new TextLayout(Display.getCurrent());  
+						String text = whiteSpaces + tempArrList.get(i).getUserFormat();
+						textLayout.setText(text);
+						
+						TextStyle styleDescription = new TextStyle(View.normalFont, null, null);
+						TextStyle styleDate = new TextStyle(View.normalFont, View.redColor, null);
+						
+						if(tempArrList.get(i).getDatetimes().get(0)!= null){
+							int seperatingIndex = whiteSpaces.length() + tempArrList.get(i).getUserFormatNoDate().length();
+							textLayout.setStyle(styleDescription, 0, seperatingIndex);
+							textLayout.setStyle(styleDate, seperatingIndex + 3, text.length());
+						} else {
+							textLayout.setStyle(styleDescription, 0, text.length());
+						}
+						
+						view.getMainTable().addListener(SWT.PaintItem, new Listener() {
+						      public void handleEvent(Event event) {
+						    	  if(event.item.equals(mainItem)){
+						    		  textLayout.draw(event.gc, event.x, event.y);
+						    	  }
+						      }
+						});
+						
+						final Rectangle textLayoutBounds = textLayout.getBounds();
+						    view.getMainTable().addListener(SWT.MeasureItem, new Listener() {
+						      public void handleEvent(Event e) {
+						    	  if(e.item.equals(mainItem)){
+							        e.width = textLayoutBounds.width + 2;
+							        e.height = textLayoutBounds.height + 2;
+						    	  }
+						      }
+						});
+					}
+				
 			}
 			return true;
 		}
@@ -754,8 +781,8 @@ public class Controller {
 			
 				Logic.updateFile(currFile.exists());
 			
+				displayList(Logic.getUncompletedTasks());
 				displayCategory();
-				displayList(Logic.getUncompletedTasks());		
 			
 			}
 			
