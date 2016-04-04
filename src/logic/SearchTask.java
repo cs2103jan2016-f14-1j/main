@@ -30,9 +30,9 @@ public class SearchTask extends Functionality {
 		if (result.size() == 0) {
 			setNTitle("Search Success!");
 			setNMessage("No results found!");
-		}else{
+		} else {
 			setNTitle("Search Success!");
-			setNMessage("Results found: "+result.size());
+			setNMessage("Results found: " + result.size());
 		}
 		ArrayList<Object> combined = new ArrayList<Object>();
 		combined.add(getNotification());
@@ -43,15 +43,17 @@ public class SearchTask extends Functionality {
 	private ArrayList<Task> filterWords(ArrayList<Task> list, String words) {
 		ArrayList<Task> temp = new ArrayList<Task>();
 		for (Task t : list) {
-			if (t.getTask().contains(words)) {
+			for(String word : words.split(Keywords.SPACE_STRING)){
+			if (t.getTask().contains(word)) {
 				temp.add(t);
 			} else if (!t.getCategories().isEmpty()) {
 				for (String cat : t.getCategories()) {
-					if (cat.contains(words)) {
+					if (cat.contains(word)) {
 						temp.add(t);
 						break;
 					}
 				}
+			}
 			}
 		}
 		return temp;
