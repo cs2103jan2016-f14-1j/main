@@ -24,7 +24,7 @@ public class SearchTask extends Functionality {
 			if(freeSlots.isEmpty()){
 				freeSlots.add("Whole day is free");
 			}
-			results.put("freeslots", freeSlots);
+			results.put("free", freeSlots);
 		}
 
 		if (!categories.isEmpty()) {

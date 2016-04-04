@@ -899,7 +899,10 @@ public class Controller {
 	public void displaySearch(HashMap<String,Object> items, String tempInput){
 		view.getMainTable().removeAll();
 		ArrayList<Task> tasks = (ArrayList<Task>)items.get("Tasks");
-		ArrayList<String> freeSlots = (ArrayList<String>) items.get("freeslots");
+		ArrayList<String> freeSlots=new ArrayList<String>();
+		if(items.get("free")!=null){
+			freeSlots = (ArrayList<String>) items.get("free");
+		}
 		tasks = Sorter.sortByDate(tasks);
 		TableItem mainItem = new TableItem(view.getMainTable(),SWT.NONE);
 		mainItem.setText("Search Results : " + parser.removeFirstWord(tempInput));
