@@ -179,9 +179,10 @@ public class SymSpell
     }
 
     //create a frequency dictionary from a corpus
-    public static void CreateDictionary(String corpus, String language)
+    public static void CreateDictionary(File corpus, String language)
     {
-    	File f = new File(corpus);
+    	//File f = new File(corpus);
+		File f = corpus;
         if(!(f.exists() && !f.isDirectory()))
         {
             System.out.println("File not found: " + corpus);
@@ -432,34 +433,6 @@ public class SymSpell
         return temp;
        // if (verbose !=0) System.out.println(suggestions.size() + " suggestions");
        // System.out.println("done");
-    }
-
-    private static void ReadFromStdIn()
-    {
-        String word;
-        BufferedReader br =  new BufferedReader(new InputStreamReader(System.in));
-        try {
-			while ((word = br.readLine())!=null)
-			{
-			    Correct(word,"");
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-
-    public static void main(String[] args)
-    {
-
-        //Create the dictionary from a sample corpus
-        //e.g. http://norvig.com/big.txt , or any other large text corpus
-        //The dictionary may contain vocabulary from different languages. 
-        //If you use mixed vocabulary use the language parameter in Correct() and CreateDictionary() accordingly.
-        //You may use CreateDictionaryEntry() to update a (self learning) dictionary incrementally
-        //To extend spelling correction beyond single words to phrases (e.g. correcting "unitedkingom" to "united kingdom") simply add those phrases with CreateDictionaryEntry().
-        CreateDictionary("dictionary","");
-        ReadFromStdIn();
     }
 
     // Damerau–Levenshtein distance algorithm and code 

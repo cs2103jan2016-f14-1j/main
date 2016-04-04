@@ -1,5 +1,6 @@
 package logic;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -53,10 +54,10 @@ public class SearchTask extends Functionality {
 	String replace="Do you mean:";
 	private ArrayList<Task> filterWords(ArrayList<Task> list, String words) {
 		ArrayList<Task> temp = new ArrayList<Task>();
-		SymSpell.CreateDictionary("dictionary", "");
+		File f = new File(getClass().getResource("/storage/dictionary").getFile());
+		SymSpell.CreateDictionary(f, "");
 		for (Task t : list) {
 			for (String word : words.split(Keywords.SPACE_STRING)) {
-				// SymSpell ss = new SymSpell();
 				ArrayList<String> result = SymSpell.Correct(word, "");
 				for (String wor : result) {
 					if (t.getTask().contains(wor)) {
