@@ -66,12 +66,16 @@ public class SearchTask extends Functionality {
 						if(wor!=word && !replace.contains(wor)){
 							replace.add(wor);
 						}
-						temp.add(t);
+						if(!temp.contains(t)){
+							temp.add(t);
+						}
 						break;
 					} else if (!t.getCategories().isEmpty()) {
 						for (String cat : t.getCategories()) {
 							if (cat.contains(wor)||cat.contains(word)) {
-								temp.add(t);
+								if(!temp.contains(t)){
+									temp.add(t);
+								}
 								break;
 							}
 						}
