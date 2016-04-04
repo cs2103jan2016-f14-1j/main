@@ -33,6 +33,7 @@ public class FreeSlots {
 		return convertToArrayListString(compileFreeSlots(input));
 	}
 	private static ArrayList<String> convertToArrayListString(ArrayList<IntegerPair> aip) {
+		//System.out.println(aip.isEmpty()==true);
 		ArrayList<String> as = new ArrayList<String>();
 		for (IntegerPair ip : aip) {
 			as.add(toTimeString(ip.getInt1(), ip.getInt2()));
@@ -116,13 +117,11 @@ public class FreeSlots {
 						}
 						continue;
 					} else {
+						if (timeSlots.get(key).get(0) != 0) {
+							freeSlots.add(new IntegerPair(startTRange, endTRange));
+							startTRange = (key * 100) + timeSlots.get(key).get(0);
+						}
 						for (int i = 0; i < totalMinSize-1; i++) {
-							if (timeSlots.get(key).get(i) != 0) {
-								endTRange = (key * 100);
-								freeSlots.add(new IntegerPair(startTRange, endTRange));
-								startTRange = (key * 100) + timeSlots.get(key).get(i);
-								continue;
-							}
 							if (timeSlots.get(key).get(i)+1 != timeSlots.get(key).get(i+1)) {
 								freeSlots.add(new IntegerPair(startTRange, endTRange+1));
 								startTRange = (key * 100) + timeSlots.get(key).get(i+1);
@@ -184,7 +183,7 @@ public class FreeSlots {
 		for (Task t : tasks) {
 			if (t.getDatetimes().get(3) == null) { // no time range ignore
 				continue;
-			} else if (t.getIntDateEnd() != 999) { // have range of dates
+			} else if (t.getIntDateEnd() != 9999) { // have range of dates
 				if (input > t.getIntDate() && input < t.getIntDateEnd()) {
 					tasksOnDate.add(t);
 				} else {
