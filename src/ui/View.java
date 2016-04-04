@@ -35,8 +35,9 @@ public class View extends Logger{
 	protected final static Color orangeColor = new Color (Display.getCurrent(), 255, 116, 23);
 	protected final static Color missingColor =Display.getDefault().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
 	protected final static Color whiteColor = Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
-	protected final static Color redColor = Display.getDefault().getSystemColor(SWT.COLOR_RED);
-	protected final static Color blackGrayColor = new Color (Display.getCurrent(), 246, 246, 246);
+	protected final static Color dateColor =  new Color(Display.getCurrent(), 0, 0, 132);
+	protected final static Color blackGrayColor = new Color(Display.getCurrent(), 246, 246, 246);
+	protected final static Color newColor = new Color(Display.getCurrent(), 255,255,153);
 	
 	protected final static Font normalFont = SWTResourceManager.getFont("Trebuchet MS", 9, SWT.NORMAL);
 	protected final static Font boldFont = SWTResourceManager.getFont("Trebuchet MS", 9, SWT.BOLD);
@@ -118,7 +119,7 @@ public class View extends Logger{
 	        	invisibleButton.forceFocus();
 	        }
 	    });
-		
+	
 		input = new StyledText(shell, SWT.NONE);
 		input.setFont(normalFont);
 		input.setTopMargin(8);

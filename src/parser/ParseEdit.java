@@ -9,14 +9,18 @@ import shared.Keywords;
 import shared.Task;
 
 public class ParseEdit {
+	
+	private static ArrayList<Integer> ids = new ArrayList<Integer>() ;
+	
 	public static Notification editTask(String rawInput) {
 		
+		ids.clear();
 		String tempStr = Formatter.getAfterFirstPrep(rawInput);
 		String taskName = Keywords.EMPTY_STRING, 
 				prep = Keywords.EMPTY_STRING;
 		ArrayList<String> inputParts = Formatter.breakString(tempStr);
 		
-		ArrayList<Integer> ids = Formatter.breakToIds(rawInput);
+		ids = Formatter.breakToIds(rawInput);
 		ArrayList<String> categories = new ArrayList<String>();
 		ArrayList<String> preposition = new ArrayList<String>();
 				
@@ -34,5 +38,9 @@ public class ParseEdit {
 		}
 	
 		return Logic.editTask(ids, datetimes, taskName, categories);
+	}
+	
+	public static ArrayList<Integer> returnIds(){
+		return ids;
 	}
 }

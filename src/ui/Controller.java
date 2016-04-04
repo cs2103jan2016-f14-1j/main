@@ -107,16 +107,13 @@ public class Controller {
 		view.getTimeLabel().setText(getCurrentTime());
 		
 		readFileLocation();
-		if (Keywords.filePath.equals(Keywords.EMPTY_STRING)) {
-			writePathToFile();
-		}
 
 		parser = parser.getInstance();
 		logic = logic.getInstance();
 		storage = storage.getInstance();
 		
-		displayCategory();
 		displayList(Logic.getUncompletedTasks());
+		displayCategory();
 	}
 
 	private void displayNotification(Notification notify) {
@@ -131,9 +128,20 @@ public class Controller {
 		TableItem categoryItem;
 
 		ArrayList<String> categories = Logic.getListOfCatWithCount();
+	
 		for (int i = 0; i < categories.size(); i++) {
 			categoryItem = new TableItem(view.getCategoryTable(), SWT.NONE);
 			categoryItem.setText(categories.get(i));
+			for(int z =0 ; z < ViewTask.getCategories().size() ; z++){
+				
+				String compareCategory = categories.get(i);
+				compareCategory = compareCategory.substring(0, compareCategory.indexOf(Keywords.SPACE_STRING));
+				
+				if(ViewTask.getCategories().get(z).equals(compareCategory)){
+					categoryItem.setBackground(View.newColor);
+					break;
+				}
+			}
 		}
 
 		final TextLayout textLayout = new TextLayout(Display.getCurrent());
@@ -153,6 +161,8 @@ public class Controller {
 		view.getCategoryTable().addListener(SWT.EraseItem, new Listener() {
 			public void handleEvent(Event event) {
 				event.detail &= ~SWT.FOREGROUND;
+				// MouseOver:
+				event.detail &= ~SWT.HOT;
 			}
 		});
 
@@ -164,7 +174,7 @@ public class Controller {
 		list = Sorter.sortByDate(list);
 		TableItem mainItem;
 		putIntoDays.clear();
-
+		
 		final TableItem firstItem = new TableItem(view.getMainTable(), SWT.NONE);
 		firstItem.setText(OVERDUE);
 		firstItem.setFont(View.headingFont);
@@ -300,6 +310,8 @@ public class Controller {
 			view.getMainTable().removeListener(SWT.PaintItem, paintListener);
 		}
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+		mainItem.setText("                                                                                                  ");
+		
 		boolean thirdItem = false;
 
 		for (String day : days) {
@@ -315,7 +327,7 @@ public class Controller {
 					mainItem.setForeground(View.missingColor);
 				}
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-
+				
 			} else if (day.equals(TOMORROW)) {
 
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
@@ -327,7 +339,7 @@ public class Controller {
 					mainItem.setForeground(View.missingColor);
 				}
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-
+				
 			} else if (thirdItem) {
 
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
@@ -348,15 +360,15 @@ public class Controller {
 
 		}
 
-		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+		mainItem = new TableItem(view.getMainTable(), SWT.NONE);	
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 		mainItem.setText(OTHERS);
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);
 		if (!insertIntoTable(OTHERS, false)) {
 			mainItem.setForeground(View.missingColor);
-		}
-
+		}	
+		
 	}
 
 	private void displayHelp(LinkedList<String> items) {
@@ -480,8 +492,7 @@ public class Controller {
 						// SWT.CR : when "ENTER" key is pressed
 						inputToHint();
 						Object result = parser.parse(tempInput);
-						displayCategory();
-	
+						
 						try {
 							if (result instanceof LinkedList<?>) {
 								displayHelp((LinkedList<String>)result);
@@ -498,6 +509,7 @@ public class Controller {
 							e.printStackTrace();
 						}
 						
+						displayCategory();
 						
 					}
 					view.getPopupShell().setVisible(false);
@@ -648,7 +660,11 @@ public class Controller {
 				headerItem.setFont(View.normalFont);
 				headerItem.setForeground(View.orangeColor);
 			}
+			
 			ArrayList<Task> tempArrList = putIntoDays.get(key);
+	
+			ArrayList<Task> lastTasks = Logic.getLastTasks();
+			
 			for (int i = 0; i < tempArrList.size(); i++) {
 				final TableItem mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				String whiteSpaces = "";
@@ -656,44 +672,56 @@ public class Controller {
 					mainItem.setData(object);
 					whiteSpaces = "      ";
 				}
-
-				if (week) {
-					mainItem.setText(whiteSpaces + tempArrList.get(i).getUserFormatNoDate());
-				} else {
-					
-					final TextLayout textLayout = new TextLayout(Display.getCurrent());  
-					String text = whiteSpaces + tempArrList.get(i).getUserFormat();
-					textLayout.setText(text);
-					
-					TextStyle styleDescription = new TextStyle(View.normalFont, null, null);
-					TextStyle styleDate = new TextStyle(View.normalFont, View.redColor, null);
-					
-					if(tempArrList.get(i).getDatetimes().get(0)!= null){
-						int seperatingIndex = whiteSpaces.length() + tempArrList.get(i).getUserFormatNoDate().length();
-						textLayout.setStyle(styleDescription, 0, seperatingIndex);
-						textLayout.setStyle(styleDate, seperatingIndex + 3, text.length());
-					} else {
-						textLayout.setStyle(styleDescription, 0, text.length());
+				
+				if(lastTasks != null){
+					for(int k =0; k< lastTasks.size(); k++){
+						if(lastTasks.get(k).getId() == tempArrList.get(i).getId()){
+							mainItem.setBackground(View.newColor);
+							mainItem.setFont(View.boldFont);
+						}
 					}
-					
-					view.getMainTable().addListener(SWT.PaintItem, new Listener() {
-					      public void handleEvent(Event event) {
-					    	  if(event.item.equals(mainItem)){
-					    		  textLayout.draw(event.gc, event.x, event.y);
-					    	  }
-					      }
-					});
-					
-					final Rectangle textLayoutBounds = textLayout.getBounds();
-					    view.getMainTable().addListener(SWT.MeasureItem, new Listener() {
-					      public void handleEvent(Event e) {
-					    	  if(e.item.equals(mainItem)){
-						        e.width = textLayoutBounds.width + 2;
-						        e.height = textLayoutBounds.height + 2;
-					    	  }
-					      }
-					});
 				}
+				
+					if (week) {
+						
+						mainItem.setText(whiteSpaces + tempArrList.get(i).getUserFormatNoDate());
+						
+					} else {
+						
+						final TextLayout textLayout = new TextLayout(Display.getCurrent());  
+						String text = whiteSpaces + tempArrList.get(i).getUserFormat();
+						textLayout.setText(text);
+						
+						TextStyle styleDescription = new TextStyle(View.normalFont, null, null);
+						TextStyle styleDate = new TextStyle(View.normalFont, View.dateColor, null);
+						
+						if(tempArrList.get(i).getDatetimes().get(0)!= null){
+							int seperatingIndex = whiteSpaces.length() + tempArrList.get(i).getUserFormatNoDate().length();
+							textLayout.setStyle(styleDescription, 0, seperatingIndex);
+							textLayout.setStyle(styleDate, seperatingIndex + 3, text.length());
+						} else {
+							textLayout.setStyle(styleDescription, 0, text.length());
+						}
+						
+						view.getMainTable().addListener(SWT.PaintItem, new Listener() {
+						      public void handleEvent(Event event) {
+						    	  if(event.item.equals(mainItem)){
+						    		  textLayout.draw(event.gc, event.x, event.y);
+						    	  }
+						      }
+						});
+						
+						final Rectangle textLayoutBounds = textLayout.getBounds();
+						    view.getMainTable().addListener(SWT.MeasureItem, new Listener() {
+						      public void handleEvent(Event e) {
+						    	  if(e.item.equals(mainItem)){
+							        e.width = textLayoutBounds.width + 2;
+							        e.height = textLayoutBounds.height + 2;
+						    	  }
+						      }
+						});
+					}
+				
 			}
 			return true;
 		}
@@ -746,28 +774,20 @@ public class Controller {
 		
 		try {
 			if (path != null) {
-				File oldFile = new File(Keywords.filePath);
-				if(oldFile.exists()){
-					oldFile.delete();
-				}
+				
 				Keywords.filePath = path + "\\" + Keywords.TASK_FILENAME;
-			} else {
-				if(Keywords.filePath.equals(Keywords.EMPTY_STRING)){
-					Keywords.filePath = Keywords.currLocation + Keywords.TASK_FILENAME;
-				}
-			}
 			
-			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.settingsPath));
-			bufferWriter.write(Keywords.filePath);
-			bufferWriter.close();
+				BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.settingsPath));
+				bufferWriter.write(Keywords.filePath);
+				bufferWriter.close();
+				
+				File currFile = new File(Keywords.filePath);
 			
-			File currFile = new File(Keywords.filePath);
-		
-			Logic.updateFile(currFile.exists());
+				Logic.updateFile(currFile.exists());
 			
-			if(parser != null && storage != null && logic !=null){
+				displayList(Logic.getUncompletedTasks());
 				displayCategory();
-				displayList(Logic.getUncompletedTasks());		
+			
 			}
 			
 		} catch (Exception ex) {

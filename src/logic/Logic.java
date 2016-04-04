@@ -65,7 +65,12 @@ public class Logic {
 	}
 	
 	public static ArrayList<Task> getUncompletedTasks(){
+		ViewTask.getCategories().add("Uncompleted");
 		return Storage.getListOfUncompletedTasks();
+	}
+	
+	public static ArrayList<Task> getLastTasks(){
+		return Storage.getLastTasks();
 	}
 	
 	public static ArrayList<String> getListOfCatWithCount(){

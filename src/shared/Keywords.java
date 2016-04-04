@@ -52,9 +52,9 @@ public class Keywords {
 	
 	public static String settingsPath =  "settings.ini";
 	public static final String TASK_FILENAME = "task.txt";
-	public static String filePath = EMPTY_STRING;
-	public static final String LOG_FILEPATH = "log.txt";
 	public static String currLocation = EMPTY_STRING;
+	public static String filePath = currLocation + Keywords.TASK_FILENAME;
+	public static final String LOG_FILEPATH = "log.txt";
 	
 	public static final int TASK_ID = 0;
 	public static final int TASK_DESC = 1;

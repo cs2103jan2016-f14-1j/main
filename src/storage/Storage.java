@@ -139,6 +139,10 @@ public class Storage {
 		return History.getLastTasks();
 	}
 	
+	public static ArrayList<Task> getLastTasksNoRemove(){
+		return History.getLastTasksNoRemove();
+	}
+	
 	public static String getLastAction(){
 		return History.getLastAction();
 	}
