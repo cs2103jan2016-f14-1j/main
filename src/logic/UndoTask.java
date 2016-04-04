@@ -42,11 +42,18 @@ public class UndoTask extends Functionality {
 			}
 			n = printSuccessful("Delete command undone");
 			break;
+		case "mark":
+			for(Task task : t){
+				Storage.getTask(task.getId()).togglePriority();
+			}
+			n = printSuccessful("Mark command undone");
+			break;
 		}
 		if(t == null){
 			n.setTitle("Undo Failed.");
 			n.setMessage("Nothing to undo!");
 		}
+		
 		super.synchronization();
 		return n;
 	}

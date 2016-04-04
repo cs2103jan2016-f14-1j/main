@@ -10,7 +10,7 @@ public class MarkTask extends Functionality {
 	public Notification prioritise(ArrayList<Integer> taskIDs) {
 		Notification  n = new Notification();
 		ArrayList<Integer> validIds = new ArrayList<Integer>();
-		for (int id : taskIDs) { // fliters out non-existent ids
+		for (int id : taskIDs) { // filters out non-existent ids
 			if (Storage.getTask(id) != null) {
 				validIds.add(id);
 			}
@@ -21,8 +21,11 @@ public class MarkTask extends Functionality {
 			return n;
 		} else {
 			for (int id : validIds) {
+				System.out.println("yes"+Storage.getTask(id));
+				super.addToFuncTasks(Storage.getTask(id));
 				prioritise(id);
 			}
+			super.addToHistory("mark");
 			n.setTitle("Prioritised Successful!");
 			n.setMessage("Prioritised: " + validIds.toString());
 		}

@@ -17,6 +17,7 @@ public class History {
 	
 	protected static ArrayList<Task> getLastTasks(){
 		if(historyList.isEmpty()){
+			System.out.print("ran");
 			return null;
 		}
 		return historyList.poll();

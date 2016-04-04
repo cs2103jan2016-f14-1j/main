@@ -663,7 +663,7 @@ public class Controller {
 			
 			ArrayList<Task> tempArrList = putIntoDays.get(key);
 	
-			ArrayList<Task> lastTasks = Logic.getLastTasks();
+			ArrayList<Task> lastTasks = Logic.getLastTasksNoRemove();
 			
 			for (int i = 0; i < tempArrList.size(); i++) {
 				final TableItem mainItem = new TableItem(view.getMainTable(), SWT.NONE);

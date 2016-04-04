@@ -73,6 +73,10 @@ public class Logic {
 		return Storage.getLastTasks();
 	}
 	
+	public static ArrayList<Task> getLastTasksNoRemove(){
+		return Storage.getLastTasksNoRemove();
+	}
+	
 	public static ArrayList<String> getListOfCatWithCount(){
 		return Storage.getListOfCategoriesWithCount();
 	}
