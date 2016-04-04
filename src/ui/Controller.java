@@ -897,17 +897,27 @@ public class Controller {
 	}
 	
 	public void displaySearch(HashMap<String,Object> items, String tempInput){
+		view.getMainTable().removeAll();
 		ArrayList<Task> tasks = (ArrayList<Task>)items.get("Tasks");
 		ArrayList<String> freeSlots = (ArrayList<String>) items.get("freeslots");
-		
+		tasks = Sorter.sortByDate(tasks);
 		TableItem mainItem = new TableItem(view.getMainTable(),SWT.NONE);
-		mainItem.setText("Search Results : " + tempInput);
+		mainItem.setText("Search Results : " + parser.removeFirstWord(tempInput));
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);
 		
+		mainItem = new TableItem(view.getMainTable(),SWT.NONE);
+		mainItem = new TableItem(view.getMainTable(),SWT.NONE);
 		mainItem.setText("Tasks");
 		mainItem.setFont(View.headingFont);
-		mainItem.setForeground(View.orangeColor);
+		
+		if(tasks.isEmpty()){
+			
+			mainItem.setForeground(View.missingColor);
+		} else {
+			
+			mainItem.setForeground(View.orangeColor);
+		}
 		
 		for(int i = 0 ; i <tasks.size() ; i++){
 			mainItem = new TableItem(view.getMainTable(),SWT.NONE);
@@ -915,9 +925,17 @@ public class Controller {
 			mainItem.setFont(View.normalFont);
 		}
 		
+		mainItem = new TableItem(view.getMainTable(),SWT.NONE);
+		mainItem = new TableItem(view.getMainTable(),SWT.NONE);
+		
 		mainItem.setText("Free");
 		mainItem.setFont(View.headingFont);
-		mainItem.setForeground(View.orangeColor);
+		
+		if(freeSlots.isEmpty()){
+			mainItem.setForeground(View.missingColor);
+		} else {
+			mainItem.setForeground(View.orangeColor);
+		}
 		
 		for(int i = 0 ; i < freeSlots.size() ; i++){
 			mainItem = new TableItem(view.getMainTable(),SWT.NONE);
