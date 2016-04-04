@@ -117,6 +117,12 @@ public class FreeSlots {
 						continue;
 					} else {
 						for (int i = 0; i < totalMinSize-1; i++) {
+							if (timeSlots.get(key).get(i) != 0) {
+								endTRange = (key * 100);
+								freeSlots.add(new IntegerPair(startTRange, endTRange));
+								startTRange = (key * 100) + timeSlots.get(key).get(i);
+								continue;
+							}
 							if (timeSlots.get(key).get(i)+1 != timeSlots.get(key).get(i+1)) {
 								freeSlots.add(new IntegerPair(startTRange, endTRange+1));
 								startTRange = (key * 100) + timeSlots.get(key).get(i+1);
