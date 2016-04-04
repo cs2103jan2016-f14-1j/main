@@ -32,6 +32,10 @@ public class UndoTask extends Functionality {
 				//when there are more attributes, we will add accordingly
 				Storage.getTask(task.getId()).setDate(task.getDate());
 				Storage.getTask(task.getId()).setIntDate(task.getIntDate());
+				Storage.getTask(task.getId()).setCategories(task.getCategories());
+				Storage.getTask(task.getId()).setDateTimes(task.getDatetimes());
+				Storage.getTask(task.getId()).setIsCompleted(task.getIsCompleted());
+				Storage.getTask(task.getId()).setPriority(task.getPriority());
 			}
 			n = printSuccessful("Edit command undone");
 			break;
