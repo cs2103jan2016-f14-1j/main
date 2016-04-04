@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import shared.Keywords;
 import shared.Task;
@@ -8,7 +9,8 @@ import storage.Storage;
 
 public class SearchTask extends Functionality {
 
-	public ArrayList<Object> searchTask(String words, int isPriortise, int date, ArrayList<String> categories) {
+	public HashMap<String, Object> searchTask(String words, int isPriortise, int date, ArrayList<String> categories) {
+		HashMap<String, Object> results = new HashMap<String,Object>(); 
 		ArrayList<Task> result = new ArrayList<Task>();
 		if (isPriortise == 1 || isPriortise == 0) {
 			result = filterPriority(Storage.getListOfUncompletedTasks(), isPriortise);
@@ -20,6 +22,7 @@ public class SearchTask extends Functionality {
 			// search <result> comparing dates
 			result = filterDate(result, date);
 			ArrayList<String> freeSlots = FreeSlots.getFreeSlots(date); //get free time slots
+			results.put("freeslots", freeSlots);
 		}
 
 		if (!categories.isEmpty()) {
@@ -36,8 +39,10 @@ public class SearchTask extends Functionality {
 		}
 		ArrayList<Object> combined = new ArrayList<Object>();
 		combined.add(getNotification());
+		results.put("Tasks", result);
+		results.put("notification", getNotification());
 		combined.add(result);
-		return combined;
+		return results;
 	}
 
 	private ArrayList<Task> filterWords(ArrayList<Task> list, String words) {
