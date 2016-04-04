@@ -900,7 +900,7 @@ public class Controller {
 		view.getMainTable().removeAll();
 		ArrayList<Task> tasks = (ArrayList<Task>)items.get("Tasks");
 		ArrayList<String> freeSlots=new ArrayList<String>();
-		String replace = (String)items.get("replace");
+		ArrayList<String>replace = (ArrayList<String>)items.get("replace");
 		if(items.get("free")!=null){
 			freeSlots = (ArrayList<String>) items.get("free");
 		}
@@ -911,8 +911,12 @@ public class Controller {
 		mainItem.setForeground(View.orangeColor);
 		
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-		if(!replace.equals("Do you mean:")){
-			mainItem.setText(replace+"?");
+		if(replace.size()>1){
+			String form = "";
+			for(String s : replace){
+				form+=s+" ";
+			}
+			mainItem.setText(form+"?");
 			mainItem.setFont(View.italicFont);
 			mainItem.setForeground(View.orangeColor);
 		}
