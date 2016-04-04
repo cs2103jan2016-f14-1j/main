@@ -63,6 +63,7 @@ public class ParseSearch {
 			}
 			output.add(list);
 		}
+		
 		return output;
 	}
 
