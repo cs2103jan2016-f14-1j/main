@@ -17,12 +17,14 @@ public class SearchTask extends Functionality {
 		} else {
 			result = Storage.getListOfUncompletedTasks();
 		}
-
 		if (date != -1) {
 			// search <result> comparing dates
 			result = filterDate(result, date);
 			ArrayList<String> freeSlots = FreeSlots.getFreeSlots(date); //get free time slots
-			results.put("freeslots", freeSlots);
+			if(freeSlots.isEmpty()){
+				freeSlots.add("Whole day is free");
+			}
+			results.put("free", freeSlots);
 		}
 
 		if (!categories.isEmpty()) {

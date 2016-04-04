@@ -72,6 +72,9 @@ public class Controller {
 	private Logic logic;
 	private Storage storage;
 
+	private int lastIndex = -1;
+	private int setIndex = -1;
+	
 	public Controller() throws Exception {
 		view = new View();
 		starImage = new Image(Display.getCurrent(),
@@ -174,11 +177,14 @@ public class Controller {
 		list = Sorter.sortByDate(list);
 		TableItem mainItem;
 		putIntoDays.clear();
+		lastIndex = -1;
+		setIndex = -1;
 
 		final TableItem firstItem = new TableItem(view.getMainTable(), SWT.NONE);
 		firstItem.setText(OVERDUE);
 		firstItem.setFont(View.headingFont);
 		firstItem.setForeground(View.orangeColor);
+		lastIndex++;
 
 		Listener paintListener = new Listener() {
 			public void handleEvent(Event event) {
@@ -312,9 +318,9 @@ public class Controller {
 			view.getMainTable().removeListener(SWT.PaintItem, paintListener);
 		}
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-		mainItem.setText(
-				"                                                                                                  ");
-
+		mainItem.setText("                                                                                                  ");
+		lastIndex++;
+		mainItem.setText("                                                                                                  ");
 		boolean thirdItem = false;
 
 		for (String day : days) {
@@ -325,11 +331,14 @@ public class Controller {
 				mainItem.setText(day);
 				mainItem.setFont(View.headingFont);
 				mainItem.setForeground(View.orangeColor);
+				lastIndex++;
 
 				if (!insertIntoTable(day, false)) {
 					mainItem.setForeground(View.missingColor);
 				}
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+
+				lastIndex++;
 
 			} else if (day.equals(TOMORROW)) {
 
@@ -337,15 +346,22 @@ public class Controller {
 				mainItem.setText(day);
 				mainItem.setFont(View.headingFont);
 				mainItem.setForeground(View.orangeColor);
+				lastIndex++;
 				thirdItem = true;
 				if (!insertIntoTable(day, false)) {
 					mainItem.setForeground(View.missingColor);
 				}
+				
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+				lastIndex++;
+
+				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+
 
 			} else if (thirdItem) {
 
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+				lastIndex++;
 				mainItem.setText(WEEK);
 				mainItem.setFont(View.headingFont);
 				mainItem.setForeground(View.missingColor);
@@ -365,13 +381,16 @@ public class Controller {
 
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+		lastIndex++;
+		lastIndex++;
 		mainItem.setText(OTHERS);
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);
 		if (!insertIntoTable(OTHERS, false)) {
 			mainItem.setForeground(View.missingColor);
-		}
-
+		}	
+			view.getMainTable().setTopIndex(setIndex);
+		
 	}
 
 	private void displayHelp(LinkedList<String> items) {
@@ -506,7 +525,7 @@ public class Controller {
 								displayList((ArrayList<Task>) re.get(1));
 							} else if (result instanceof HashMap<?, ?>) {
 								HashMap<String,Object> re = (HashMap<String,Object>) result;
-								displaySearch(re);
+								displaySearch(re, tempInput);
 								displayNotification((Notification)re.get("notification"));
 							} else {
 								displayList(Logic.getUncompletedTasks());
@@ -664,6 +683,7 @@ public class Controller {
 		if (putIntoDays.containsKey(key)) {
 			if (week) {
 				TableItem headerItem = new TableItem(view.getMainTable(), SWT.NONE);
+				lastIndex++;
 				headerItem.setText(key);
 				headerItem.setFont(View.normalFont);
 				headerItem.setForeground(View.orangeColor);
@@ -675,6 +695,7 @@ public class Controller {
 
 			for (int i = 0; i < tempArrList.size(); i++) {
 				final TableItem mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+				lastIndex++;
 				String whiteSpaces = "";
 				if (tempArrList.get(i).getPriority() == 1) {
 					mainItem.setData(object);
@@ -686,6 +707,9 @@ public class Controller {
 						if (lastTasks.get(k).getId() == tempArrList.get(i).getId()) {
 							mainItem.setBackground(View.newColor);
 							mainItem.setFont(View.boldFont);
+							
+							setIndex = lastIndex - i - 1;
+							
 						}
 					}
 				}
@@ -872,8 +896,54 @@ public class Controller {
 		return view;
 	}
 	
-	public void displaySearch(HashMap<String,Object> items){
+	public void displaySearch(HashMap<String,Object> items, String tempInput){
+		view.getMainTable().removeAll();
 		ArrayList<Task> tasks = (ArrayList<Task>)items.get("Tasks");
-		ArrayList<String> freeSlots = (ArrayList<String>) items.get("freeslots");
+		ArrayList<String> freeSlots=new ArrayList<String>();
+		if(items.get("free")!=null){
+			freeSlots = (ArrayList<String>) items.get("free");
+		}
+		tasks = Sorter.sortByDate(tasks);
+		TableItem mainItem = new TableItem(view.getMainTable(),SWT.NONE);
+		mainItem.setText("Search Results : " + parser.removeFirstWord(tempInput));
+		mainItem.setFont(View.headingFont);
+		mainItem.setForeground(View.orangeColor);
+		
+		mainItem = new TableItem(view.getMainTable(),SWT.NONE);
+		mainItem = new TableItem(view.getMainTable(),SWT.NONE);
+		mainItem.setText("Tasks");
+		mainItem.setFont(View.headingFont);
+		
+		if(tasks.isEmpty()){
+			
+			mainItem.setForeground(View.missingColor);
+		} else {
+			
+			mainItem.setForeground(View.orangeColor);
+		}
+		
+		for(int i = 0 ; i <tasks.size() ; i++){
+			mainItem = new TableItem(view.getMainTable(),SWT.NONE);
+			mainItem.setText(tasks.get(i).getUserFormat());
+			mainItem.setFont(View.normalFont);
+		}
+		
+		mainItem = new TableItem(view.getMainTable(),SWT.NONE);
+		mainItem = new TableItem(view.getMainTable(),SWT.NONE);
+		
+		mainItem.setText("Free");
+		mainItem.setFont(View.headingFont);
+		
+		if(freeSlots.isEmpty()){
+			mainItem.setForeground(View.missingColor);
+		} else {
+			mainItem.setForeground(View.orangeColor);
+		}
+		
+		for(int i = 0 ; i < freeSlots.size() ; i++){
+			mainItem = new TableItem(view.getMainTable(),SWT.NONE);
+			mainItem.setText(freeSlots.get(i));
+			mainItem.setFont(View.normalFont);
+		}
 	}
 }

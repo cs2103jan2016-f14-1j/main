@@ -143,6 +143,7 @@ public class FreeSlots {
 				}
 			}
 			freeSlots.add(toTimeString(startTRange, endTRange));
+			System.out.println(toTimeString(startTRange, endTRange));
 		}
 		return freeSlots;
 	}
