@@ -10,7 +10,7 @@ import storage.Storage;
 public class SearchTask extends Functionality {
 
 	public HashMap<String, Object> searchTask(String words, int isPriortise, int date, ArrayList<String> categories) {
-		HashMap<String, Object> results = new HashMap<String,Object>(); 
+		HashMap<String, Object> results = new HashMap<String, Object>();
 		ArrayList<Task> result = new ArrayList<Task>();
 		if (isPriortise == 1 || isPriortise == 0) {
 			result = filterPriority(Storage.getListOfUncompletedTasks(), isPriortise);
@@ -20,8 +20,11 @@ public class SearchTask extends Functionality {
 		if (date != -1) {
 			// search <result> comparing dates
 			result = filterDate(result, date);
-			ArrayList<String> freeSlots = FreeSlots.getFreeSlots(date); //get free time slots
-			if(freeSlots.isEmpty()){
+			ArrayList<String> freeSlots = FreeSlots.getFreeSlots(date); // get
+																		// free
+																		// time
+																		// slots
+			if (freeSlots.isEmpty()) {
 				freeSlots.add("Whole day is free");
 			}
 			results.put("free", freeSlots);
@@ -43,25 +46,32 @@ public class SearchTask extends Functionality {
 		combined.add(getNotification());
 		results.put("Tasks", result);
 		results.put("notification", getNotification());
+		results.put("replace", replace);
 		combined.add(result);
 		return results;
 	}
-
+	String replace="Do you mean:";
 	private ArrayList<Task> filterWords(ArrayList<Task> list, String words) {
 		ArrayList<Task> temp = new ArrayList<Task>();
+		SymSpell.CreateDictionary("dictionary", "");
 		for (Task t : list) {
-			for(String word : words.split(Keywords.SPACE_STRING)){
-			if (t.getTask().contains(word)) {
-				temp.add(t);
-				break;
-			} else if (!t.getCategories().isEmpty()) {
-				for (String cat : t.getCategories()) {
-					if (cat.contains(word)) {
+			for (String word : words.split(Keywords.SPACE_STRING)) {
+				// SymSpell ss = new SymSpell();
+				ArrayList<String> result = SymSpell.Correct(word, "");
+				for (String wor : result) {
+					if (t.getTask().contains(wor)) {
+						replace+=" "+wor;
 						temp.add(t);
 						break;
+					} else if (!t.getCategories().isEmpty()) {
+						for (String cat : t.getCategories()) {
+							if (cat.contains(wor)) {
+								temp.add(t);
+								break;
+							}
+						}
 					}
 				}
-			}
 			}
 		}
 		return temp;
