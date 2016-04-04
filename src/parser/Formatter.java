@@ -193,8 +193,26 @@ public class Formatter extends Logger {
 
 		return out;
 	}
-	private static int lastIndexOf(ArrayList<String> as) {
+	private static int lastIndexOf(ArrayList as) {
 		return as.size() - 1;
+	}
+	/**
+	 * temporary method that will replace all other getTaskName methods
+	 * @param taskName
+	 * @return
+	 */
+	public static String extractTaskName(String taskName) {
+		ArrayList<String> as = breakString(taskName);
+		ArrayList<String> out = new ArrayList<String>();
+		for (String token : as) {
+			if (isPreposition(token)) {
+				
+			} else { // !isPreposition(token)
+				out.add(token);
+			}
+		}
+		
+		return convertArrayListToStringWithoutCategories(out);
 	}
 	
 	/**
@@ -211,17 +229,21 @@ public class Formatter extends Logger {
 			if (checkDate != 0) {
 				if (isPreposition(s)) {
 					outArray.add(tempDate.trim());
+					tempDate = Keywords.EMPTY_STRING;
 					checkDate = 2;
-				} else {
+					outArray.add(s);
+				} else { // checkDate != 0 && !isPreposition(s)
 					if (!isCategory(s)) {
-						tempDate += s + Keywords.SPACE_STRING;
+						
+						tempDate = String.format("%s%s ", tempDate, s);
+					System.out.printf("tempDAtE: %s , s: %s\n", tempDate, s);
 					}
 					checkDate--;
 					if (getDateFromString(tempDate) != null) {
 						break;
 					}
-					continue;
 				}
+				continue;
 			} else { // checkDate == 0
 				if (!tempDate.isEmpty()) {
 					if (getDateFromString(tempDate) != null) {
@@ -232,14 +254,17 @@ public class Formatter extends Logger {
 				tempDate = Keywords.EMPTY_STRING;
 			}
 			if (isPreposition(s)) {
+				tempDate = Keywords.EMPTY_STRING;
 				checkDate = 2;
 			}
 			outArray.add(s);
 		}
-		if (!tempDate.isEmpty() && getDateFromString(tempDate) != null) {
-			removeLastElement(outArray); // removes the previously added preposition
-		} else if (!tempDate.isEmpty()) {
-			outArray.add(tempDate);
+		if (!tempDate.isEmpty()) {
+			if (getDateFromString(tempDate) != null) {
+				removeLastElement(outArray); // removes the previously added preposition
+			} else { // getDateFromString(tempDate) == null
+				outArray.add(tempDate);
+			}
 		}
 		
 		return convertArrayListToStringWithoutCategories(outArray);
@@ -353,7 +378,7 @@ public class Formatter extends Logger {
 	public static String getAfterPreposition(String s) {
 		ArrayList<String> as = breakString(s);
 		String answer = "";
-		for (int i = as.size() - 1; i >= 0; i--) {
+		for (int i = lastIndexOf(as); i >= 0; i--) {
 			if (!isPreposition(as.get(i))) {
 				answer = as.get(i) + Keywords.EMPTY_STRING + answer;
 			} else {
