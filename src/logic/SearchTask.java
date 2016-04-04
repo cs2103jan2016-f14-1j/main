@@ -46,6 +46,7 @@ public class SearchTask extends Functionality {
 			for(String word : words.split(Keywords.SPACE_STRING)){
 			if (t.getTask().contains(word)) {
 				temp.add(t);
+				break;
 			} else if (!t.getCategories().isEmpty()) {
 				for (String cat : t.getCategories()) {
 					if (cat.contains(word)) {
