@@ -37,7 +37,7 @@ public class ParseEdit {
 		} else if (hasPreposition) {
 			taskName = Formatter.getTaskNameWithPreposition(tempStr);
 		}
-	
+
 		return Logic.editTask(id, datetimes, taskName, categories);
 	}
 	
