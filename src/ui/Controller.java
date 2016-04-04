@@ -72,6 +72,9 @@ public class Controller {
 	private Logic logic;
 	private Storage storage;
 
+	private int lastIndex = -1;
+	private int setIndex = -1;
+	
 	public Controller() throws Exception {
 		view = new View();
 		starImage = new Image(Display.getCurrent(),
@@ -174,11 +177,14 @@ public class Controller {
 		list = Sorter.sortByDate(list);
 		TableItem mainItem;
 		putIntoDays.clear();
+		lastIndex = -1;
+		setIndex = -1;
 		
 		final TableItem firstItem = new TableItem(view.getMainTable(), SWT.NONE);
 		firstItem.setText(OVERDUE);
 		firstItem.setFont(View.headingFont);
 		firstItem.setForeground(View.orangeColor);
+		lastIndex++;
 
 		Listener paintListener = new Listener() {
 			public void handleEvent(Event event) {
@@ -311,7 +317,7 @@ public class Controller {
 		}
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 		mainItem.setText("                                                                                                  ");
-		
+		lastIndex++;
 		boolean thirdItem = false;
 
 		for (String day : days) {
@@ -322,11 +328,13 @@ public class Controller {
 				mainItem.setText(day);
 				mainItem.setFont(View.headingFont);
 				mainItem.setForeground(View.orangeColor);
+				lastIndex++;
 
 				if (!insertIntoTable(day, false)) {
 					mainItem.setForeground(View.missingColor);
 				}
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+				lastIndex++;
 				
 			} else if (day.equals(TOMORROW)) {
 
@@ -334,15 +342,18 @@ public class Controller {
 				mainItem.setText(day);
 				mainItem.setFont(View.headingFont);
 				mainItem.setForeground(View.orangeColor);
+				lastIndex++;
 				thirdItem = true;
 				if (!insertIntoTable(day, false)) {
 					mainItem.setForeground(View.missingColor);
 				}
-				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				
+				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+				lastIndex++;
 			} else if (thirdItem) {
 
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+				lastIndex++;
 				mainItem.setText(WEEK);
 				mainItem.setFont(View.headingFont);
 				mainItem.setForeground(View.missingColor);
@@ -362,12 +373,17 @@ public class Controller {
 
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);	
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+		lastIndex++;
+		lastIndex++;
 		mainItem.setText(OTHERS);
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);
 		if (!insertIntoTable(OTHERS, false)) {
 			mainItem.setForeground(View.missingColor);
 		}	
+		
+		
+			view.getMainTable().setTopIndex(setIndex);
 		
 	}
 
@@ -656,6 +672,7 @@ public class Controller {
 		if (putIntoDays.containsKey(key)) {
 			if (week) {
 				TableItem headerItem = new TableItem(view.getMainTable(), SWT.NONE);
+				lastIndex++;
 				headerItem.setText(key);
 				headerItem.setFont(View.normalFont);
 				headerItem.setForeground(View.orangeColor);
@@ -667,6 +684,7 @@ public class Controller {
 			
 			for (int i = 0; i < tempArrList.size(); i++) {
 				final TableItem mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+				lastIndex++;
 				String whiteSpaces = "";
 				if (tempArrList.get(i).getPriority() == 1) {
 					mainItem.setData(object);
@@ -678,6 +696,9 @@ public class Controller {
 						if(lastTasks.get(k).getId() == tempArrList.get(i).getId()){
 							mainItem.setBackground(View.newColor);
 							mainItem.setFont(View.boldFont);
+							
+							setIndex = lastIndex - i - 1;
+							
 						}
 					}
 				}
