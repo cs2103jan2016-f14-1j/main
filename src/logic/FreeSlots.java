@@ -13,7 +13,7 @@ public class FreeSlots {
 	private static ArrayList<Task> tasks = Storage.getListOfUncompletedTasks();
 	private static ArrayList<Task> tasksOnDate = new ArrayList<Task>();
 	//FORMAT: ["xxxxH to xxxxH", ... ]
-	private static ArrayList<String> freeSlots = new ArrayList<String>();
+	private static ArrayList<IntegerPair> freeSlots = new ArrayList<IntegerPair>();
 	
 	private static HashMap<Integer, ArrayList<Integer>> timeSlots = new HashMap<Integer, ArrayList<Integer>>(24);
 	
@@ -30,10 +30,17 @@ public class FreeSlots {
 	// assume input is displayDate format e.g. 27Feb, 02Mar
 	public static ArrayList<String> getFreeSlots(int input) {
 		//initTimeSlot();
-		return compileFreeSlots(input);
+		return convertToArrayListString(compileFreeSlots(input));
+	}
+	private static ArrayList<String> convertToArrayListString(ArrayList<IntegerPair> aip) {
+		ArrayList<String> as = new ArrayList<String>();
+		for (IntegerPair ip : aip) {
+			as.add(toTimeString(ip.getInt1(), ip.getInt2()));
+		}
+		return as;
 	}
 	
-	private static ArrayList<String> compileFreeSlots(int input) {
+	private static ArrayList<IntegerPair> compileFreeSlots(int input) {
 		initTimeSlot();
 		freeSlots.clear();
 		filterDateTask(tasks, input);
@@ -90,7 +97,7 @@ public class FreeSlots {
 				if (totalMinSize == 1){
 					if (started) {
 						endTRange = key * 100;
-						freeSlots.add(toTimeString(startTRange, endTRange));
+						freeSlots.add(new IntegerPair(startTRange, endTRange));
 						startTRange = (key + 1) * 100;
 						endTRange = (key + 1) * 100;
 						started = false;
@@ -111,7 +118,7 @@ public class FreeSlots {
 					} else {
 						for (int i = 0; i < totalMinSize-1; i++) {
 							if (timeSlots.get(key).get(i)+1 != timeSlots.get(key).get(i+1)) {
-								freeSlots.add(toTimeString(startTRange, endTRange+1));
+								freeSlots.add(new IntegerPair(startTRange, endTRange+1));
 								startTRange = (key * 100) + timeSlots.get(key).get(i+1);
 								endTRange = (key * 100) + timeSlots.get(key).get(i+1);
 								started = true;
@@ -131,7 +138,7 @@ public class FreeSlots {
 						endTRange = timeSlots.get(key).get(0);
 						for (int i = 0; i < totalMinSize-1; i++) {
 							if (timeSlots.get(key).get(i)+1 != timeSlots.get(key).get(i+1)) {
-								freeSlots.add(toTimeString(startTRange, endTRange));
+								freeSlots.add(new IntegerPair(startTRange, endTRange));
 								startTRange = (key * 100) + timeSlots.get(key).get(i+1);
 								endTRange = (key * 100) + timeSlots.get(key).get(i+1);
 								continue;
@@ -142,8 +149,8 @@ public class FreeSlots {
 					}
 				}
 			}
-			freeSlots.add(toTimeString(startTRange, endTRange));
-			System.out.println(toTimeString(startTRange, endTRange));
+			freeSlots.add(new IntegerPair(startTRange, endTRange));
+			System.out.printf("%d - %d\n", startTRange, endTRange);
 		}
 		return freeSlots;
 	}

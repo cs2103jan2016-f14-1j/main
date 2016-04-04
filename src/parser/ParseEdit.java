@@ -13,8 +13,6 @@ public class ParseEdit {
 	private static int id;
 	
 	public static Notification editTask(String rawInput) {
-		//eg 11 to from 6apr to 9 apr
-		
 		String tempStr = Formatter.getAfterFirstPrep(rawInput);
 		String taskName = Keywords.EMPTY_STRING;
 		ArrayList<String> inputParts = Formatter.breakString(tempStr);

@@ -27,6 +27,7 @@ public class Logic {
 	public static Notification addTask(Task task) {
 		Notification n = new AddTask().addTask(task);
 		ArrayList<String> fS = FreeSlots.getFreeSlots(task.getIntDate());
+		// TODO: get warning notification for clashing tasks
 		System.out.println(fS);
 		return n;
 	}
