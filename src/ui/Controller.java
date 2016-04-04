@@ -706,7 +706,8 @@ public class Controller {
 							} else {
 								textLayout.setStyle(styleDate, seperatingIndex + 3, text.length());				
 							}
-						}else {
+							
+						} else {
 							textLayout.setStyle(styleDescription, 0, text.length());
 						}
 						

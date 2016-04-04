@@ -38,8 +38,8 @@ public class Logic {
 			return new DoTask().doTask(taskIDs);
 	}
 
-	public static Notification editTask(ArrayList<Integer> taskIDs, ArrayList<Date> datetimes,String task, ArrayList<String> cats) {
-		return new EditTask().editTask(taskIDs, datetimes, task, cats);
+	public static Notification editTask(int taskID, ArrayList<Date> datetimes,String task, ArrayList<String> cats) {
+		return new EditTask().editTask(taskID, datetimes, task, cats);
 	}
 	
 	public static ArrayList<Object> viewTask(String input) {

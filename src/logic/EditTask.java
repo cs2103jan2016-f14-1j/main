@@ -16,24 +16,24 @@ public class EditTask extends Functionality {
 	 *            changes to be made to the task's date
 	 * @return it will return successful when a task is edited, else otherwise.
 	 */
-	public Notification editTask(ArrayList<Integer> taskIDs, ArrayList<Date> datetimes , String task, ArrayList<String> categories) {
+	public Notification editTask(int taskID, ArrayList<Date> datetimes , String task, ArrayList<String> categories) {
 		Notification n = new Notification();
-		for(int z = 0 ; z < taskIDs.size(); z++){
-			if (!isValidId(taskIDs.get(z))) {
+		
+			if (!isValidId(taskID)) {
 				n.setTitle(Keywords.MESSAGE_ERROR);
 				n.setMessage(Keywords.INVALID_ID);
 				return n;
 			}
-			if (Storage.getTask(taskIDs.get(z)) != null) {
+			if (Storage.getTask(taskID) != null) {
 				//super.getTasks().add(Storage.getTask(taskID));
-				super.addToFuncTasks(Storage.getTask(taskIDs.get(z)));
+				super.addToFuncTasks(Storage.getTask(taskID));
 				super.addToHistory("edit");
 				
 				if(!task.equals(Keywords.EMPTY_STRING)){
-					Storage.getTask(taskIDs.get(z)).setTask(task);
+					Storage.getTask(taskID).setTask(task);
 				}
 				if(!categories.isEmpty()){
-					Storage.getTask(taskIDs.get(z)).setCategories(categories);
+					Storage.getTask(taskID).setCategories(categories);
 				}
 				
 				boolean dateExists = false;
@@ -46,13 +46,12 @@ public class EditTask extends Functionality {
 				}
 				
 				if(dateExists){
-					Storage.getTask(taskIDs.get(z)).setDateTimes(datetimes);
+					Storage.getTask(taskID).setDateTimes(datetimes);
 	         	}
 				
 				n.setTitle(Keywords.MESSAGE_EDIT_SUCCESS);
-				n.setMessage(Storage.getTask(taskIDs.get(z)).getUserFormat() + " has been edited!");
+				n.setMessage(Storage.getTask(taskID).getUserFormat() + " has been edited!");
 			}
-		}
 		
 		super.synchronization();
 		return n;

@@ -10,20 +10,21 @@ import shared.Task;
 
 public class ParseEdit {
 	
-	private static ArrayList<Integer> ids = new ArrayList<Integer>() ;
+	private static int id;
 	
 	public static Notification editTask(String rawInput) {
+		//eg 11 to from 6apr to 9 apr
 		
-		ids.clear();
 		String tempStr = Formatter.getAfterFirstPrep(rawInput);
-		String taskName = Keywords.EMPTY_STRING, 
-				prep = Keywords.EMPTY_STRING;
+		String taskName = Keywords.EMPTY_STRING;
 		ArrayList<String> inputParts = Formatter.breakString(tempStr);
-		
-		ids = Formatter.breakToIds(rawInput);
+		try{
+			id = Integer.parseInt(Formatter.breakString(rawInput).get(Keywords.FIRST_ELEMENT));
+		}catch(Exception e){
+			id = -1;
+		}
 		ArrayList<String> categories = new ArrayList<String>();
 		ArrayList<String> preposition = new ArrayList<String>();
-				
 		ArrayList<Date> datetimes = Formatter.getDateTimes(rawInput);
 
 		boolean hasCategory = Formatter.getCategories(categories, inputParts),
@@ -37,10 +38,10 @@ public class ParseEdit {
 			taskName = Formatter.getTaskNameWithPreposition(tempStr);
 		}
 	
-		return Logic.editTask(ids, datetimes, taskName, categories);
+		return Logic.editTask(id, datetimes, taskName, categories);
 	}
 	
-	public static ArrayList<Integer> returnIds(){
-		return ids;
+	public static int returnId(){
+		return id;
 	}
 }
