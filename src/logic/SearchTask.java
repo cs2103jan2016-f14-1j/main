@@ -19,6 +19,7 @@ public class SearchTask extends Functionality {
 		if (date != -1) {
 			// search <result> comparing dates
 			result = filterDate(result, date);
+			ArrayList<String> freeSlots = FreeSlots.getFreeSlots(date); //get free time slots
 		}
 
 		if (!categories.isEmpty()) {
