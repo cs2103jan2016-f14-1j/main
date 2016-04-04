@@ -713,7 +713,7 @@ public class Controller {
 						
 						for(int z =0; z< tempArrList.get(i).getCategories().size() ; z++){
 							String tempCat = tempArrList.get(i).getCategories().get(z);
-							textLayout.setStyle(styleCategory,  text.indexOf(tempCat) - Keywords.CATEGORY_PREPEND.length(), text.indexOf(tempCat) + tempCat.length());
+							textLayout.setStyle(styleCategory,  text.lastIndexOf(tempCat) - Keywords.CATEGORY_PREPEND.length(), text.lastIndexOf(tempCat) + tempCat.length());
 						}
 						
 						
