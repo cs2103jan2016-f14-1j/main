@@ -216,6 +216,7 @@ public class Formatter extends Logger {
 	}
 	
 	/**
+	 * TODO: GG UGLY CODE, PLEASE REFACTOR 
 	 * @param rawInput:
 	 * 				without commandType (i.e. add/delete)
 	 * @return String without commandType and preposition/date
@@ -234,9 +235,7 @@ public class Formatter extends Logger {
 					outArray.add(s);
 				} else { // checkDate != 0 && !isPreposition(s)
 					if (!isCategory(s)) {
-						
 						tempDate = String.format("%s%s ", tempDate, s);
-					System.out.printf("tempDAtE: %s , s: %s\n", tempDate, s);
 					}
 					checkDate--;
 					if (getDateFromString(tempDate) != null) {

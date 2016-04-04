@@ -58,6 +58,7 @@ public class Parser {
 	public Object parse(String userInput) {
 		String commandType = getFirstWord(userInput).toLowerCase();
 		String inputWithoutCommandType = removeFirstWord(userInput);
+		inputWithoutCommandType = filterDelimiters(inputWithoutCommandType);
 		Notification returnValue = new Notification();
 
 		switch (commandType) {
@@ -103,6 +104,10 @@ public class Parser {
 
 	private String getFirstWord(String userInput) {
 		return userInput.trim().split("\\s+")[Keywords.FIRST_ELEMENT];
+	}
+	
+	private String filterDelimiters(String userInput) {
+		return userInput.replaceAll("\\|", Keywords.EMPTY_STRING);
 	}
 
 }
