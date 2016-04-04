@@ -7,7 +7,7 @@ public class Keywords {
 	protected static final String REGEX_VIEW = "(view|v|V|VIEW)(.*)";
 	
 	public static final String REGEX_PREPOSITIONS = "^(at|by|on|to|from)$";
-	public static final String REGEX_PREPOSITIONS_WITH_SPACE = "\\s(at|by|on|to|from)\\s";
+	public static final String REGEX_PREPOSITIONS_WITH_SPACE = "\\s(at|by|on|to|from)";
 	public static final String REGEX_CATEGORIES = "(#)(.*)";
 	public static final String REGEX_DATE = 
 			"^(([1-9])|([0][1-9])|([1-2][0-9])|([3][0-1]))"
