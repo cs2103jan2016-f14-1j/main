@@ -682,26 +682,39 @@ public class Controller {
 					}
 				}
 				
+				
+				String text = whiteSpaces + tempArrList.get(i).getUserFormat();
+				
 					if (week) {
 						
-						mainItem.setText(whiteSpaces + tempArrList.get(i).getUserFormatNoDate());
-						
-					} else {
+						text = whiteSpaces + tempArrList.get(i).getUserFormatNoDate() + Keywords.SPACE_STRING +tempArrList.get(i).getDisplayTimeRange();
+					} 	
 						
 						final TextLayout textLayout = new TextLayout(Display.getCurrent());  
-						String text = whiteSpaces + tempArrList.get(i).getUserFormat();
+						
 						textLayout.setText(text);
 						
 						TextStyle styleDescription = new TextStyle(View.normalFont, null, null);
-						TextStyle styleDate = new TextStyle(View.normalFont, View.dateColor, null);
+						TextStyle styleDate = new TextStyle(View.boldFont, View.dateColor, null);
+						TextStyle styleCategory = new TextStyle(View.normalFont, View.redColor, null);
 						
 						if(tempArrList.get(i).getDatetimes().get(0)!= null){
 							int seperatingIndex = whiteSpaces.length() + tempArrList.get(i).getUserFormatNoDate().length();
 							textLayout.setStyle(styleDescription, 0, seperatingIndex);
-							textLayout.setStyle(styleDate, seperatingIndex + 3, text.length());
-						} else {
+							if(week){
+								textLayout.setStyle(styleDate, seperatingIndex, text.length());		
+							} else {
+								textLayout.setStyle(styleDate, seperatingIndex + 3, text.length());				
+							}
+						}else {
 							textLayout.setStyle(styleDescription, 0, text.length());
 						}
+						
+						for(int z =0; z< tempArrList.get(i).getCategories().size() ; z++){
+							String tempCat = tempArrList.get(i).getCategories().get(z);
+							textLayout.setStyle(styleCategory,  text.indexOf(tempCat) - Keywords.CATEGORY_PREPEND.length(), text.indexOf(tempCat) + tempCat.length());
+						}
+						
 						
 						view.getMainTable().addListener(SWT.PaintItem, new Listener() {
 						      public void handleEvent(Event event) {
@@ -720,7 +733,7 @@ public class Controller {
 						    	  }
 						      }
 						});
-					}
+					
 				
 			}
 			return true;

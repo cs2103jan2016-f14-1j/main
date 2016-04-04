@@ -257,7 +257,7 @@ public class Task extends Logger {
 		}
 	}
 	
-	private String getDisplayTimeRange() {
+	public String getDisplayTimeRange() {
 		int startTime = getIntStartTime(), 
 			endTime = getIntEndTime(); 
 		if (startTime == Keywords.NO_DATE && endTime == Keywords.NO_DATE) {
