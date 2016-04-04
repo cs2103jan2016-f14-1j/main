@@ -2,6 +2,7 @@ package logic;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import parser.Parser;
@@ -60,7 +61,7 @@ public class Logic {
 		return n;
 	}
 
-	public static ArrayList<Object> searchTask(String words, int isPriortise, int date, ArrayList<String> categories) {
+	public static HashMap<String,Object> searchTask(String words, int isPriortise, int date, ArrayList<String> categories) {
 		return new SearchTask().searchTask(words, isPriortise, date, categories);
 	}
 	
