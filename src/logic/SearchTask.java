@@ -1,5 +1,6 @@
 package logic;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,8 +10,11 @@ import storage.Storage;
 
 public class SearchTask extends Functionality {
 
+	ArrayList<String>replace;
 	public HashMap<String, Object> searchTask(String words, int isPriortise, int date, ArrayList<String> categories) {
-		HashMap<String, Object> results = new HashMap<String,Object>(); 
+		replace =new ArrayList<String>();
+		replace.add("Do you mean:");
+		HashMap<String, Object> results = new HashMap<String, Object>();
 		ArrayList<Task> result = new ArrayList<Task>();
 		if (isPriortise == 1 || isPriortise == 0) {
 			result = filterPriority(Storage.getListOfUncompletedTasks(), isPriortise);
@@ -20,8 +24,9 @@ public class SearchTask extends Functionality {
 		if (date != -1) {
 			// search <result> comparing dates
 			result = filterDate(result, date);
-			ArrayList<String> freeSlots = FreeSlots.getFreeSlots(date); //get free time slots
-			if(freeSlots.isEmpty()){
+			// get free time slots
+			ArrayList<String> freeSlots = FreeSlots.getFreeSlots(date); 
+			if (freeSlots.isEmpty()) {
 				freeSlots.add("Whole day is free");
 			}
 			results.put("free", freeSlots);
@@ -31,7 +36,9 @@ public class SearchTask extends Functionality {
 			result = filterCategories(result, categories);
 		}
 		// Lastly, after all the filtering, search for words containing if any
-		result = filterWords(result, words);
+		if(!words.equals("")){
+			result = filterWords(result, words);
+		}
 		if (result.size() == 0) {
 			setNTitle("Search Success!");
 			setNMessage("No results found!");
@@ -43,25 +50,37 @@ public class SearchTask extends Functionality {
 		combined.add(getNotification());
 		results.put("Tasks", result);
 		results.put("notification", getNotification());
+		results.put("replace", replace);
 		combined.add(result);
 		return results;
 	}
-
 	private ArrayList<Task> filterWords(ArrayList<Task> list, String words) {
 		ArrayList<Task> temp = new ArrayList<Task>();
+		File f = new File(getClass().getResource("/storage/dictionary").getFile());
+		SymSpell.CreateDictionary(f, "");
 		for (Task t : list) {
-			for(String word : words.split(Keywords.SPACE_STRING)){
-			if (t.getTask().contains(word)) {
-				temp.add(t);
-				break;
-			} else if (!t.getCategories().isEmpty()) {
-				for (String cat : t.getCategories()) {
-					if (cat.contains(word)) {
-						temp.add(t);
+			for (String word : words.split(Keywords.SPACE_STRING)) {
+				ArrayList<String> result = SymSpell.Correct(word, "");
+				for (String wor : result) {
+					if (t.getTask().contains(wor) || t.getTask().contains(word)) {
+						if(wor!=word && !replace.contains(wor)){
+							replace.add(wor);
+						}
+						if(!temp.contains(t)){
+							temp.add(t);
+						}
 						break;
+					} else if (!t.getCategories().isEmpty()) {
+						for (String cat : t.getCategories()) {
+							if (cat.contains(wor)||cat.contains(word)) {
+								if(!temp.contains(t)){
+									temp.add(t);
+								}
+								break;
+							}
+						}
 					}
 				}
-			}
 			}
 		}
 		return temp;
