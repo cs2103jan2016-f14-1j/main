@@ -27,6 +27,9 @@ public class FreeSlots {
 		}
 	}
 	
+	public static ArrayList<IntegerPair> getFreeSlotsInt(int input) {
+		return compileFreeSlots(input);
+	}
 	// assume input is displayDate format e.g. 27Feb, 02Mar
 	public static ArrayList<String> getFreeSlots(int input) {
 		//initTimeSlot();
