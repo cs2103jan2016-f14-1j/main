@@ -1,18 +1,16 @@
+//@@author A0135778N
+
 package logic;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
-import org.ocpsoft.prettytime.shade.edu.emory.mathcs.backport.java.util.Collections;
-
 import shared.*;
 import storage.Storage;
 
 public class FreeSlots {
 	private static ArrayList<Task> tasks = Storage.getListOfUncompletedTasks();
 	private static ArrayList<Task> tasksOnDate = new ArrayList<Task>();
-	//FORMAT: ["xxxxH to xxxxH", ... ]
 	private static ArrayList<IntegerPair> freeSlots = new ArrayList<IntegerPair>();
 	
 	private static HashMap<Integer, ArrayList<Integer>> timeSlots = new HashMap<Integer, ArrayList<Integer>>(24);
