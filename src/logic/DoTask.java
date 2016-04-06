@@ -1,3 +1,5 @@
+//@@author A0076520L
+
 package logic;
 
 import shared.*;
@@ -7,7 +9,6 @@ import shared.Keywords;
 
 public class DoTask extends Functionality {
 
-	private final String TASK_NOT_FOUND_MSG = "The task is not found";
 	/**
 	 * This method allows the user to mark task as completed
 	 * 
