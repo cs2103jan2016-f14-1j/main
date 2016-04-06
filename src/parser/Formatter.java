@@ -198,24 +198,6 @@ public class Formatter extends Logger {
 	private static int lastIndexOf(ArrayList as) {
 		return as.size() - 1;
 	}
-	/**
-	 * temporary method that will replace all other getTaskName methods
-	 * @param taskName
-	 * @return
-	 */
-	public static String extractTaskName(String taskName) {
-		ArrayList<String> as = breakString(taskName);
-		ArrayList<String> out = new ArrayList<String>();
-		for (String token : as) {
-			if (isPreposition(token)) {
-				
-			} else { // !isPreposition(token)
-				out.add(token);
-			}
-		}
-		
-		return convertArrayListToStringWithoutCategories(out);
-	}
 	
 	/**
 	 * TODO: GG UGLY CODE, PLEASE REFACTOR 
@@ -297,27 +279,24 @@ public class Formatter extends Logger {
 		for (String t : breakBySpacedPrepositionWithoutFirstElement(s)) {
 			logf("getDateTimes", t);
 			Date d = getDateFromString(handleSpecialCharacters(t));
-			if (as.get(Keywords.INDEX_STARTDATE) != null &&
-				as.get(Keywords.INDEX_ENDDATE) != null &&
-				as.get(Keywords.INDEX_STARTTIME) != null &&
-				as.get(Keywords.INDEX_ENDTIME) != null) {
+			if (areDatesFull(as)) {
 				logf("getDateTimes", "datetimes fully filled");
-				break; // all 4 datetimes filled up, exit loop
+				break;
 			}
 			if (d != null) { // either date or time
 				if (isDateString(t)) {
 					logf("getDateTimes, isDateString", t);
-					if (as.get(Keywords.INDEX_STARTDATE) == null) {
+					if (isThereStartDate(as)) {
 						as.set(Keywords.INDEX_STARTDATE, d);
 					} else {
 						as.set(Keywords.INDEX_ENDDATE, d);
 					}
 				} else { // if (isTimeString(t)) 
 					logf("getDateTimes, isTimeString", t);
-					if (as.get(Keywords.INDEX_STARTTIME) == null) {
+					if (isThereStartTime(as)) {
 						as.set(Keywords.INDEX_STARTTIME, d);
-						if (as.get(Keywords.INDEX_STARTDATE) == null) {
-							as.set(Keywords.INDEX_STARTDATE, new Date()); // add today if time exist
+						if (isThereStartDate(as)) {
+							as.set(Keywords.INDEX_STARTDATE, new Date());
 						}
 					} else {
 						as.set(Keywords.INDEX_ENDTIME, d);
@@ -326,6 +305,18 @@ public class Formatter extends Logger {
 			}			
 		}		
 		return as;
+	}
+	private static boolean isThereStartDate(ArrayList<Date> as) {
+		return as.get(Keywords.INDEX_STARTDATE) == null;
+	}
+	private static boolean isThereStartTime(ArrayList<Date> as) {
+		return as.get(Keywords.INDEX_STARTTIME) == null;
+	}
+	private static boolean areDatesFull(ArrayList<Date> as) {
+		return as.get(Keywords.INDEX_STARTDATE) != null &&
+				as.get(Keywords.INDEX_ENDDATE) != null &&
+				as.get(Keywords.INDEX_STARTTIME) != null &&
+				as.get(Keywords.INDEX_ENDTIME) != null;
 	}
 	private static String handleSpecialCharacters(String s) {
 		String out = s.replaceAll("#[\\S]*[\\s]{0,1}", Keywords.EMPTY_STRING);
@@ -349,6 +340,7 @@ public class Formatter extends Logger {
 		as.remove(Keywords.FIRST_ELEMENT);
 		return as;
 	}
+	
 	public static Date getDateFromString(String s) {
 		List<Date> parse = new PrettyTimeParser().parse(s);
 		if (!parse.isEmpty()) {
@@ -359,52 +351,23 @@ public class Formatter extends Logger {
 		logf("getDateFromString", String.format("%s (failed)", s));
 		return null;
 	}
+	
 	/**
 	 * assumption: String d is valid date string of (dMMM | ddMMM)
 	 */
 	private static Date convertToDate(String d) {
-		DateFormat df = new SimpleDateFormat(Keywords.DDMMM);
-		if (d.length() == 4) {
-			df = new SimpleDateFormat(Keywords.DMMM);
-		}
+		DateFormat df = isFormatDMMM(d) ? 
+				new SimpleDateFormat(Keywords.DMMM) :
+				new SimpleDateFormat(Keywords.DDMMM);
 		try {
-			return df.parse(d);  
+			return df.parse(d);
 		} catch (Exception e) {
+			logf("getDateFromString, convertToDate", String.format("%s", e));
 		}
 		return null; // will never reach this statement
 	}
-	/**
-	 * assumption: String d is valid date string of (dMMM | ddMMM)
-	 */
-	public static String getAfterPreposition(String s) {
-		ArrayList<String> as = breakString(s);
-		String answer = "";
-		for (int i = lastIndexOf(as); i >= 0; i--) {
-			if (!isPreposition(as.get(i))) {
-				answer = as.get(i) + Keywords.EMPTY_STRING + answer;
-			} else {
-				break;
-			}
-		}
-		return answer;
-	}
-	
-	// For edit to
-	public static String getAfterFirstPrep(String s){
-		
-		ArrayList<String> as = breakString(s);
-		String answer = "";
-		boolean start = false;
-		for (int i = 0 ; i < as.size() ; i++) {
-			if (start) {
-				answer += as.get(i) + Keywords.SPACE_STRING;
-			}
-			if (isPreposition(as.get(i))) {
-				start = true;
-			} 
-		}
-
-		return answer.trim();
+	private static boolean isFormatDMMM(String s) {
+		return s.length() == 4;
 	}
 
 }
