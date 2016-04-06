@@ -8,15 +8,18 @@ import java.io.IOException;
 import java.util.Date;
 
 public class Logger {
+	final static String STOUT_FORMAT = "%s %s";
+	final static String LOG_FORMAT = "%s (%s): %s\n";
+	
 	protected static void log(String s) {
-		System.out.println(String.format("%s %s", new Date(), s));
+		System.out.println(String.format(STOUT_FORMAT, new Date(), s));
 	}
 	
 	protected static void logf(String className, String s) {
 		try {
 			BufferedWriter bufferWriter = 
 					new BufferedWriter(new FileWriter(Keywords.LOG_FILEPATH, true));
-			bufferWriter.write(String.format("%s (%s): %s\n", className, new Date(), s));
+			bufferWriter.write(String.format(LOG_FORMAT, className, new Date(), s));
 			bufferWriter.close();
 		} catch (IOException ex) {
 		}

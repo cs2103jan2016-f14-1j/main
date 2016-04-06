@@ -169,7 +169,7 @@ public class Task extends Logger {
 	}
 	
 	public void togglePriority(){
-		this.priority = this.priority == 0 ? 1 : 0;
+		this.priority = (this.priority == 0) ? 1 : 0;
 	}
 	
 	/**
@@ -295,31 +295,33 @@ public class Task extends Logger {
 		
 	}
 	private String getHumanReadableTimeFromIntTime(int time) {
-		int hour = time / 100 == 0 ? 12 : time / 100;
+		int hour = (time / 100 == 0) ? 12 : (time / 100);
 		if (time < 1200) {
 			return String.format("%d:%02dam", hour, time % 100);
 		} else {
-			return String.format("%d:%02dpm", hour - 12 == 0 ? 12 : hour - 12, time % 100);
+			return String.format("%d:%02dpm", (hour - 12 == 0) ? 12 : (hour - 12), (time % 100));
 		}
 		
 	}
 	
 	//For JUnit Testing Purposes
 	public boolean like(Task b){
-		boolean isCat = true, isDate=true;
-		for(String cat: b.getCategories()){
-			if(!categories.contains(cat)){
+		boolean isCat = true, 
+				isDate = true;
+		for (String cat : b.getCategories()){
+			if (!categories.contains(cat)){
 				isCat = false;
 				break;
 			}
 		}
 		
-		for(Date d:b.getDatetimes()){
-			if(!datetimes.contains(d)){
+		for (Date d : b.getDatetimes()) {
+			if (!datetimes.contains(d)){
 				isDate = false;
 				break;
 			}
 		}
-		return (this.date.equals(b.getDate()) && this.task.equals(b.getTask())&& this.intDate == b.getIntDate() && isCat && isDate)? true: false; 
+		return (this.date.equals(b.getDate()) && this.task.equals(b.getTask())
+				&& this.intDate == b.getIntDate() && isCat && isDate) ? true : false; 
 	}
 }
