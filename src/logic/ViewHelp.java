@@ -23,7 +23,7 @@ public class ViewHelp extends Functionality {
 		help.add("Eg. edit 1 to 15Feb");
 		help.add("Set priority");
 		help.add("mark <task_ID#>");
-		help.add("Eg. set 2 to 10");
+		help.add("Eg. mark 2 3");
 		help.add("Complete Tasks");
 		help.add("do <TODO | task_ID#>");
 		help.add("Eg. do receive quest");
@@ -36,8 +36,9 @@ public class ViewHelp extends Functionality {
 		help.add("Undo previous command");
 		help.add("[u | undo]");
 		help.add("Keyboard shortcuts");
-		help.add("Undo previous command: Ctrl+Z");
-		help.add("Scroll through command history: \u2191 or \u2193");
+		help.add("Launch application: CTRL + ALT + D");
+		help.add("Choose file location: ALT + E");
+		help.add("Exit program: ESC");
 		return help;
 	}
 }
