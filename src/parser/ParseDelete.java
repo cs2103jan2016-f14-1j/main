@@ -12,6 +12,7 @@ public class ParseDelete {
 	public static Notification deleteTask(String rawInput) {
 		ArrayList<Integer> ids = Formatter.breakToIds(rawInput);
 		ArrayList<String> cats = Formatter.breakToCats(rawInput);
+		
 		return Logic.deleteTask(ids, cats);
 	}
 }

@@ -16,8 +16,7 @@ public class ParseAdd extends Logger {
 	private static Task task;
 	public static Notification addTask(String rawInput) {
 	
-		String 	taskName = rawInput, 
-				prep = Keywords.EMPTY_STRING;
+		String 	taskName = rawInput;
 		ArrayList<String> inputParts = Formatter.breakString(rawInput), 
 				categories = new ArrayList<String>(),
 				preposition = new ArrayList<String>();
@@ -29,7 +28,6 @@ public class ParseAdd extends Logger {
 			taskName = Formatter.getTaskNameWithCategories(rawInput);
 		} else if (hasPreposition) {
 			taskName = Formatter.getTaskNameWithPreposition(rawInput);
-			//prep = getFirstElementInArrayList(preposition);
 		}
 	
 		task = new Task(datetimes, taskName, categories); 

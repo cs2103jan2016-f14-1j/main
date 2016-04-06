@@ -281,11 +281,13 @@ public class Task extends Logger {
 	}
 
 	public void setDateTimes(ArrayList<Date> datetimes) {
-		if(datetimes.get(Keywords.INDEX_STARTTIME)!=null || datetimes.get(Keywords.INDEX_ENDTIME)!=null){
+		if (datetimes.get(Keywords.INDEX_STARTTIME) != null || 
+				datetimes.get(Keywords.INDEX_ENDTIME) != null) {
 			this.datetimes.set(Keywords.INDEX_STARTTIME, datetimes.get(Keywords.INDEX_STARTTIME));
 			this.datetimes.set(Keywords.INDEX_ENDTIME, datetimes.get(Keywords.INDEX_ENDTIME));
 		}
-		if(datetimes.get(Keywords.INDEX_STARTDATE)!=null || datetimes.get(Keywords.INDEX_ENDDATE)!=null){
+		if (datetimes.get(Keywords.INDEX_STARTDATE) != null || 
+				datetimes.get(Keywords.INDEX_ENDDATE) != null) {
 			this.datetimes.set(Keywords.INDEX_STARTDATE, datetimes.get(Keywords.INDEX_STARTDATE));
 			this.datetimes.set(Keywords.INDEX_ENDDATE, datetimes.get(Keywords.INDEX_ENDDATE));
 		}
