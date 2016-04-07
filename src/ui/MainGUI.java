@@ -1,3 +1,5 @@
+//@@author A0125387Y
+
 package ui;
 
 import org.jnativehook.GlobalScreen;
@@ -32,13 +34,14 @@ public class MainGUI implements NativeKeyListener {
 	private static Shell shell;
 
 	public static void main(String[] args) throws Exception {
+		
 		Keywords.currLocation = MainGUI.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString();
 		Keywords.currLocation = Keywords.currLocation.replace(Keywords.OLD_FILE_DELIMITER, Keywords.NEW_FILE_DELIMITER);
 		Keywords.currLocation = Keywords.currLocation.substring(Keywords.currLocation.indexOf(Keywords.NEW_FILE_DELIMITER) + 1, Keywords.currLocation.lastIndexOf(Keywords.NEW_FILE_DELIMITER)+1);
+		
 		// Run startup.reg to add preference
 		String value = "\"" + Keywords.currLocation + JAR_NAME +"\"";
 		WinRegistry.writeStringValue(WinRegistry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", KEY_NAME, value);
-		//WinRegistry.deleteValue(WinRegistry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "dotdotdot autorun key");
 		
 		Keywords.settingsPath = Keywords.currLocation + Keywords.settingsPath;
 	    
@@ -108,11 +111,9 @@ public class MainGUI implements NativeKeyListener {
 
 	@Override
 	public void nativeKeyPressed(NativeKeyEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getKeyCode() == NativeKeyEvent.VC_D) {
             keyD = true;
             if (keyD && keyCtrl && keyAlt) {
-    	        
                	Display.getDefault().asyncExec(
                			new Runnable(){
               			       public void run(){
@@ -124,7 +125,7 @@ public class MainGUI implements NativeKeyListener {
                	try {
     					GlobalScreen.unregisterNativeHook();
     				} catch (NativeHookException e1) {
-    					e1.printStackTrace();
+    					System.exit(0);
     				}
             }
             keyD = false;
@@ -139,7 +140,6 @@ public class MainGUI implements NativeKeyListener {
 
 	@Override
 	public void nativeKeyReleased(NativeKeyEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getKeyCode() == NativeKeyEvent.VC_D) {
             keyD = false;
         } else if (e.getKeyCode() == NativeKeyEvent.VC_CONTROL_L || e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
@@ -151,8 +151,7 @@ public class MainGUI implements NativeKeyListener {
 
 	@Override
 	public void nativeKeyTyped(NativeKeyEvent e) {
-		// TODO Auto-generated method stub
-		
+		// We do not need this method
 	}	
 	
 }

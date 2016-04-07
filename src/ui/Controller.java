@@ -1,3 +1,5 @@
+//@@author A0125387Y
+
 package ui;
 
 import java.io.BufferedReader;
@@ -45,13 +47,12 @@ import storage.*;
 
 public class Controller {
 
-	private static final int WRAP_AROUND = 40;
-
 	private final static int NUMBER_OF_DAYS = 7;
 	private HashMap<String, ArrayList<Task>> putIntoDays = new HashMap<>();
 	private static String[] days = new String[NUMBER_OF_DAYS];
 	private final static String[] DEFAULT_DAYS = new String[] { "SATURDAY", "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY",
 			"THURSDAY", "FRIDAY" };
+	
 	private final Object object = new Object();
 
 	private final static String WARNING_FILE_PATH = "images/warning-icon.png";
@@ -65,7 +66,6 @@ public class Controller {
 	private final static String WEEK = "WEEK";
 	private final static String OTHERS = "OTHERS";
 	private final static int STARTING_INDEX = 2;
-	private final static int WHITESPACES = 1;
 
 	private View view;
 	private Parser parser;
@@ -120,10 +120,8 @@ public class Controller {
 	}
 
 	private void displayNotification(Notification notify) {
-
 		Label tip = view.getNotification();
 		tip.setText(notify.getTitle() + " " + notify.getMessage());
-		// Notification.clear();
 	}
 
 	private void displayCategory() {
@@ -221,41 +219,29 @@ public class Controller {
 				TableItem item = (TableItem) event.item;
 				if (item.getData() == object) {
 					switch (event.type) {
-					case SWT.MeasureItem: {
-						Rectangle rect = starImage.getBounds();
-						event.width += rect.width;
-						event.height = Math.max(event.height, rect.height + 2);
-						break;
-					}
-					case SWT.PaintItem: {
-						int x = 7;
-						Rectangle rect = starImage.getBounds();
-						int offset = Math.max(0, (event.height - rect.height) / 2);
-						event.gc.drawImage(starImage, x, event.y + offset + 1);
-						break;
-					}
+						case SWT.MeasureItem: {
+							Rectangle rect = starImage.getBounds();
+							event.width += rect.width;
+							event.height = Math.max(event.height, rect.height + 2);
+							break;
+						}
+						case SWT.PaintItem: {
+							int x = 7;
+							Rectangle rect = starImage.getBounds();
+							int offset = Math.max(0, (event.height - rect.height) / 2);
+							event.gc.drawImage(starImage, x, event.y + offset + 1);
+							break;
+						}
 					}
 				}
 			}
-
 		};
+		
 		view.getMainTable().addListener(SWT.MeasureItem, paintStarListener);
 		view.getMainTable().addListener(SWT.PaintItem, paintStarListener);
 
 		for (Task task : list) {
 
-			/*
-			 * String formattedOutput = WordUtils.wrap(taskIDandDesc,
-			 * WRAP_AROUND, "\n", true); String outputArray[] =
-			 * formattedOutput.split("\n"); for (int j = 0; j <
-			 * outputArray.length; j++) {
-			 * 
-			 * mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-			 * 
-			 * if (j == 0) { mainItem.setText(outputArray[j]); } else { // Add
-			 * necessary white space to align tasks mainItem.setText(" " +
-			 * outputArray[j]); } }
-			 */
 			boolean added = false;
 			Date startTaskDate = task.getDatetimes().get(Keywords.INDEX_STARTDATE);
 			Date endTaskDate = task.getDatetimes().get(Keywords.INDEX_ENDDATE);
@@ -309,7 +295,6 @@ public class Controller {
 					}
 				}
 			}
-
 		}
 
 		if (!insertIntoTable(OVERDUE, false)) {
@@ -320,7 +305,6 @@ public class Controller {
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 		mainItem.setText("                                                                                                  ");
 		lastIndex++;
-		mainItem.setText("                                                                                                  ");
 		boolean thirdItem = false;
 
 		for (String day : days) {
@@ -495,7 +479,6 @@ public class Controller {
 			}
 		});
 
-		// http://git.eclipse.org/c/platform/eclipse.platform.swt.git/tree/examples/org.eclipse.swt.snippets/src/org/eclipse/swt/snippets/Snippet320.java
 		input.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent event) {
 
@@ -614,9 +597,7 @@ public class Controller {
 						}
 					});
 				} catch (InterruptedException e) {
-
 				} catch (InvocationTargetException e) {
-
 				}
 
 			}
@@ -663,10 +644,6 @@ public class Controller {
 	private void inputToNormal() {
 		view.getInput().setText(View.EMPTY_STRING);
 		view.getInput().setForeground(View.normalColor);
-	}
-
-	private boolean isTextEmpty(StyledText t) {
-		return t.getText().length() == 0;
 	}
 
 	private int calculateDiffInDay(Calendar startDate, Calendar endDate) {
@@ -800,14 +777,13 @@ public class Controller {
 		} catch (FileNotFoundException ex) {
 			File f = new File(Keywords.settingsPath);
 			f.createNewFile();
-			// systemPrint(FILE_NOT_FOUND_ERROR_MSG);
 		} finally {
 			try {
 				if (bufferReader != null) {
 					bufferReader.close();
 				}
 			} catch (IOException ex) {
-				// systemPrint(IO_ERROR_MSG);
+				System.exit(0);
 			}
 		}
 	}
@@ -836,7 +812,7 @@ public class Controller {
 			}
 
 		} catch (Exception ex) {
-			// systemPrint(IO_ERROR_MSG);
+			System.exit(0);
 		}
 	}
 
@@ -863,6 +839,7 @@ public class Controller {
 		}
 	}
 
+	// http://git.eclipse.org/c/platform/eclipse.platform.swt.git/tree/examples/org.eclipse.swt.snippets/src/org/eclipse/swt/snippets/Snippet320.java
 	public void setAutoComplete() {
 
 		view.getPopupTable().addListener(SWT.DefaultSelection, event -> {
@@ -926,10 +903,8 @@ public class Controller {
 		mainItem.setFont(View.headingFont);
 		
 		if(tasks.isEmpty()){
-			
 			mainItem.setForeground(View.missingColor);
 		} else {
-			
 			mainItem.setForeground(View.orangeColor);
 		}
 		

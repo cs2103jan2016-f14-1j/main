@@ -1,3 +1,5 @@
+//@@author A0125387Y
+
 package ui;
 
 import org.eclipse.swt.SWT;
@@ -30,6 +32,7 @@ public class View extends Logger{
 	protected final static String GUI_HINT = "< Input ? or help to show available commands >";
 	protected final static String EMPTY_STRING = "";
     private final static String APP_ICON = "images/logo.png";
+    
 	protected final static Color hintColor = Display.getDefault().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
 	protected final static Color normalColor = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
 	protected final static Color orangeColor = new Color (Display.getCurrent(), 255, 116, 23);
@@ -70,12 +73,10 @@ public class View extends Logger{
 		shell.setImage(new Image(Display.getCurrent(), Thread.currentThread().getContextClassLoader().getResourceAsStream(APP_ICON)));
 		setCenterOfScreen();
 		
-		// For shortcut command
+		// For shortcut command CTRL + ALT + D
 		shell.addListener(SWT.Close, new Listener() {
-			
 			@Override
 			public void handleEvent(org.eclipse.swt.widgets.Event arg0) {
-				// TODO Auto-generated method stub
 				arg0.doit = false;
 				shell.setVisible(false);
 				try {
@@ -84,7 +85,6 @@ public class View extends Logger{
 		        catch (NativeHookException ex) {
 		            System.exit(0);
 		        }
-
 		        GlobalScreen.addNativeKeyListener(new MainGUI());
 			}
 	    });
