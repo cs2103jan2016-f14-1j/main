@@ -44,7 +44,6 @@ public class ViewTask extends Functionality {
 		if (taskCats.isEmpty()) {
 			setNTitle(Keywords.MESSAGE_ERROR);
 			setNMessage("No such category!");
-			// TODO: here might need to return same view
 		}
 		return taskCats;
 	}
