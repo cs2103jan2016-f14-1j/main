@@ -46,7 +46,8 @@ public class Categories {
 			if (t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
 				for (String cat : t.getCategories()) {
 					if (!cat.equals(Keywords.EMPTY_STRING)) {
-						int currentCount = (noOfTasksPerCat.get(cat) == null) ? 0 : noOfTasksPerCat.get(cat);
+						int currentCount = (noOfTasksPerCat.get(cat) == null) ? 0 
+								: noOfTasksPerCat.get(cat);
 						currentCount++;
 						noOfTasksPerCat.put(cat, currentCount);
 					}
@@ -82,14 +83,15 @@ public class Categories {
 	private static String getUncompletedCatWithCount(ArrayList<Task> tasks) {
 		for (Task t : tasks) {
 			if (t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
-				int currentCount = (noOfTasksPerCat.get("Uncompleted") == null) ? 0
-						: noOfTasksPerCat.get("Uncompleted");
+				int currentCount = (noOfTasksPerCat.get(Keywords.CATEGORY_DEFAULT) == null) ? 0
+						: noOfTasksPerCat.get(Keywords.CATEGORY_DEFAULT);
 				currentCount++;
 				noOfTasksPerCat.put("Uncompleted", currentCount);
 			}
 		}
-		int count = (noOfTasksPerCat.get("Uncompleted") == null) ? 0 : noOfTasksPerCat.get("Uncompleted");
-		return new String("Uncompleted (" + count + ")");
+		int count = (noOfTasksPerCat.get(Keywords.CATEGORY_DEFAULT) == null) ? 0 
+				: noOfTasksPerCat.get(Keywords.CATEGORY_DEFAULT);
+		return new String(Keywords.CATEGORY_DEFAULT +" (" + count + ")");
 	}
 	
 	//might need this for getting suggested categories
@@ -103,11 +105,12 @@ public class Categories {
 				continue;
 			}
 			for (String cat : t.getCategories()) {
-				if(!catNames.contains("#"+cat)) {
-					catNames.add("#"+cat);
+				if(!catNames.contains(cat)) {
+					catNames.add(cat);
 				}
 			}
 		}
+		catNames.add(Keywords.CATEGORY_DEFAULT);
 		return catNames;
 	}
 }

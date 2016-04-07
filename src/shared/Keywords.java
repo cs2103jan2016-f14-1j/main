@@ -34,6 +34,7 @@ public class Keywords {
 	public static final String INVALID_ID = "Invalid ID entered!";
 	public static final String TASKID_PREPEND = "-";
 	public static final String CATEGORY_PREPEND = "#";
+	public static final String CATEGORY_DEFAULT = "Uncompleted";
 	
 	public static final String PREPOSITION_ON = " on ";
 	public static final String PREPOSITION_TO = " to ";

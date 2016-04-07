@@ -9,32 +9,37 @@ import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class ViewTask extends Functionality {
 	
-	private static ArrayList<String> categories =  new ArrayList<String>();
+	private static ArrayList<String> currCat = defaultCat();
 	
 	public boolean sortTask(String sortType) {
 		return true;
 	}
 
+	private static ArrayList<String> defaultCat() {
+		ArrayList<String> cat = new ArrayList<String>();
+		cat.add(Keywords.CATEGORY_DEFAULT);
+		return cat;
+	}
+
 	public ArrayList<Object> viewTasks(String input) {
-		
-		categories.clear();
 		ArrayList<Object> combined = new ArrayList<Object>();
 		if (input.equals(Keywords.EMPTY_STRING) || input.equalsIgnoreCase("not done")) {
 			setNTitle(String.format(Keywords.MESSAGE_VIEW_SUCCESS, "Default"));
 			combined.add(getNotification());
 			combined.add(Storage.getListOfUncompletedTasks());
-			categories.add("Uncompleted");
+			currCat = defaultCat();
 			return combined;
 		}
 		setNTitle(String.format(Keywords.MESSAGE_VIEW_SUCCESS, input));
 		if (input.equalsIgnoreCase("done")) {
+			currCat.clear();
 			combined.add(getNotification());
 			combined.add(Storage.getListOfCompletedTasks());
 			return combined;
 		} else {
-			categories = new ArrayList<String>(Arrays.asList(input.split(Keywords.SPACE_STRING)));
+			currCat = new ArrayList<String>(Arrays.asList(input.split(Keywords.SPACE_STRING)));
 			combined.add(getNotification());
-			combined.add(viewByCat(categories));
+			combined.add(viewByCat(currCat));
 			return combined;
 		}
 	}
@@ -49,6 +54,6 @@ public class ViewTask extends Functionality {
 	}
 	
 	public static ArrayList<String> getCategories(){
-		return categories;
+		return currCat;
 	}
 }

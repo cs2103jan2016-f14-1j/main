@@ -80,7 +80,6 @@ public class Logic {
 	}
 	
 	public static ArrayList<Task> getUncompletedTasks(){
-		ViewTask.getCategories().add("Uncompleted");
 		return Storage.getListOfUncompletedTasks();
 	}
 	

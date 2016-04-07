@@ -134,7 +134,6 @@ public class Controller {
 			categoryItem = new TableItem(view.getCategoryTable(), SWT.NONE);
 			categoryItem.setText(categories.get(i));
 			for (int z = 0; z < ViewTask.getCategories().size(); z++) {
-
 				String compareCategory = categories.get(i);
 				compareCategory = compareCategory.substring(0, compareCategory.indexOf(Keywords.SPACE_STRING));
 
