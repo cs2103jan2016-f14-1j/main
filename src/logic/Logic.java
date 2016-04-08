@@ -1,4 +1,9 @@
-//@@author A0135778N
+/**
+ * This class acts as a facade for Parser and UI components to interact
+ * with the Logic component.
+ * 
+ * @@author A0135778N
+ */
 
 package logic;
 

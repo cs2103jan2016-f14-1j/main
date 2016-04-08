@@ -9,14 +9,7 @@ import org.jnativehook.keyboard.NativeKeyListener;
 
 import shared.Keywords;
 
-import java.awt.FileDialog;
-import java.util.concurrent.Executor;
-
-import javax.swing.JFrame;
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;

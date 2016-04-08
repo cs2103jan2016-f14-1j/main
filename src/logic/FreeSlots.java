@@ -9,7 +9,7 @@ import shared.*;
 import storage.Storage;
 
 public class FreeSlots {
-	private static ArrayList<Task> tasks = Storage.getListOfUncompletedTasks();
+	private static ArrayList<Task> tasks = new ArrayList<Task>();
 	private static ArrayList<Task> tasksOnDate = new ArrayList<Task>();
 	private static ArrayList<IntegerPair> freeSlots = new ArrayList<IntegerPair>();
 	
@@ -30,7 +30,7 @@ public class FreeSlots {
 	}
 	// assume input is displayDate format e.g. 27Feb, 02Mar
 	public static ArrayList<String> getFreeSlots(int input) {
-		//initTimeSlot();
+		tasks = Storage.getListOfUncompletedTasks();
 		return convertToArrayListString(compileFreeSlots(input));
 	}
 	private static ArrayList<String> convertToArrayListString(ArrayList<IntegerPair> aip) {
