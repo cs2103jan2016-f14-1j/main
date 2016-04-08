@@ -20,16 +20,31 @@ public class AddTask extends Functionality {
 			return getNotification();
 		}
 		ArrayList<IntegerPair> freeS = FreeSlots.getFreeSlotsInt(task.getIntDate());
-		// TODO: get warning notification for clashing tasks
+		if (hasCollision(freeS, task)){ // not working yet! TODO
+			setNTitle(Keywords.MESSAGE_ADD_SUCCESS);
+			setNMessage("Conflicting time slots!");
+		} else {
+			setNTitle(Keywords.MESSAGE_ADD_SUCCESS);
+			setNMessage(task.getTask() + " has been added!");
+		}
 
 		// Add to history the action to be done
-		setNTitle(Keywords.MESSAGE_ADD_SUCCESS);
-		setNMessage(task.getTask() + " has been added!");
 		Storage.addTaskToList(task);
 		super.addToFuncTasks(task);
 		super.addToHistory("add");
 		super.synchronization();
 		return getNotification();
+	}
+
+	private boolean hasCollision(ArrayList<IntegerPair> freeS, Task task) {
+		for (IntegerPair slots : freeS){
+			if (slots.inBetween(task.getIntStartTime())) {
+				return true;
+			} else if (slots.inBetween(task.getIntEndTime())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
