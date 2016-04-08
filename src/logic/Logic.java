@@ -68,8 +68,8 @@ public class Logic {
 	}
 
 	public static HashMap<String,Object> searchTask(String words, 
-			int isPriortise, int date, ArrayList<String> categories) {
-		return new SearchTask().searchTask(words, isPriortise, date, categories);
+			int isPriortise, String month, int date, ArrayList<String> categories) {
+		return new SearchTask().searchTask(words, isPriortise, date, categories, month);
 	}
 	
 	/**
