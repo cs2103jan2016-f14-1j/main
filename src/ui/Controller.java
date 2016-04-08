@@ -884,8 +884,9 @@ public class Controller {
 		mainItem.setForeground(View.orangeColor);
 		
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
+		String form = "";
+		
 		if(replace.size()>1){
-			String form = "";
 			for(String s : replace){
 				form+=s+" ";
 			}
@@ -893,7 +894,10 @@ public class Controller {
 			mainItem.setFont(View.italicFont);
 			mainItem.setForeground(View.orangeColor);
 		}
-		mainItem = new TableItem(view.getMainTable(),SWT.NONE);
+		
+		if(!form.equals(Keywords.EMPTY_STRING)){
+			mainItem = new TableItem(view.getMainTable(),SWT.NONE);
+		}
 		mainItem = new TableItem(view.getMainTable(),SWT.NONE);
 		mainItem.setText("Tasks");
 		mainItem.setFont(View.headingFont);
