@@ -16,9 +16,10 @@ import storage.Storage;
 
 public class SearchTask extends Functionality {
 
-	ArrayList<String>replace;
-	public HashMap<String, Object> searchTask(String words, int isPriortise, int date, ArrayList<String> categories, String month){
-		replace =new ArrayList<String>();
+	ArrayList<String> replace;
+	public HashMap<String, Object> searchTask(String words, int isPriortise,
+			String month, int date, ArrayList<String> categories){
+		replace = new ArrayList<String>();
 		replace.add("Do you mean:");
 		HashMap<String, Object> results = new HashMap<String, Object>();
 		ArrayList<Task> result = new ArrayList<Task>();

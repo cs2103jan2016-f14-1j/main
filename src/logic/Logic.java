@@ -1,8 +1,8 @@
+//@@author A0135778N
 /**
  * This class acts as a facade for Parser and UI components to interact
  * with the Logic component.
  * 
- * @@author A0135778N
  */
 
 package logic;
@@ -67,9 +67,9 @@ public class Logic {
 		return new MarkTask().prioritise(taskIDs);
 	}
 
-	public static HashMap<String,Object> searchTask(String words, 
-			int isPriortise, String month, int date, ArrayList<String> categories) {
-		return new SearchTask().searchTask(words, isPriortise, date, categories, month);
+	public static HashMap<String,Object> searchTask(String words, int isPriortise,
+			String month, int date, ArrayList<String> categories) {
+		return new SearchTask().searchTask(words, isPriortise, month, date, categories);
 	}
 	
 	/**

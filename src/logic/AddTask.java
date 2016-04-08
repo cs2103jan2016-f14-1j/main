@@ -1,4 +1,6 @@
-//@@author A0135778N
+/**
+ * //@@author A0135778N
+ */
 
 package logic;
 
@@ -10,7 +12,8 @@ import storage.Storage;
 public class AddTask extends Functionality {
 	
 	/**
-	 * Adds a task, also checks if task's time slot clashes with another
+	 * Adds a task, also checks if task's time slot clashes with another.
+	 * 
 	 * @param task
 	 * @return Notification object
 	 */
@@ -19,8 +22,9 @@ public class AddTask extends Functionality {
 			setNTitle(Keywords.MESSAGE_ERROR);
 			return getNotification();
 		}
-		ArrayList<IntegerPair> freeS = FreeSlots.getFreeSlotsInt(task.getIntDate()); //only get free slots
-		ArrayList<Integer> taskIDs = FreeSlots.getConflict(task); //should handle single time tasks
+		
+		ArrayList<IntegerPair> freeS = FreeSlots.getFreeSlotsInt(task.getIntDate()); //get free time slots
+		ArrayList<Integer> taskIDs = FreeSlots.getConflict(task); //get taskIDs that has time slot conflicts
 		if (freeS.isEmpty()){ // if empty means free whole day
 			if (taskIDs.size() == 1) {
 				setNTitle(Keywords.MESSAGE_ADD_SUCCESS);
