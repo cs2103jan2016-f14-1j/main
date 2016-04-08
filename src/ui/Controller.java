@@ -338,9 +338,6 @@ public class Controller {
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				lastIndex++;
 
-				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
-
-
 			} else if (thirdItem) {
 
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
