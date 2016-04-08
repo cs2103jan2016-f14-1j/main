@@ -12,10 +12,18 @@ import java.util.ArrayList;
 
 import shared.Task;
 import shared.Keywords;
+import shared.Logger;
 
 public class ReadWrite {
 	
-	protected static void readTasksFromFile(ArrayList<Task> at) {
+	private static final String ERROR_MSG = "ReadWrite Error Msg";
+	
+	/**
+	 * Method to read the data from file and store it in the list
+	 * @param list 
+	 * 			Obtain an arraylist to add tasks to
+	 */
+	protected static void readTasksFromFile(ArrayList<Task> list) {
 		BufferedReader bufferReader = null;
 		try {
 			bufferReader = new BufferedReader(new FileReader(Keywords.filePath));
@@ -23,37 +31,42 @@ public class ReadWrite {
 			String currentLine = Keywords.EMPTY_STRING;
 			while ((currentLine = bufferReader.readLine()) != null) {
 				if (currentLine.contains(Keywords.STORE_DELIMITER)) {
-					at.add(Task.formatStringToObject(currentLine));
+					list.add(Task.formatStringToObject(currentLine));
 				} else {
 					FreeIDs.convertIDStringToList(currentLine);
 				}
 			}
 		} catch (FileNotFoundException ex) {
-			// systemPrint(FILE_NOT_FOUND_ERROR_MSG);
+			Logger.logf(ERROR_MSG, "File was not found.");
 		} catch (IOException ex) {
-			// systemPrint(IO_ERROR_MSG);
+			Logger.logf(ERROR_MSG, "Usage of BufferReader IOException caught.");
 		} finally {
 			try {
 				if (bufferReader != null) {
 					bufferReader.close();
 				}
 			} catch (IOException ex) {
-				// systemPrint(IO_ERROR_MSG);
+				Logger.logf(ERROR_MSG, " Closing of BufferReader IOException caught.");
 			}
 		}
 	}
 
-	protected static void writeTasksToFile(ArrayList<Task> at) {
+	/**
+	 * Method to write tasks to file
+	 * @param list 
+	 * 			Obtain a list of tasks to write to file
+	 */
+	protected static void writeTasksToFile(ArrayList<Task> list) {
 		try {
 			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(Keywords.filePath));
-			for (int index = 0; index < at.size(); index++) {
-				bufferWriter.write(Task.formatObjectToString(at.get(index)));
+			for (int index = 0; index < list.size(); index++) {
+				bufferWriter.write(Task.formatObjectToString(list.get(index)));
 				bufferWriter.newLine();
 			}
 			bufferWriter.write(FreeIDs.convertIDListToString());
 			bufferWriter.close();
 		} catch (IOException ex) {
-			//systemPrint(IO_ERROR_MSG);
+			Logger.logf(ERROR_MSG, "Usage of BufferWriter IOException caught.");
 		}
 	}
 

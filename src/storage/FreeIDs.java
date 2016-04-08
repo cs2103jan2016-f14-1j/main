@@ -12,16 +12,31 @@ import shared.Keywords;
 public class FreeIDs {
 
 	private static LinkedList<Integer> freeIDs;
-	private static int currentTaskId = 0;
+	private static int currentTaskId;
 	
+	/**
+	 * Initialize the variables
+	 */
 	protected static void init(){
 		freeIDs = new LinkedList<Integer>();
+		currentTaskId = 0;
 	}
 	
+	/**
+	 * A clear public method for callers
+	 * @return
+	 * 		the next available ID
+	 */
 	public int getNextAvailID(){
 		return getNextAvailableID();
 	}
 	
+	/**
+	 * Check if the list is empty and generate ID using generateID()
+	 * else poll ID from the list
+	 * @return
+	 * 		the next ID
+	 */
 	protected static int getNextAvailableID() {
 		sortIDs();
 		if (freeIDs.isEmpty()) {
@@ -30,10 +45,23 @@ public class FreeIDs {
 		return freeIDs.poll();
 	}
 
+	/**
+	 * Add the ID to the list
+	 * @param id
+	 * 			the ID to be added
+	 */
 	protected static void addToFreeId(int id) {
-		freeIDs.offerFirst(id);
+		//detects if there are any repeated IDs
+		if(!freeIDs.contains(id)){
+			freeIDs.offerFirst(id);
+		}
 	}
 	
+	/**
+	 * Remove the specific ID from the list
+	 * @param id
+	 * 			the ID to be removed
+	 */
 	protected static void removeSpecificId(int id){
 		boolean foundID = false;
 		for(int i : freeIDs){
@@ -46,6 +74,11 @@ public class FreeIDs {
 		}
 	}
 	
+	/**
+	 * Convert the list of ID to String for storing in file
+	 * @return
+	 * 		the string form of IDs
+	 */
 	protected static String convertIDListToString() {
 		String stringID = Keywords.EMPTY_STRING;
 		if (freeIDs.isEmpty()) {
@@ -57,6 +90,11 @@ public class FreeIDs {
 		return stringID.trim();
 	}
 	
+	/**
+	 * Convert the String to an Integer object and store it in the list
+	 * @param s
+	 * 		the String to be converted
+	 */
 	protected static void convertIDStringToList(String s) {
 		ArrayList<String> stringOfIds = new ArrayList<String>(Arrays.asList(s.split(Keywords.SPACE_STRING)));
 		for (String id : stringOfIds) {
@@ -66,14 +104,25 @@ public class FreeIDs {
 		sortIDs();
 	}
 
+	/**
+	 * sort the IDs in ascending order
+	 */
 	private static void sortIDs() {
 		Collections.sort(freeIDs);
 	}
 
+	/**
+	 * set the currentID to be the ID next
+	 * @param id
+	 * 			the ID to be set
+	 */
 	private static void setCurrentID(int id) {
 		currentTaskId = id;
 	}
 
+	/**
+	 * Generate the next ID and store it in list
+	 */
 	private static void generateID() {
 		freeIDs.offer(++currentTaskId);
 	}

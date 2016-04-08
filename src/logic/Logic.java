@@ -105,8 +105,8 @@ public class Logic {
 	 * 
 	 * @return     list last modified/added task(s) or null if no history.
 	 */
-	public static ArrayList<Task> getLastTasksNoRemove(){
-		return Storage.getLastTasksNoRemove();
+	public static ArrayList<Task> peekLastTask(){
+		return Storage.peekLastTask();
 	}
 	
 	/**
@@ -137,26 +137,5 @@ public class Logic {
 		} else {
 			Storage.writeTasksToFile();
 		}
-	}
-	
-	/**
-	 * Gets all the categories' names.
-	 * 
-	 * @return     list of categories' names.
-	 */
-	public static ArrayList<String> getCatNames(){
-		return Storage.getAllCategories();
-	}
-	
-	/**
-	 * Takes in user input with each char and looks
-	 * for words that matches. Used for suggesting
-	 * to user/auto-completing words.
-	 * 
-	 * @param word	User input.
-	 * @return      list of possible words.
-	 */
-	public static ArrayList<String> findCompletions(String word){
-		return Storage.findCompletions(word);
 	}
 }

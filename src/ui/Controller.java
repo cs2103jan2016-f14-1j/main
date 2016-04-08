@@ -664,7 +664,7 @@ public class Controller {
 
 			ArrayList<Task> tempArrList = putIntoDays.get(key);
 
-			ArrayList<Task> lastTasks = Logic.getLastTasksNoRemove();
+			ArrayList<Task> lastTasks = Logic.peekLastTask();
 
 			for (int i = 0; i < tempArrList.size(); i++) {
 				final TableItem mainItem = new TableItem(view.getMainTable(), SWT.NONE);
@@ -818,7 +818,7 @@ public class Controller {
 			view.getPopupShell().setVisible(false);
 		} else {
 			view.getPopupTable().removeAll();
-			ArrayList<String> outList = parser.parseAuto(tempInput);
+			/*ArrayList<String> outList = parser.parseAuto(tempInput);
 			for (int i = 1; i <= Keywords.AUTO_LENGTH; i++) {
 				if (outList.size() - i < 0) {
 					break;
@@ -826,7 +826,7 @@ public class Controller {
 					TableItem autoItem = new TableItem(view.getPopupTable(), SWT.NONE);
 					autoItem.setText(outList.get(outList.size() - i));
 				}
-			}
+			}*/
 
 			Rectangle textBounds = Display.getCurrent().map(view.getShell(), null, view.getInput().getBounds());
 			view.getPopupShell().setBounds(textBounds.x, textBounds.y + textBounds.height, textBounds.width,
