@@ -15,7 +15,7 @@ public class Logger {
 		System.out.println(String.format(STOUT_FORMAT, new Date(), s));
 	}
 	
-	protected static void logf(String className, String s) {
+	public static void logf(String className, String s) {
 		try {
 			BufferedWriter bufferWriter = 
 					new BufferedWriter(new FileWriter(Keywords.LOG_FILEPATH, true));

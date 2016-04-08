@@ -9,6 +9,8 @@ import org.jnativehook.keyboard.NativeKeyListener;
 
 import shared.Keywords;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -25,22 +27,55 @@ public class MainGUI implements NativeKeyListener {
 	private static boolean keyAlt = false;
 	private static boolean keyE = false;
 	private static Shell shell;
+	private static Display display;
+	private static Controller controller;
 
 	public static void main(String[] args) throws Exception {
 		
-		Keywords.currLocation = MainGUI.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString();
-		Keywords.currLocation = Keywords.currLocation.replace(Keywords.OLD_FILE_DELIMITER, Keywords.NEW_FILE_DELIMITER);
-		Keywords.currLocation = Keywords.currLocation.substring(Keywords.currLocation.indexOf(Keywords.NEW_FILE_DELIMITER) + 1, Keywords.currLocation.lastIndexOf(Keywords.NEW_FILE_DELIMITER)+1);
+		setCurrentLocation();
+		addToRegistry();
+		setSettingPath();
 		
+	    display = new Display();
+		controller = new Controller();
+		addFilter();
+		
+		shell = controller.getView().getShell();
+		shell.open();
+		shell.layout();
+		
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+	}
+
+	private static void setCurrentLocation(){
+		try {
+			Keywords.currLocation = MainGUI.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString();
+			Keywords.currLocation = Keywords.currLocation.replace(Keywords.OLD_FILE_DELIMITER, Keywords.NEW_FILE_DELIMITER);
+			Keywords.currLocation = Keywords.currLocation.substring(Keywords.currLocation.indexOf(Keywords.NEW_FILE_DELIMITER) + 1, Keywords.currLocation.lastIndexOf(Keywords.NEW_FILE_DELIMITER)+1);
+		} catch (Exception e) {
+			shared.Logger.logf(MainGUI.class.getName(),e.toString());
+		}
+	}
+	
+	private static void addToRegistry(){
 		// Run startup.reg to add preference
 		String value = "\"" + Keywords.currLocation + JAR_NAME +"\"";
-		WinRegistry.writeStringValue(WinRegistry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", KEY_NAME, value);
-		
+		try {
+			WinRegistry.writeStringValue(WinRegistry.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", KEY_NAME, value);
+		} catch (Exception e) {
+			shared.Logger.logf(MainGUI.class.getName(),e.toString());
+		}
+	}
+	
+	private static void setSettingPath(){
 		Keywords.settingsPath = Keywords.currLocation + Keywords.settingsPath;
-	    
-		Display display = new Display();
-		Controller controller = new Controller();
-		
+	}
+	
+	private static void addFilter(){
 		// For alt tab bug
 		display.addFilter(SWT.FocusOut, new Listener(){
 
@@ -52,6 +87,7 @@ public class MainGUI implements NativeKeyListener {
 			
 		});
 
+		// To save location
 		display.addFilter(SWT.KeyDown, new Listener() {
 			
 			@Override
@@ -77,6 +113,7 @@ public class MainGUI implements NativeKeyListener {
             	
             }
         });
+		
 		display.addFilter(SWT.KeyUp, new Listener(){
 
 			@Override
@@ -91,17 +128,8 @@ public class MainGUI implements NativeKeyListener {
 			}
 			
 		});
-		shell = controller.getView().getShell();
-		shell.open();
-		shell.layout();
-		
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
 	}
-
+	
 	@Override
 	public void nativeKeyPressed(NativeKeyEvent e) {
 		if (e.getKeyCode() == NativeKeyEvent.VC_D) {

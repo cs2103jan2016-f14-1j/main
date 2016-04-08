@@ -59,14 +59,24 @@ public class View extends Logger{
 	private Label timeLabel;
 	private Table categoryTable;
 	private Table mainTable;
-	
-	private Table popupTable;
-	private Shell popupShell;
-	
+
+	private Button invisibleButton;
+
 	public View() throws Exception {
-        
+		initShell();
+		initButton();
+		initCategoryTable();
+		initMainTable();
+		initInput();
+		initDayLabel();
+		initDateLabel();
+		initTimeLabel();
+		initSeperator();
+		initNotification();
+	}
+	
+	private void initShell(){
 		shell = new Shell(SWT.CLOSE | SWT.MIN | SWT.TITLE);
-		
 		shell.setBackground(whiteColor);
 		shell.setSize(725, 625);
 		shell.setText(GUI_TITLE);
@@ -88,10 +98,19 @@ public class View extends Logger{
 		        GlobalScreen.addNativeKeyListener(new MainGUI());
 			}
 	    });
-		
-		categoryTable = new Table(shell, SWT.FULL_SELECTION);
-		Button invisibleButton = new Button(shell, SWT.NONE);
+	}
+	
+	public Shell getShell(){
+		return shell;
+	}
+	
+	private void initButton(){
+		invisibleButton = new Button(shell, SWT.NONE);
 		invisibleButton.setVisible(false);
+	}
+	
+	private void initCategoryTable(){
+		categoryTable = new Table(shell, SWT.FULL_SELECTION);
 		categoryTable.setFont(normalFont);
 		categoryTable.setBounds(10, 125, 170, 459);
 		categoryTable.setBackground(blackGrayColor);
@@ -106,7 +125,13 @@ public class View extends Logger{
 	        	invisibleButton.forceFocus();
 	        }
 	    });
-		
+	}
+	
+	public Table getCategoryTable(){
+		return categoryTable;
+	}
+
+	private void initMainTable(){
 		mainTable = new Table(shell, SWT.FULL_SELECTION | SWT.NO_SCROLL | SWT.V_SCROLL);
 		mainTable.setFont(normalFont);
 		mainTable.setBounds(196, 10, 513, 489);
@@ -120,7 +145,52 @@ public class View extends Logger{
 	        	invisibleButton.forceFocus();
 	        }
 	    });
+	}
 	
+	public Table getMainTable(){
+		return mainTable;
+	}
+	
+	public void initDayLabel(){
+		dayLabel = new Label(shell, SWT.NONE);
+		dayLabel.setFont(SWTResourceManager.getFont("Trebuchet MS", 14, SWT.BOLD));
+		dayLabel.setAlignment(SWT.CENTER);
+		dayLabel.setBounds(0, 15, 190, 45);
+		dayLabel.setBackground(blackGrayColor);
+		dayLabel.setForeground(normalColor);
+	}
+	
+	public Label getDayLabel(){
+		return dayLabel;
+	}
+	
+	public void initDateLabel(){
+		dateLabel = new Label(shell, SWT.NONE);
+		dateLabel.setFont(normalFont);
+		dateLabel.setAlignment(SWT.CENTER);
+		dateLabel.setBounds(0, 60, 190, 30);
+		dateLabel.setBackground(blackGrayColor);
+		dateLabel.setForeground(normalColor);
+	}
+	
+	public Label getDateLabel(){
+		return dateLabel;
+	}
+	
+	public void initTimeLabel(){
+		timeLabel = new Label(shell, SWT.NONE);
+		timeLabel.setFont(normalFont);
+		timeLabel.setAlignment(SWT.CENTER);
+		timeLabel.setBounds(0, 90, 190, 30);
+		timeLabel.setBackground(blackGrayColor);
+		timeLabel.setForeground(normalColor);
+	}
+	
+	public Label getTimeLabel(){
+		return timeLabel;
+	}
+	
+	private void initInput(){
 		input = new StyledText(shell, SWT.NONE);
 		input.setFont(normalFont);
 		input.setTopMargin(8);
@@ -138,85 +208,29 @@ public class View extends Logger{
 	            e.gc.drawRoundRectangle(1, 1, input.getBounds().width-2, input.getBounds().height-2, 12, 12);
 	        }
 	    });
-		
-		dayLabel = new Label(shell, SWT.NONE);
-		dayLabel.setFont(SWTResourceManager.getFont("Trebuchet MS", 14, SWT.BOLD));
-		dayLabel.setAlignment(SWT.CENTER);
-		dayLabel.setBounds(0, 15, 190, 45);
-		dayLabel.setBackground(blackGrayColor);
-		dayLabel.setForeground(normalColor);
-		
-		dateLabel = new Label(shell, SWT.NONE);
-		dateLabel.setFont(normalFont);
-		dateLabel.setAlignment(SWT.CENTER);
-		dateLabel.setBounds(0, 60, 190, 30);
-		dateLabel.setBackground(blackGrayColor);
-		dateLabel.setForeground(normalColor);
-		
-		timeLabel = new Label(shell, SWT.NONE);
-		timeLabel.setFont(normalFont);
-		timeLabel.setAlignment(SWT.CENTER);
-		timeLabel.setBounds(0, 90, 190, 30);
-		timeLabel.setBackground(blackGrayColor);
-		timeLabel.setForeground(normalColor);
-		
-		Label seperator = new Label(shell, SWT.NONE);
-		seperator.setBounds(0, 0, 190, 585);
-		seperator.setBackground(blackGrayColor);
-		
-		notification = new Label(shell, SWT.NONE);
-		notification.setFont(normalFont);
-		notification.setAlignment(SWT.CENTER);
-		notification.setForeground(orangeColor);
-		notification.setBackground(whiteColor);
-		notification.setBounds(196, 505, 513, 25);
-		
-		popupShell = new Shell(Display.getCurrent(), SWT.ON_TOP);
-		popupShell.setLayout(new FillLayout());
-		popupTable = new Table(popupShell, SWT.SINGLE | SWT.NO_SCROLL);
-		for (int i = 0; i < Keywords.AUTO_LENGTH; i++) {
-			new TableItem(popupTable, SWT.NONE);
-		}
-	}
-	
-	public Shell getPopupShell(){
-		return popupShell;
-	}
-	
-	public Shell getShell(){
-		return shell;
-	}
-	
-	public Table getCategoryTable(){
-		return categoryTable;
-	}
-
-	public Table getMainTable(){
-		return mainTable;
-	}
-	
-	public Table getPopupTable(){
-		return popupTable;
-	}
-	
-	public Label getDayLabel(){
-		return dayLabel;
-	}
-	
-	public Label getDateLabel(){
-		return dateLabel;
-	}
-	
-	public Label getTimeLabel(){
-		return timeLabel;
 	}
 	
 	public StyledText getInput(){
 		return input;
 	}
 	
+	private void initNotification(){
+		notification = new Label(shell, SWT.NONE);
+		notification.setFont(normalFont);
+		notification.setAlignment(SWT.CENTER);
+		notification.setForeground(orangeColor);
+		notification.setBackground(whiteColor);
+		notification.setBounds(196, 505, 513, 25);
+	}
+	
 	public Label getNotification(){
 		return notification;
+	}
+	
+	private void initSeperator(){
+		Label seperator = new Label(shell, SWT.NONE);
+		seperator.setBounds(0, 0, 190, 585);
+		seperator.setBackground(blackGrayColor);
 	}
 	
 	public void setCenterOfScreen(){
