@@ -38,10 +38,22 @@ public class AddTask extends Functionality {
 
 	private boolean hasCollision(ArrayList<IntegerPair> freeS, Task task) {
 		for (IntegerPair slots : freeS){
-			if (slots.inBetween(task.getIntStartTime())) {
-				return true;
-			} else if (slots.inBetween(task.getIntEndTime())) {
-				return true;
+			if (task.getDatetimes().get(2) != null) {
+				if (task.getDatetimes().get(3) != null) {
+					if (slots.inBetween(task.getIntStartTime())) {
+						return true;
+					} else if (slots.inBetween(task.getIntEndTime())) {
+						return true;
+					} 
+				} else {
+					if (slots.inBetween(task.getIntStartTime())) {
+						return true;
+					}
+				}
+			} else if (task.getDatetimes().get(3) != null) {
+				if (slots.inBetween(task.getIntEndTime())) {
+					return true;
+				}
 			}
 		}
 		return false;
