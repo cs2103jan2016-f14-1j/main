@@ -52,7 +52,7 @@ public class FreeSlots {
 			return freeSlots; // null list means all time slots available
 		} else {
 			for (Task t : taskSlots) {
-				ArrayList<Date> dateTimes = t.getDatetimes();
+				ArrayList<Date> dateTimes = t.getDateTimes();
 				Date startT = dateTimes.get(Keywords.INDEX_STARTTIME);
 				if (startT != null){ //either only one timing or range timing
 					Date endT = dateTimes.get(Keywords.INDEX_ENDTIME);
@@ -185,7 +185,7 @@ public class FreeSlots {
 		taskSlots.clear();
 		filterDateTask(tasks, input);
 		for (Task t : tasksOnDate) {
-			if (t.getDatetimes().get(3) == null) { // no time range ignore
+			if (t.getDateTimes().get(3) == null) { // no time range ignore
 				continue;
 			}
 			taskSlots.add(t);
@@ -195,7 +195,7 @@ public class FreeSlots {
 	private static void filterDateTask(ArrayList<Task> tasks, int input) {
 		tasksOnDate.clear();
 		for (Task t : tasks) {
-			if (t.getDatetimes().get(2) == null) { // no time at all ignore
+			if (t.getDateTimes().get(2) == null) { // no time at all ignore
 				continue;
 			} else if (t.getIntDateEnd() != 9999) { // have range of dates
 				if (input > t.getIntDate() && input < t.getIntDateEnd()) {
@@ -212,46 +212,58 @@ public class FreeSlots {
 	}
 
 	public static ArrayList<Integer> getConflict(Task task) {
+		ArrayList<Task> conflicts = new ArrayList<Task>();
 		ArrayList<Integer> taskIDs = new ArrayList<Integer>();
-		if (task.getDatetimes().get(2) == null) {
+		if (task.getDateTimes().get(2) == null) {
 			taskIDs.add(task.getId());
 			return taskIDs;
 		}
 		filterDateTask(tasks, task.getIntDate());
 		
-		if (task.getDatetimes().get(3) == null) { //task only has start time
+		if (task.getDateTimes().get(3) == null) { //task only has start time
 			for (Task t : tasksOnDate) {
-				if (t.getDatetimes().get(2) == null) {
+				if (t.getDateTimes().get(2) == null) {
 					continue;
-				} else if (t.getDatetimes().get(3) != null) { // t got time range
+				} else if (t.getDateTimes().get(3) != null) { // t got time range
 					IntegerPair tTimeRange = new IntegerPair(t.getIntStartTime(),t.getIntEndTime());
 					if (tTimeRange.inBetween(task.getIntStartTime())) {
 						taskIDs.add(t.getId());
+						conflicts.add(t);
 					}
 				} else { // t only got start time;
 					if (t.getIntStartTime() == task.getIntStartTime()){
 						taskIDs.add(t.getId());
+						conflicts.add(t);
 					}
 				}
 			}
 		} else { // task has a time range
 			IntegerPair taskTimeRange = new IntegerPair(task.getIntStartTime(),task.getIntEndTime());
 			for (Task t : tasksOnDate) {
-				if (t.getDatetimes().get(2) == null) {
+				if (t.getDateTimes().get(2) == null) {
 					continue;
-				} else if (t.getDatetimes().get(3) != null) { // t got time range
+				} else if (t.getDateTimes().get(3) != null) { // t got time range
 					if (taskTimeRange.inBetween(t.getIntStartTime())
 							|| taskTimeRange.inBetween(t.getIntEndTime())) {
 						taskIDs.add(t.getId());
+						conflicts.add(t);
 					}
 				} else { // t only got start time
 					if (taskTimeRange.inBetween(t.getIntStartTime())){
 						taskIDs.add(t.getId());
+						conflicts.add(t);
 					}
 				}
 			}
 		}
+		if (!conflicts.isEmpty()) {
+			conflicts.add(task);
+		}
 		taskIDs.add(task.getId());
+		//task.setConflict(conflicts);
+		//for (Task t : conflicts) {
+		//	t.setConflict(conflicts);
+		//}
 		return taskIDs;
 	}
 }

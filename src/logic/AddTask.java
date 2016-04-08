@@ -21,8 +21,8 @@ public class AddTask extends Functionality {
 			return getNotification();
 		}
 		
-		setNotification(task);
 		Storage.addTaskToList(task);
+		setNotification(task);
 		addActionToHistory(task);
 		return getNotification();
 	}
@@ -48,7 +48,8 @@ public class AddTask extends Functionality {
 	 */
 	private void setNotification(Task task) {
 		
-		ArrayList<IntegerPair> freeTimeSlots = FreeSlots.getFreeSlotsInt(task.getIntDate()); 
+		ArrayList<IntegerPair> freeTimeSlots = FreeSlots.getFreeSlotsInt(task.getIntDate());
+		//TODO: task with date range
 		ArrayList<Integer> conflictTaskIDs = FreeSlots.getConflict(task);
 		
 		if (freeTimeSlots.isEmpty()){
@@ -84,7 +85,7 @@ public class AddTask extends Functionality {
 	 */
 	private boolean validSlot(ArrayList<IntegerPair> freeS, Task task) {
 		for (IntegerPair slots : freeS){
-			if (task.getDatetimes().get(3) != null) {
+			if (task.getDateTimes().get(3) != null) {
 				if (slots.inBetween(task.getIntStartTime()) &&
 						slots.inBetween(task.getIntEndTime())) {
 					return true;

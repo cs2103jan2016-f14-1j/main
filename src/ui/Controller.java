@@ -242,8 +242,8 @@ public class Controller {
 		for (Task task : list) {
 
 			boolean added = false;
-			Date startTaskDate = task.getDatetimes().get(Keywords.INDEX_STARTDATE);
-			Date endTaskDate = task.getDatetimes().get(Keywords.INDEX_ENDDATE);
+			Date startTaskDate = task.getDateTimes().get(Keywords.INDEX_STARTDATE);
+			Date endTaskDate = task.getDateTimes().get(Keywords.INDEX_ENDDATE);
 
 			int lengthOfDays = 0;
 
@@ -703,7 +703,7 @@ public class Controller {
 				TextStyle styleDate = new TextStyle(View.boldFont, View.dateColor, null);
 				TextStyle styleCategory = new TextStyle(View.normalFont, View.redColor, null);
 
-				if (tempArrList.get(i).getDatetimes().get(0) != null) {
+				if (tempArrList.get(i).getDateTimes().get(0) != null) {
 					int seperatingIndex = whiteSpaces.length() + tempArrList.get(i).getUserFormatNoDate().length();
 					textLayout.setStyle(styleDescription, 0, seperatingIndex);
 					if (week) {

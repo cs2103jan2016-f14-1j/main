@@ -27,7 +27,7 @@ public class Task extends Logger {
 	public Task() {
 		id = 0;
 		task = date = Keywords.EMPTY_STRING;
-		initDatetimes(); // add null Dates into datetimes
+		initDateTimes(); // add null Dates into datetimes
 		categories = new ArrayList<String>();
 		intDate = Keywords.NO_DATE;
 		intDateEnd = Keywords.NO_DATE;
@@ -265,7 +265,7 @@ public class Task extends Logger {
 				+ datetimes.get(Keywords.INDEX_ENDTIME).getMinutes();
 	}
 
-	public ArrayList<Date> getDatetimes() {
+	public ArrayList<Date> getDateTimes() {
 		return datetimes;
 	}
 
@@ -295,7 +295,7 @@ public class Task extends Logger {
 		initIntDateEnd();
 	}
 
-	public void initDatetimes() {
+	public void initDateTimes() {
 		datetimes = new ArrayList<Date>();
 		for (int i = 0; i < Keywords.MAX_DATES; i++) {
 			datetimes.add(null);
@@ -360,7 +360,7 @@ public class Task extends Logger {
 			}
 		}
 
-		for (Date d : b.getDatetimes()) {
+		for (Date d : b.getDateTimes()) {
 			if (!datetimes.contains(d)) {
 				isDate = false;
 				break;

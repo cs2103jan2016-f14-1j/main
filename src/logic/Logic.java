@@ -86,6 +86,7 @@ public class Logic {
 	}
 
 // ========================= Getter/Other Methods =========================
+	
 	public static ArrayList<Task> getUncompletedTasks(){
 		return Storage.getListOfUncompletedTasks();
 	}

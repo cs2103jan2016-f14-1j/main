@@ -47,7 +47,7 @@ public class Functionality extends Logger {
 		newt.setId(task.getId());
 		newt.setCategories(task.getCategories());
 		newt.setDate(task.getDate());
-		newt.setDateTimes(task.getDatetimes());
+		newt.setDateTimes(task.getDateTimes());
 		newt.setTask(task.getTask());
 		newt.setIsCompleted(task.getIsCompleted());
 		newt.setIntDate(task.getIntDate());
