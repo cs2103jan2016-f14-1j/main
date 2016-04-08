@@ -23,15 +23,18 @@ public class Keywords {
 	public static final String NEW_FILE_DELIMITER = "\\";
 	public static final String OLD_FILE_DELIMITER = "/";
 	
-	public static final String MESSAGE_DELETE_SUCCESS = "Task(s) Deleted!";
-	public static final String MESSAGE_ADD_SUCCESS = "Add Successful!";
-	public static final String MESSAGE_EDIT_SUCCESS = "Edit Successful!";
-	public static final String MESSAGE_COMPLETED_SUCCESS = "Task Completed!";
-	public static final String MESSAGE_VIEW_SUCCESS = "View By %s";
-	public static final String MESSAGE_HELP_SUCCESS = "Help Displayed!";
 	public static final String MESSAGE_ERROR = "Error!";
+	public static final String MESSAGE_ADD_SUCCESS = "Add Successful!";
+	public static final String MESSAGE_ADD_BODY = " has been added!";
+	public static final String MESSAGE_ADD_CONFLICT = "Conflicting time slots! Tasks: ";
+	public static final String MESSAGE_COMPLETED_SUCCESS = "Task Completed!";
+	public static final String MESSAGE_DELETE_SUCCESS = "Task(s) Deleted!";
+	public static final String MESSAGE_EDIT_SUCCESS = "Edit Successful!";
+	public static final String MESSAGE_HELP_SUCCESS = "Help Displayed!";
+	public static final String MESSAGE_VIEW_SUCCESS = "View By %s";
 	public static final String INVALID_COMMAND = "Invalid Command entered!";
 	public static final String INVALID_ID = "Invalid ID entered!";
+	
 	public static final String TASKID_PREPEND = "-";
 	public static final String CATEGORY_PREPEND = "#";
 	public static final String CATEGORY_DEFAULT = "Uncompleted";

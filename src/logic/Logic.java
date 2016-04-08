@@ -2,7 +2,6 @@
 /**
  * This class acts as a facade for Parser and UI components to interact
  * with the Logic component.
- * 
  */
 
 package logic;
@@ -15,9 +14,10 @@ import shared.Task;
 import storage.Storage;
 
 public class Logic {
-
+	// Private Variables
 	private static Logic logic;
 
+// ========================= Constructor-Related Methods =========================
 	/**
 	 * Private Logic constructor
 	 */
@@ -31,6 +31,7 @@ public class Logic {
 		return logic;
 	}
 	
+// ========================= Command Operations =========================
 	public static Notification addTask(Task task) {
 		Notification n = new AddTask().addTask(task);
 		return n;
@@ -71,7 +72,7 @@ public class Logic {
 			String month, int date, ArrayList<String> categories) {
 		return new SearchTask().searchTask(words, isPriortise, month, date, categories);
 	}
-	
+
 	/**
 	 * If user inputs invalid command, this method will set the invalid
 	 * message and returns it to GUI component for displaying to user.
@@ -83,7 +84,8 @@ public class Logic {
 		n.setInvalidMsg();
 		return n;
 	}
-	
+
+// ========================= Getter/Other Methods =========================
 	public static ArrayList<Task> getUncompletedTasks(){
 		return Storage.getListOfUncompletedTasks();
 	}
