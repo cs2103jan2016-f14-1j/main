@@ -1,3 +1,8 @@
-readme.md
+# Dotdotdot
+![dotdotdot overview](docs/overview.png)
 
-created by Sam
+The simple task manager by command line users, for command line users.
+
+**Want to use Collate?**
+* [Download the latest release](https://github.com/cs2103jan2016-f14-1j/releases)
+* [**User Guide**](docs/User-Guide.md)
