@@ -4,6 +4,7 @@ package logic;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,10 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-import org.eclipse.swt.widgets.Display;
-
 import parser.Formatter;
-import shared.Logger;
 import shared.Keywords;
 import shared.Task;
 import storage.Storage;
@@ -75,20 +73,9 @@ public class SearchTask extends Functionality {
 	}
 	private ArrayList<Task> filterWords(ArrayList<Task> list, String words) {
 		ArrayList<Task> temp = new ArrayList<Task>();
-		File f=null;
-		try {
-			f = new File(new String(Files.readAllBytes(Paths.get(getClass().getResource("/storage/ditionary").toURI()))));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		logf(Keywords.currLocation," current Location");
-		logf("is file found?", (f.exists())?"true":"false");
-		System.out.print(Keywords.currLocation);
-		SymSpell.CreateDictionary(f, "");
+		
+		InputStream is= getClass().getResourceAsStream("/storage/dictionary");
+		SymSpell.CreateDictionary(is, "");
 		for (Task t : list) {
 			for (String word : words.split(Keywords.SPACE_STRING)) {
 				ArrayList<String> result = SymSpell.Correct(word, "");
