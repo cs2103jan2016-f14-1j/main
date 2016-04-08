@@ -23,7 +23,6 @@ public class AddTask extends Functionality {
 		ArrayList<Integer> taskIDs = FreeSlots.getConflict(task); //should handle single time tasks
 		if (freeS.isEmpty()){ // if empty means free whole day
 			if (taskIDs.size() == 1) {
-				System.out.println("hereeee");
 				setNTitle(Keywords.MESSAGE_ADD_SUCCESS);
 				setNMessage(task.getTask() + " has been added!");
 			} else {
