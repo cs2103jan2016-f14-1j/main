@@ -8,7 +8,6 @@ import java.util.Arrays;
 import logic.Logic;
 import logic.Notification;
 import shared.*;
-import storage.LoadWords;
 
 public class Parser {
 
@@ -41,22 +40,8 @@ public class Parser {
 		}
 		return parser;
 	}
-
-	public ArrayList<String> parseAuto(String userInput){
-		ArrayList<String> toReturn = new ArrayList<String>();
-		ArrayList<String> findLastWord = new ArrayList<String>(Arrays.asList(userInput.split(Keywords.SPACE_STRING)));
-		toReturn = Logic.findCompletions(findLastWord.get(findLastWord.size()-1));
-		String sentence = "";
-		for(int i =0; i <findLastWord.size()-1;i++){
-			sentence+=findLastWord.get(i)+" ";
-		}
-		ArrayList<String> newSentences = new ArrayList<String>();
-		for(String word :toReturn){
-			newSentences.add(sentence+word);
-		}
-		return newSentences;
-	}
 	
+	@SuppressWarnings("unchecked")
 	public Object parse(String userInput) {
 		String commandType = getFirstWord(userInput).toLowerCase();
 		String inputWithoutCommandType = removeFirstWord(userInput);
@@ -90,8 +75,9 @@ public class Parser {
 			ArrayList<Object> output = ParseSearch.filterInput(inputWithoutCommandType);
 			return Logic.searchTask((String)output.get(0), //words to be searched
 					(int) output.get(1), //user's priority option
-					(int) output.get(2), //date in integer form
-					(ArrayList<String>)output.get(3));//categories
+					(String) output.get(2), //get month
+					(int )output.get(3),//get date by int
+					(ArrayList<String>) output.get(4));//category
 		case COMMAND_MARK:
 			return returnValue = ParseMark.prioritise(inputWithoutCommandType);
 		default:

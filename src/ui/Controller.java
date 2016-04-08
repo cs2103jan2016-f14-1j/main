@@ -672,7 +672,7 @@ public class Controller {
 
 			ArrayList<Task> tempArrList = putIntoDays.get(key);
 
-			ArrayList<Task> lastTasks = Logic.getLastTasksNoRemove();
+			ArrayList<Task> lastTasks = Logic.peekLastTask();
 
 			initTextLayout(tempArrList, lastTasks, week);
 			

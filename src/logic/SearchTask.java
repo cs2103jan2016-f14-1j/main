@@ -2,19 +2,24 @@
 
 package logic;
 
-import java.io.File;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
+import parser.Formatter;
 import shared.Keywords;
 import shared.Task;
 import storage.Storage;
 
 public class SearchTask extends Functionality {
 
-	ArrayList<String>replace;
-	public HashMap<String, Object> searchTask(String words, int isPriortise, int date, ArrayList<String> categories) {
-		replace =new ArrayList<String>();
+	ArrayList<String> replace;
+	public HashMap<String, Object> searchTask(String words, int isPriortise,
+			String month, int date, ArrayList<String> categories){
+		replace = new ArrayList<String>();
 		replace.add("Do you mean:");
 		HashMap<String, Object> results = new HashMap<String, Object>();
 		ArrayList<Task> result = new ArrayList<Task>();
@@ -23,15 +28,21 @@ public class SearchTask extends Functionality {
 		} else {
 			result = Storage.getListOfUncompletedTasks();
 		}
+		
 		if (date != -1) {
 			// search <result> comparing dates
 			result = filterDate(result, date);
 			// get free time slots
-			ArrayList<String> freeSlots = FreeSlots.getFreeSlots(date); 
+			ArrayList<String> freeSlots = FreeSlots.getFreeSlots(date);
 			if (freeSlots.isEmpty()) {
 				freeSlots.add("Whole day is free");
 			}
 			results.put("free", freeSlots);
+		}
+		
+		//search by month
+		if(!month.equals(Keywords.EMPTY_STRING)){
+			result = filterByMonth(result, month);
 		}
 
 		if (!categories.isEmpty()) {
@@ -58,8 +69,9 @@ public class SearchTask extends Functionality {
 	}
 	private ArrayList<Task> filterWords(ArrayList<Task> list, String words) {
 		ArrayList<Task> temp = new ArrayList<Task>();
-		File f = new File(getClass().getResource("/storage/dictionary").getFile());
-		SymSpell.CreateDictionary(f, "");
+		
+		InputStream is= getClass().getResourceAsStream("/storage/dictionary");
+		SymSpell.CreateDictionary(is, "");
 		for (Task t : list) {
 			for (String word : words.split(Keywords.SPACE_STRING)) {
 				ArrayList<String> result = SymSpell.Correct(word, "");
@@ -117,6 +129,26 @@ public class SearchTask extends Functionality {
 				if (t.getCategories().contains(cat)) {
 					temp.add(t);
 					break;
+				}
+			}
+		}
+		return temp;
+	}
+	
+	private ArrayList<Task> filterByMonth(ArrayList<Task> list, String month){
+		ArrayList<Task> temp = new ArrayList<Task>();
+		for(Task t: list){
+			String intDate = Integer.toString(t.getIntDate());
+			Date dateMth =null;
+			try{
+				dateMth = new SimpleDateFormat("MMM", Locale.ENGLISH).parse(month);
+			}catch(Exception e){
+				setNMessage("Wrong date format. Use Feb, may, Jan.");
+			}
+			Date date = Formatter.fromIntToDate(intDate);
+			if(date!=null){
+				if(date.getMonth()==dateMth.getMonth()){
+					temp.add(t);
 				}
 			}
 		}

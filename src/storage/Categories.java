@@ -14,10 +14,19 @@ public class Categories {
 
 	private static HashMap<String, Integer> noOfTasksPerCat;
 
+	/**
+	 * Initialize the variables
+	 */
 	protected static void init() {
 		noOfTasksPerCat = new HashMap<>();
 	}
 
+	/**
+	 * Add a count to the category name and store in the HashMap
+	 * 
+	 * @param category
+	 *            the category to be incremented
+	 */
 	protected static void addACountToCat(ArrayList<String> category) {
 		for (String cat : category) {
 			if (noOfTasksPerCat.get(cat) == null) {
@@ -28,6 +37,13 @@ public class Categories {
 		}
 	}
 
+	/**
+	 * Remove a count from the category name and remove the category if it
+	 * reaches 0
+	 * 
+	 * @param category
+	 *            the category to be decremented
+	 */
 	protected static void removeACountFromCat(ArrayList<String> category) {
 		for (String cat : category) {
 			if (noOfTasksPerCat.get(cat) == null) {
@@ -41,13 +57,21 @@ public class Categories {
 		}
 	}
 
+	/**
+	 * Get a list of categories with the total number of tasks
+	 * 
+	 * @param tasks
+	 *            the tasks to be accounted for
+	 * @return the list of categories with its count
+	 */
 	protected static ArrayList<String> getListOfCategoriesWithCount(ArrayList<Task> tasks) {
+		int uncompletedTasks = 0;
 		for (Task t : tasks) {
 			if (t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
+				uncompletedTasks++;
 				for (String cat : t.getCategories()) {
 					if (!cat.equals(Keywords.EMPTY_STRING)) {
-						int currentCount = (noOfTasksPerCat.get(cat) == null) ? 0 
-								: noOfTasksPerCat.get(cat);
+						int currentCount = (noOfTasksPerCat.get(cat) == null) ? 0 : noOfTasksPerCat.get(cat);
 						currentCount++;
 						noOfTasksPerCat.put(cat, currentCount);
 					}
@@ -55,17 +79,27 @@ public class Categories {
 			}
 		}
 		// format the list to be displayed
-		Iterator it = noOfTasksPerCat.entrySet().iterator();
+		Iterator<Map.Entry<String, Integer>> it = noOfTasksPerCat.entrySet().iterator();
 		ArrayList<String> temp = new ArrayList<>();
 		while (it.hasNext()) {
-			Map.Entry pair = (Map.Entry) it.next();
+			Map.Entry<String, Integer> pair = it.next();
 			temp.add(pair.getKey() + Keywords.SPACE_STRING + "(" + pair.getValue() + ")");
 		}
-		temp.add(getUncompletedCatWithCount(tasks));
+		temp.add("Uncompleted (" + uncompletedTasks + ")");
+		// clear off the old list of categories
 		noOfTasksPerCat.clear();
 		return temp;
 	}
 
+	/**
+	 * Filter the list of tasks by the categories
+	 * 
+	 * @param categories
+	 *            the categories to be matched
+	 * @param tasks
+	 *            the tasks to be filtered
+	 * @return the list of tasks filtered or empty list if none matched
+	 */
 	protected static ArrayList<Task> getTasksByCat(ArrayList<String> categories, ArrayList<Task> tasks) {
 		ArrayList<Task> taskList = new ArrayList<Task>();
 		for (Task t : tasks) {
@@ -78,39 +112,5 @@ public class Categories {
 			}
 		}
 		return taskList;
-	}
-
-	private static String getUncompletedCatWithCount(ArrayList<Task> tasks) {
-		for (Task t : tasks) {
-			if (t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
-				int currentCount = (noOfTasksPerCat.get(Keywords.CATEGORY_DEFAULT) == null) ? 0
-						: noOfTasksPerCat.get(Keywords.CATEGORY_DEFAULT);
-				currentCount++;
-				noOfTasksPerCat.put("Uncompleted", currentCount);
-			}
-		}
-		int count = (noOfTasksPerCat.get(Keywords.CATEGORY_DEFAULT) == null) ? 0 
-				: noOfTasksPerCat.get(Keywords.CATEGORY_DEFAULT);
-		return new String(Keywords.CATEGORY_DEFAULT +" (" + count + ")");
-	}
-	
-	//might need this for getting suggested categories
-	public static ArrayList<String> getCategories(ArrayList<Task> tasks) {
-		ArrayList<String> catNames = new ArrayList<String>();
-		if (tasks.isEmpty()){
-			return catNames;
-		}
-		for (Task t : tasks) {
-			if (t.getCategories().isEmpty()){
-				continue;
-			}
-			for (String cat : t.getCategories()) {
-				if(!catNames.contains(cat)) {
-					catNames.add(cat);
-				}
-			}
-		}
-		catNames.add(Keywords.CATEGORY_DEFAULT);
-		return catNames;
 	}
 }

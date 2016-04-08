@@ -12,19 +12,31 @@ public class History {
 	private static LinkedList<ArrayList<Task>> historyList;
 	private static LinkedList<String> actionList;
 	
+	/**
+	 * Initialize the variables
+	 */
 	protected static void initHistory(){
 		historyList = new LinkedList<ArrayList<Task>>();
 		actionList = new LinkedList<String>();
 	}
 	
+	/**
+	 * Obtain the last set of tasks from the list
+	 * @return 
+	 * 		the last set of tasks or null if there are no tasks
+	 */
 	protected static ArrayList<Task> getLastTasks(){
 		if(historyList.isEmpty()){
-			System.out.print("ran");
 			return null;
 		}
 		return historyList.poll();
 	}
 	
+	/**
+	 * Obtain the last action performed by the user
+	 * @return 
+	 * 		the last action or empty string if there are no action
+	 */
 	protected static String getLastAction(){
 		if(actionList.isEmpty()){
 			return Keywords.EMPTY_STRING;
@@ -32,15 +44,27 @@ public class History {
 		return actionList.poll();
 	}
 	
-	protected static ArrayList<Task> getLastTasksNoRemove(){
+	/**
+	 * Peek the list to check the last set of tasks stored in the history
+	 * @return 
+	 * 		the peeked set of tasks or null if there are no tasks
+	 */
+	protected static ArrayList<Task> peekLastTask(){
 		if(historyList.isEmpty()){
 			return null;
 		}
 		return historyList.peek();
 	}
 	
-	protected static void addActionToHistory(ArrayList<Task> t, String action){
-		historyList.addFirst(t);
+	/**
+	 * Store the set of tasks and action to the variables
+	 * @param tasks 
+	 * 			the set of tasks to store
+	 * @param action 
+	 * 			the action to store
+	 */
+	protected static void addActionToHistory(ArrayList<Task> tasks, String action){
+		historyList.addFirst(tasks);
 		actionList.addFirst(action);
 	}
 	

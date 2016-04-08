@@ -12,40 +12,71 @@ public class Functionality extends Logger {
 
 	private ArrayList<Task> tasks = new ArrayList<Task>();
 	private Notification notification = new Notification();
-	
-	protected void synchronization(){
+
+	/**
+	 * Synchronize the file with the active list
+	 */
+	protected void synchronization() {
 		Storage.writeTasksToFile();
 	}
-	
-	protected void addToHistory(String action){
+
+	/**
+	 * Add the action and set of tasks to History
+	 * @param action
+	 *            the action to be added
+	 */
+	protected void addToHistory(String action) {
 		Storage.addToHistory(tasks, action);
 	}
-	
-	protected ArrayList<Task> getTasks(){
+
+	/**
+	 * Obtain a list of tasks this Function is currently using
+	 * @return the list of tasks
+	 */
+	protected ArrayList<Task> getTasks() {
 		return tasks;
 	}
-	
-	protected void addToFuncTasks(Task t){
+
+	/**
+	 * Create a new task object and add to this list
+	 * @param task
+	 * 			the task to be added
+	 */
+	protected void addToFuncTasks(Task task) {
 		Task newt = new Task();
-		newt.setId(t.getId());
-		newt.setCategories(t.getCategories());
-		newt.setDate(t.getDate());
-		newt.setDateTimes(t.getDatetimes());
-		newt.setTask(t.getTask());
-		newt.setIsCompleted(t.getIsCompleted());
-		newt.setIntDate(t.getIntDate());
+		newt.setId(task.getId());
+		newt.setCategories(task.getCategories());
+		newt.setDate(task.getDate());
+		newt.setDateTimes(task.getDatetimes());
+		newt.setTask(task.getTask());
+		newt.setIsCompleted(task.getIsCompleted());
+		newt.setIntDate(task.getIntDate());
 		tasks.add(newt);
 	}
-	
-	protected void setNTitle(String title){
+
+	/**
+	 * Set the title for Notification
+	 * @param title
+	 * 			the String to be input
+	 */
+	protected void setNTitle(String title) {
 		notification.setTitle(title);
 	}
-	
-	protected void setNMessage(String msg){
+
+	/**
+	 * Set the message for Notification
+	 * @param msg
+	 * 			the String to be input
+	 */
+	protected void setNMessage(String msg) {
 		notification.setMessage(msg);
 	}
-	
-	protected Notification getNotification(){
+
+	/**
+	 * Obtain the Notification of this Function
+	 * @return the Notification object
+	 */
+	protected Notification getNotification() {
 		return notification;
 	}
 }

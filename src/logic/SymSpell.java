@@ -1,8 +1,6 @@
 package logic;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -179,23 +177,23 @@ public class SymSpell
     }
 
     //create a frequency dictionary from a corpus
-    public static void CreateDictionary(File corpus, String language)
+    public static void CreateDictionary(InputStream corpus, String language)
     {
     	//File f = new File(corpus);
-		File f = corpus;
+		/*File f = corpus;
         if(!(f.exists() && !f.isDirectory()))
         {
             System.out.println("File not found: " + corpus);
             return;
-        }
-
+        }*/
+    	InputStreamReader isr = new InputStreamReader(corpus);
         System.out.println("Creating dictionary ...");
         long startTime = System.currentTimeMillis();
         long wordCount = 0;
         
         BufferedReader br = null;
         try {
-			br = new BufferedReader(new FileReader(corpus));
+			br = new BufferedReader(isr);
 	        String line;
 	        while ((line = br.readLine()) != null) 
 	        {

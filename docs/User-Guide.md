@@ -21,18 +21,23 @@ Examples:
 * `add receive quest`
 * `add do CS2103 tutorial`
 
-To add a normal task, use this command.
+To add a normal task on a certain date, use this command.
 ```
-add <TODO> (at | by | on | to) <date> [@category]
+add <TODO> (at | by | on | to) <date> [#category]
 ```
 
-`<date>` refers to the date. Dates can be strings like `31Feb` or `2 Mar`. You can assign single-word category(s) to each task by appending `@` to the word.
+`<date>` can be strings like `31Mar` or `31-01`. You can assign category(s) to each task by prepending `#` to the category.
 
 Examples:
-* `add receive quest on 31feb`
-* `add do CS2103 tutorial by 2 mar`
-* `add buy milk by 15Feb @shopping`
-* `add Caroline @21st birthday party on 31feb`
+* `add complete CS2103 tutorial on 31mar`
+* `add Caroline birthday party #birthday on 31apr`
+
+To add a task with date and time ranges, use this command.
+```
+add <TODO> from <start date> to <end date> from <start time> to <end time>
+```
+
+`<* time>` can be strings like `11pm` or `2300`.
 
 ## Edit tasks
 To edit the date/deadline of a task, use this command.
@@ -42,26 +47,30 @@ edit <task_ID#> to <date>
 
 `<task_ID#>` is the unique ID of a task.
 
-## Add priority
-To add priority levels to task, use this command.
+To edit the description of a task, use this command.
 ```
-set <task_ID#> to <priority#>
+edit <task_ID#> to <new task description>
 ```
 
-`<priority#>` is a positive number used to indicate the priority level of a task.
+## Add priority
+To prioritise a task, use this command.
+```
+mark <task_ID#>
+```
 
 Examples:
-* `set 2 to 10`
+* `mark 2`
 
 ## Complete tasks
-To complete a task, use this command.
+To complete task(s), use this command.
 ```
 do <task_ID#>
 ```
 
+You can input several task IDs, separated by spaces.
+
 Examples:
-* `do receive quest`
-* `do 1`
+* `do 2 3 5 7`
 
 ## Delete tasks
 To delete task(s), use this command.
@@ -69,11 +78,9 @@ To delete task(s), use this command.
 delete <task_IDs#>
 ```
 
-You can input several task IDs, separated by spaces.
-
 Examples: 
 * `delete 2`
-* `delete 44 72 3 49`
+* `delete 2 3 5 7`
 
 ## View tasks
 To view task by category, use this command.
@@ -87,6 +94,18 @@ Examples:
 * `view shopping`
 * `view done`
 
+## Search tasks
+To search for task(s) containing string, use this command.
+```
+search "<searchword(s)>"
+```
+
+`<searchword>` can be any string that you want to search for. Dotdotdot can detect minor typos and return task(s) that contains similar dictionary strings.
+
+Examples:
+* `search "balolon"` (returns results containing "balloon" as well)
+* `search "cake blue"` (returns results containing strings "cake" and "blue")
+
 ## Show help
 ```
 [? | h | help]
@@ -96,12 +115,12 @@ Shows a help screen containing all commands available.
 
 ## Undo previous command
 ```
-[u | undo]
+undo
 ```
 
 Undo the previous command.
 
 # Keyboard Shortcuts
 
-* Undo previous command: <kbd>Ctrl</kbd>+<kbd>Z</kbd>
-* Scroll through command history: <kbd>&uarr;</kbd> or <kbd>&darr;</kbd>
+* Start application: <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>D</kbd>
+* Choose file location: <kbd>Alt</kbd>+<kbd>E</kbd>
