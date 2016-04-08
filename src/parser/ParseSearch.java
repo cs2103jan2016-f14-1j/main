@@ -7,10 +7,7 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import logic.Logic;
-import logic.Notification;
 import shared.Keywords;
-import shared.Task;
 
 public class ParseSearch {
 	public static ArrayList<Object> filterInput(String rawInput) {
@@ -27,7 +24,6 @@ public class ParseSearch {
 		// remove the words to be searched
 		rawInput = removeString("\"([^\"]*)\"", rawInput);
 
-		System.out.println(rawInput);
 		// check for user asking for priority
 		if (rawInput.contains("no priority")) {
 			rawInput = removeString("no priority", rawInput);
@@ -41,14 +37,26 @@ public class ParseSearch {
 		}
 
 		// filter for dates
+
+		// check if it is by month only
+		String checkMth = "(?:from|in)?\\s?(?i)(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|january|february|march|april|may|june|july|august|september|october|november|december)";
+		p = Pattern.compile(checkMth);
+		m = p.matcher(rawInput);
+		if (m.find()) {
+			output.add(m.group(1));
+			rawInput = rawInput.replaceAll(checkMth, "");
+		}else{
+			output.add(Keywords.EMPTY_STRING);
+		}
+		
 		// need to check for invalid input
 		Date date = Formatter.getDateFromString(rawInput);
 		int dateStart = -1;
 		if (date != null) {
 			dateStart = Formatter.fromDateToInt(date);
-			System.out.println(date.toString());
+			System.out.println(date.toString()+" "+dateStart);
 		}
-		// int dateEnd =
+
 		// Formatter.fromDateToInt(dates.get(Keywords.INDEX_ENDDATE));
 		output.add(dateStart);
 		// filter for categories

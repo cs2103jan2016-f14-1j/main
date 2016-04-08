@@ -90,8 +90,9 @@ public class Parser {
 			ArrayList<Object> output = ParseSearch.filterInput(inputWithoutCommandType);
 			return Logic.searchTask((String)output.get(0), //words to be searched
 					(int) output.get(1), //user's priority option
-					(int) output.get(2), //date in integer form
-					(ArrayList<String>)output.get(3));//categories
+					(String) output.get(2), //get month
+					(int )output.get(3),//get date by int
+					(ArrayList<String>) output.get(4));//category
 		case COMMAND_MARK:
 			return returnValue = ParseMark.prioritise(inputWithoutCommandType);
 		default:
