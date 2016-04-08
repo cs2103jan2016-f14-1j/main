@@ -19,13 +19,25 @@ public class AddTask extends Functionality {
 			setNTitle(Keywords.MESSAGE_ERROR);
 			return getNotification();
 		}
-		ArrayList<IntegerPair> freeS = FreeSlots.getFreeSlotsInt(task.getIntDate());
-		if (hasCollision(freeS, task)){ // not working yet! TODO
-			setNTitle(Keywords.MESSAGE_ADD_SUCCESS);
-			setNMessage("Conflicting time slots!");
-		} else {
-			setNTitle(Keywords.MESSAGE_ADD_SUCCESS);
-			setNMessage(task.getTask() + " has been added!");
+		ArrayList<IntegerPair> freeS = FreeSlots.getFreeSlotsInt(task.getIntDate()); //only get free slots
+		ArrayList<Integer> taskIDs = FreeSlots.getConflict(task); //should handle single time tasks
+		if (freeS.isEmpty()){ // if empty means free whole day
+			if (taskIDs.size() == 1) {
+				System.out.println("hereeee");
+				setNTitle(Keywords.MESSAGE_ADD_SUCCESS);
+				setNMessage(task.getTask() + " has been added!");
+			} else {
+				setNTitle(Keywords.MESSAGE_ADD_SUCCESS);
+				setNMessage("Conflicting time slots! Tasks: " + taskIDs.toString());
+			}
+		} else { // not free whole day, so need check if valid slot chosen
+			if (validSlot(freeS, task)) {
+				setNTitle(Keywords.MESSAGE_ADD_SUCCESS);
+				setNMessage(task.getTask() + " has been added!");
+			} else {
+				setNTitle(Keywords.MESSAGE_ADD_SUCCESS);
+				setNMessage("Conflicting time slots! Tasks: " + taskIDs.toString());
+			}
 		}
 
 		// Add to history the action to be done
@@ -36,22 +48,11 @@ public class AddTask extends Functionality {
 		return getNotification();
 	}
 
-	private boolean hasCollision(ArrayList<IntegerPair> freeS, Task task) {
+	private boolean validSlot(ArrayList<IntegerPair> freeS, Task task) {
 		for (IntegerPair slots : freeS){
-			if (task.getDatetimes().get(2) != null) {
-				if (task.getDatetimes().get(3) != null) {
-					if (slots.inBetween(task.getIntStartTime())) {
-						return true;
-					} else if (slots.inBetween(task.getIntEndTime())) {
-						return true;
-					} 
-				} else {
-					if (slots.inBetween(task.getIntStartTime())) {
-						return true;
-					}
-				}
-			} else if (task.getDatetimes().get(3) != null) {
-				if (slots.inBetween(task.getIntEndTime())) {
+			if (task.getDatetimes().get(3) != null) {
+				if (slots.inBetween(task.getIntStartTime()) &&
+						slots.inBetween(task.getIntEndTime())) {
 					return true;
 				}
 			}
