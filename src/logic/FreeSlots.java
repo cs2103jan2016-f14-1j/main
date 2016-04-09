@@ -27,12 +27,10 @@ public class FreeSlots {
 	}
 	
 	public static ArrayList<IntegerPair> getFreeSlotsInt(int input) {
-		tasks = Storage.getListOfUncompletedTasks();
 		return compileFreeSlots(input);
 	}
 	// assume input is displayDate format e.g. 27Feb, 02Mar
 	public static ArrayList<String> getFreeSlots(int input) {
-		tasks = Storage.getListOfUncompletedTasks();
 		return convertToArrayListString(compileFreeSlots(input));
 	}
 	private static ArrayList<String> convertToArrayListString(ArrayList<IntegerPair> aip) {
@@ -46,6 +44,7 @@ public class FreeSlots {
 	
 	private static ArrayList<IntegerPair> compileFreeSlots(int input) {
 		initTimeSlot();
+		tasks = Storage.getListOfUncompletedTasks();
 		freeSlots.clear();
 		filterTaskSlots(tasks, input);
 		if (taskSlots.isEmpty()) {
@@ -233,9 +232,6 @@ public class FreeSlots {
 		for (int date : dates) {
 			ArrayList<Task> tasksOnDate = filterTasksByDate(tasks, date);
 			ArrayList<Task> taskList = findAllConflict(tasksOnDate, task);
-			if (!taskList.isEmpty()) {
-				taskList.add(task);
-			}
 			for (Task t : taskList) {
 				if (!totalConflict.contains(t)) {
 					totalConflict.add(t);
@@ -302,6 +298,11 @@ public class FreeSlots {
 				}
 			}
 		}
+		if (!taskList.isEmpty()) {
+			if (!taskList.contains(task)) {
+				taskList.add(task);
+			}
+		}
 		return taskList;
 	}
 
@@ -335,7 +336,7 @@ public class FreeSlots {
 			if (t.getDateTimes().get(2) == null) { // no time at all ignore
 				continue;
 			} else if (t.getIntDateEnd() != Keywords.NO_DATE) { // have range of dates
-				if (date > t.getIntDate() && date < t.getIntDateEnd()) {
+				if (date >= t.getIntDate() && date <= t.getIntDateEnd()) {
 					tasksOnDate.add(t);
 				} else {
 					continue;

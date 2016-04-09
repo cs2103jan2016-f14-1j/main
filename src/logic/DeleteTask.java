@@ -11,10 +11,9 @@ public class DeleteTask extends Functionality {
 	/**
 	 * The following deleteTask() methods allow the user to delete task(s)
 	 * 
-	 * @param int
-	 *            taskID or a list of integers(taskIDs) the taskID is used to
-	 *            search for the task in the storage String categories to delete
-	 * @return it will return successful when a task is deleted, else otherwise.
+	 * @param int	taskID or a list of integers(taskIDs) the taskID is used to
+	 * 				search for the task in the storage String categories to delete
+	 * @return 		it will return successful when a task is deleted, else otherwise.
 	 */
 	public Notification deleteTask(ArrayList<Integer> ids, ArrayList<String> cats) {
 		Notification n = new Notification();
