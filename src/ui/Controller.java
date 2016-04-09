@@ -151,11 +151,11 @@ public class Controller {
 		for (int i = 0; i < categories.size(); i++) {
 			categoryItem = new TableItem(view.getCategoryTable(), SWT.NONE);
 			categoryItem.setText(categories.get(i));
-			for (int z = 0; z < ViewTask.getCategories().size(); z++) {
+			for (int z = 0; z < ViewTask.getCurrCat().size(); z++) {
 				String compareCategory = categories.get(i);
 				compareCategory = compareCategory.substring(0, compareCategory.indexOf(Keywords.SPACE_STRING));
 
-				if (ViewTask.getCategories().get(z).equals(compareCategory)) {
+				if (ViewTask.getCurrCat().get(z).equals(compareCategory)) {
 					categoryItem.setBackground(View.newColor);
 					break;
 				}

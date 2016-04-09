@@ -31,9 +31,15 @@ public class Keywords {
 	public static final String MESSAGE_DELETE_SUCCESS = "Task(s) Deleted!";
 	public static final String MESSAGE_EDIT_SUCCESS = "Edit Successful!";
 	public static final String MESSAGE_HELP_SUCCESS = "Help Displayed!";
+	public static final String MESSAGE_MARK_SUCCESS = "Prioritised Successful!";
+	public static final String MESSAGE_MARK_BODY = "Prioritised: ";
 	public static final String MESSAGE_VIEW_SUCCESS = "View By %s";
 	public static final String INVALID_COMMAND = "Invalid Command entered!";
 	public static final String INVALID_ID = "Invalid ID entered!";
+	public static final String INVALID_CAT = "No such category!";
+	public static final String WORD_NOT_DONE = "Not done";
+	public static final String WORD_DONE = "Done";
+	public static final String WORD_DEFAULT = "Default";
 	
 	public static final String TASKID_PREPEND = "-";
 	public static final String CATEGORY_PREPEND = "#";
