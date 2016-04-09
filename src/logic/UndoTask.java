@@ -35,7 +35,7 @@ public class UndoTask extends Functionality {
 				Storage.getTask(task.getId()).setDate(task.getDate());
 				Storage.getTask(task.getId()).setIntDate(task.getIntDate());
 				Storage.getTask(task.getId()).setCategories(task.getCategories());
-				Storage.getTask(task.getId()).setDateTimes(task.getDatetimes());
+				Storage.getTask(task.getId()).setDateTimes(task.getDateTimes());
 				Storage.getTask(task.getId()).setIsCompleted(task.getIsCompleted());
 				Storage.getTask(task.getId()).setPriority(task.getPriority());
 				Storage.getTask(task.getId()).setTask(task.getTask());

@@ -86,6 +86,7 @@ public class Logic {
 	}
 
 // ========================= Getter/Other Methods =========================
+	
 	public static ArrayList<Task> getUncompletedTasks(){
 		return Storage.getListOfUncompletedTasks();
 	}
@@ -139,5 +140,16 @@ public class Logic {
 		} else {
 			Storage.writeTasksToFile();
 		}
+	}
+	
+	/**
+	 * Used by GUI component to get Tasks that have conflicting
+	 * time slots, and uses it to highlight these conflicting
+	 * tasks.
+	 * 
+	 * @return An list of Tasks that have conflicting time slots
+	 */
+	public static ArrayList<Task> getConflicting() {
+		return FreeSlots.findConflict();
 	}
 }

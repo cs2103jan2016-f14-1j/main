@@ -235,8 +235,8 @@ public class Controller {
 	
 	private void insertKeysToHashMap(Task task){
 		
-		Date startTaskDate = task.getDatetimes().get(Keywords.INDEX_STARTDATE);
-		Date endTaskDate = task.getDatetimes().get(Keywords.INDEX_ENDDATE);
+		Date startTaskDate = task.getDateTimes().get(Keywords.INDEX_STARTDATE);
+		Date endTaskDate = task.getDateTimes().get(Keywords.INDEX_ENDDATE);
 		
 		boolean added = false;
 		int lengthOfDays = getLengthOfDays(startTaskDate, endTaskDate);
@@ -722,6 +722,13 @@ public class Controller {
 				}
 			}
 		}
+		
+		for(int i = 0; i<Logic.getConflicting().size(); i++ ){
+			if(Logic.getConflicting().get(i).getId()==taskId){
+				mainItem.setBackground(View.redColor);
+				mainItem.setFont(View.boldFont);
+			}
+		}
 	}
 	
 	private void setLayoutStyle(Task task, TextLayout textLayout, String text, String whiteSpaces, boolean week){
@@ -729,7 +736,7 @@ public class Controller {
 		TextStyle styleDate = new TextStyle(View.boldFont, View.dateColor, null);
 		TextStyle styleCategory = new TextStyle(View.normalFont, View.redColor, null);
 
-		if (task.getDatetimes().get(0) != null) {
+		if (task.getDateTimes().get(0) != null) {
 			int seperatingIndex = whiteSpaces.length() + task.getUserFormatNoDate().length();
 			textLayout.setStyle(styleDescription, 0, seperatingIndex);
 			if (week) {
