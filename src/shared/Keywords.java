@@ -29,6 +29,7 @@ public class Keywords {
 	public static final String MESSAGE_ADD_CONFLICT = "Conflicting time slots! Tasks: ";
 	public static final String MESSAGE_COMPLETED_SUCCESS = "Task Completed!";
 	public static final String MESSAGE_DELETE_SUCCESS = "Task(s) Deleted!";
+	public static final String MESSAGE_DELETE_CAT = "Tasks under %s categories have been deleted!";
 	public static final String MESSAGE_EDIT_SUCCESS = "Edit Successful!";
 	public static final String MESSAGE_HELP_SUCCESS = "Help Displayed!";
 	public static final String MESSAGE_MARK_SUCCESS = "Prioritised Successful!";

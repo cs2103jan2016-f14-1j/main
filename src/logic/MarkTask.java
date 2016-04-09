@@ -6,10 +6,10 @@
 
 package logic;
 
+import java.util.ArrayList;
 import shared.Keywords;
 import shared.Task;
 import storage.Storage;
-import java.util.ArrayList;
 
 public class MarkTask extends Functionality {
 	

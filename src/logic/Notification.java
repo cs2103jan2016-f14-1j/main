@@ -1,4 +1,10 @@
 //@@author A0135778N
+/**
+ * This is the Notification object, updated by Logic component
+ * and used by GUI component for displaying whether command
+ * entered by user was successfully carried out or did an error
+ * occur.
+ */
 
 package logic;
 
@@ -17,16 +23,16 @@ public class Notification {
 	}	
 	
 	public void setTitle(String toUpdate) {
-		title = toUpdate;
+		this.title = toUpdate;
 	}
 	
 	public void setMessage(String toUpdate) {
-		message = toUpdate;
+		this.message = toUpdate;
 	}
 
 	public void clear() {
-		title = "";
-		message = "";
+		this.title = "";
+		this.message = "";
 	}
 
 	public void setInvalidMsg() {

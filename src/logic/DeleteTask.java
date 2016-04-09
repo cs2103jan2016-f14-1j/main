@@ -5,9 +5,10 @@
 
 package logic;
 
-import shared.*;
-import storage.Storage;
 import java.util.ArrayList;
+import shared.Keywords;
+import shared.Task;
+import storage.Storage;
 
 public class DeleteTask extends Functionality {
 
@@ -22,17 +23,25 @@ public class DeleteTask extends Functionality {
 	public Notification deleteTask(ArrayList<Integer> ids, ArrayList<String> cats) {
 		Notification n = new Notification();
 		ids = filterOutInvalidIDs(ids);
-		cats = filterOutCats(cats);
-		if (ids.isEmpty() && cats.isEmpty()) {
+		cats = filterOutInvalidCats(cats);
+		setNotification(n, cats, ids);
+		deleteByIds(ids);
+		deleteByCats(cats);
+		return n;
+	}
+
+// ========================= Supporting Delete Methods =========================
+	private void setNotification(Notification n, ArrayList<String> cats, ArrayList<Integer> ids) {
+		if (isBothEmpty(ids, cats)) {
 			n.setTitle(Keywords.MESSAGE_ERROR);
-		} else if (ids.size() + cats.size() > 1) {
+		} else if (isBothNonEmpty(ids, cats)) {
 			n.setTitle(Keywords.MESSAGE_DELETE_SUCCESS);
 			if (cats.isEmpty()) {
 				n.setMessage(ids.toString());
 			} else if (ids.isEmpty()) {
-				n.setMessage("Tasks under " + cats.toString() + " categories have been deleted!");
+				n.setMessage(String.format(Keywords.MESSAGE_DELETE_CAT, cats.toString()));
 			} else {
-				n.setMessage("Tasks under " + cats.toString() + " categories have been deleted!");
+				n.setMessage(String.format(Keywords.MESSAGE_DELETE_CAT, cats.toString()));
 			}
 		} else {
 			n.setTitle(Keywords.MESSAGE_DELETE_SUCCESS);
@@ -40,68 +49,61 @@ public class DeleteTask extends Functionality {
 				Task t = Storage.getTask(ids.get(Keywords.FIRST_ELEMENT));
 				n.setMessage(t.getUserFormat());
 			} else {
-				n.setMessage("Tasks under " + cats.toString() + " categories have been deleted!");
+				n.setMessage(String.format(Keywords.MESSAGE_DELETE_CAT, cats.toString()));
 			}
 		}
-		deleteByIds(ids);
-		deleteByCats(cats);
-		return n;
 	}
 
-// ========================= Supporting Delete Methods =========================
 	/**
-	 * delete by ids
+	 * Finds all tasks through the list of taskIDs and calls
+	 * deleteTask(taskID) method to remove each task.
 	 * 
-	 * @param ids
-	 * @return
+	 * @param ids	List of valid taskIDs to be removed.
 	 */
-	private boolean deleteByIds(ArrayList<Integer> ids) {
-		boolean value = false;
+	private void deleteByIds(ArrayList<Integer> ids) {
 		for (int id : ids) {
-			if (deleteTask(id)) {
-				value = true;
-			}
+			deleteTask(id);
 		}
 		super.addToHistory("delete");
-		return value;
 	}
 	
 	/**
 	 * This method allows user to delete all tasks under a category. Finds all
-	 * taskIDs of tasks under category and call the deleteTask method
+	 * tasks under the category/categories removes them through the
+	 * deleteTask(taskID) method.
+	 * 
+	 * @param categories	List of category's/categories' tasks to remove.
 	 */
-	private boolean deleteByCats(ArrayList<String> categories) {
+	private void deleteByCats(ArrayList<String> categories) {
 		ArrayList<Task> taskList = Storage.getTasksByCat(categories);
-		if (taskList.isEmpty()) {
-			return false;
-		}
-
 		for (Task task : taskList) {
 			deleteTask(task.getId());
 		}
-
 		super.addToHistory("delete");
-		return true;
 	}
 
 	/**
+	 * This method removes a task using its taskID
 	 * 
 	 * @param taskId
-	 * @return
 	 */
-	private boolean deleteTask(int taskId) {
-		if (Storage.getTask(taskId) == null) {
-			return false;
-		}
+	private void deleteTask(int taskId) {
 		super.addToFuncTasks(Storage.getTask(taskId));
 		Storage.removeTaskUsingTaskId(taskId);
 		Storage.recycleId(taskId);
 		super.synchronization();
-		return true;
 	}
 	
 // ========================= Other Methods =========================
-	private ArrayList<String> filterOutCats(ArrayList<String> cats) {
+	private boolean isBothNonEmpty(ArrayList<Integer> ids, ArrayList<String> cats) {
+		return (!ids.isEmpty() && !cats.isEmpty());
+	}
+
+	private boolean isBothEmpty(ArrayList<Integer> ids, ArrayList<String> cats) {
+		return (ids.isEmpty() && cats.isEmpty());
+	}
+	
+	private ArrayList<String> filterOutInvalidCats(ArrayList<String> cats) {
 		ArrayList<String> newList = new ArrayList<String>();
 		for (String cat : cats) {
 			if (Storage.containsCat(cat)) {
