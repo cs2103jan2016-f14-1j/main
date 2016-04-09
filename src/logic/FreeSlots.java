@@ -1,54 +1,74 @@
 //@@author A0135778N
+/**
+ * This class computes all the free time slots for each day as well as
+ * checks for which tasks have conflicting time slots.
+ */
 
 package logic;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import shared.*;
+import shared.IntegerPair;
+import shared.Keywords;
+import shared.Task;
 import storage.Storage;
 
 public class FreeSlots {
-	private static ArrayList<Task> tasks = new ArrayList<Task>();
-	private static ArrayList<Task> tasksDate = new ArrayList<Task>();
-	private static ArrayList<Task> taskSlots = new ArrayList<Task>();
-	private static ArrayList<IntegerPair> freeSlots = new ArrayList<IntegerPair>();
 	
-	private static HashMap<Integer, ArrayList<Integer>> timeSlots = new HashMap<Integer, ArrayList<Integer>>(24);
-	
-	private static void initTimeSlot() {
-		for (int i = 0; i < 24; i++) {
-			ArrayList<Integer> mins = new ArrayList<Integer>();
-			for (int j = 0; j < 60; j++){ 
-				mins.add(j);
-			}
-			timeSlots.put(i, mins);
-		}
-	}
-	
+// ============== Main Methods For Retrieving Free Time Slots =================
 	public static ArrayList<IntegerPair> getFreeSlotsInt(int input) {
 		return compileFreeSlots(input);
 	}
-	// assume input is displayDate format e.g. 27Feb, 02Mar
+
 	public static ArrayList<String> getFreeSlots(int input) {
 		return convertToArrayListString(compileFreeSlots(input));
 	}
-	private static ArrayList<String> convertToArrayListString(ArrayList<IntegerPair> aip) {
-		//System.out.println(aip.isEmpty()==true);
-		ArrayList<String> as = new ArrayList<String>();
-		for (IntegerPair ip : aip) {
-			as.add(toTimeString(ip.getInt1(), ip.getInt2()));
-		}
-		return as;
-	}
 	
+//============== Main Methods For Retrieving Conflicting Tasks ===============
+	public static ArrayList<Task> findConflict() {
+		ArrayList<Task> tasks = Storage.getListOfUncompletedTasks();
+		ArrayList<Integer> dates = getAllDatesWithTime(tasks);
+		ArrayList<Task> totalConflict = new ArrayList<Task>();
+		for (int date : dates) {
+			ArrayList<Task> tasksOnDate = filterTasksByDate(tasks, date);
+			ArrayList<Task> conflictByDate = new ArrayList<Task>();
+			for (int i = 0; i < tasksOnDate.size(); i++) {
+				Task task = tasksOnDate.get(i);
+				ArrayList<Task> taskList = findAllConflict(tasksOnDate, task);
+				for (Task t : taskList) {
+					if (!conflictByDate.contains(t)) {
+						conflictByDate.add(t);
+					}
+				}
+			}
+			for (Task t : conflictByDate) {
+				if (!totalConflict.contains(t)) {
+					totalConflict.add(t);
+				}
+			}
+		}
+		return totalConflict;
+	}
+
+	public static ArrayList<Integer> getConflictIDs(Task task) {
+		ArrayList<Task> taskList = findConflictByTask(task);
+		ArrayList<Integer> taskIDs = new ArrayList<Integer>();
+		for (Task t : taskList) {
+			taskIDs.add(t.getId());
+		}
+		return taskIDs;
+	}
+
+// ========================= Free Slots Compilation Operation =========================
 	private static ArrayList<IntegerPair> compileFreeSlots(int input) {
-		initTimeSlot();
-		tasks = Storage.getListOfUncompletedTasks();
-		freeSlots.clear();
-		filterTaskSlots(tasks, input);
+		HashMap<Integer, ArrayList<Integer>> timeSlots = initTimeSlot();
+		ArrayList<Task> tasks = Storage.getListOfUncompletedTasks();
+		ArrayList<IntegerPair> freeSlots = new ArrayList<IntegerPair>();
+		ArrayList<Task> taskSlots = filterTaskSlots(tasks, input);
 		if (taskSlots.isEmpty()) {
-			return freeSlots; // null list means all time slots available
+			// null list means all time slots available
+			return freeSlots;
 		} else {
 			for (Task t : taskSlots) {
 				ArrayList<Date> dateTimes = t.getDateTimes();
@@ -161,96 +181,8 @@ public class FreeSlots {
 		}
 		return freeSlots;
 	}
-	
-	private static String toTimeString(int startTRange, int endTRange) {
-		String sString = "";
-		String eString = "";
-		int sHour = startTRange / 100 == 0 ? 12 : startTRange / 100;
-		if (startTRange < 1200) {
-			sString = String.format("%d:%02dam", sHour, startTRange % 100);
-		} else {
-			sString = String.format("%d:%02dpm", sHour - 12 == 0 ? 12 : sHour - 12, startTRange % 100);
-		}
-		int eHour = endTRange / 100 == 0 ? 12 : endTRange / 100;
-		if (endTRange < 1200) {
-			eString = String.format("%d:%02dam", eHour, endTRange % 100);
-		} else {
-			eString = String.format("%d:%02dpm", eHour - 12 == 0 ? 12 : eHour - 12, endTRange % 100);
-		}
-		return sString + " to " + eString;
-	}
-	
-	private static void filterTaskSlots(ArrayList<Task> tasks, int input) {
-		taskSlots.clear();
-		filterTasksByDate(tasks, input);
-		for (Task t : tasksDate) {
-			if (t.getDateTimes().get(3) == null) { // no time range ignore
-				continue;
-			}
-			taskSlots.add(t);
-		}
-	}
 
-	public static ArrayList<Task> findConflict() { //for startup
-		ArrayList<Task> tasks = Storage.getListOfUncompletedTasks();
-		ArrayList<Integer> dates = getAllDatesWithTime(tasks);
-		ArrayList<Task> totalConflict = new ArrayList<Task>();
-		for (int date : dates) {
-			ArrayList<Task> tasksOnDate = filterTasksByDate(tasks, date);
-			ArrayList<Task> conflictByDate = new ArrayList<Task>();
-			for (int i = 0; i < tasksOnDate.size(); i++) {
-				Task task = tasksOnDate.get(i);
-				ArrayList<Task> taskList = findAllConflict(tasksOnDate, task);
-				for (Task t : taskList) {
-					if (!conflictByDate.contains(t)) {
-						conflictByDate.add(t);
-					}
-				}
-			}
-			for (Task t : conflictByDate) {
-				if (!totalConflict.contains(t)) {
-					totalConflict.add(t);
-				}
-			}
-		}
-		return totalConflict;
-	}
-
-	public static ArrayList<Integer> getConflictIDs(Task task) {
-		ArrayList<Task> taskList = findConflictByTask(task);
-		ArrayList<Integer> taskIDs = new ArrayList<Integer>();
-		for (Task t : taskList) {
-			taskIDs.add(t.getId());
-		}
-		return taskIDs;
-	}
-
-	private static ArrayList<Task> findConflictByTask(Task task) { //for commands
-		ArrayList<Task> tasks = Storage.getListOfUncompletedTasks();
-		ArrayList<Integer> dates = getTaskDates(task);
-		ArrayList<Task> totalConflict = new ArrayList<Task>();
-		for (int date : dates) {
-			ArrayList<Task> tasksOnDate = filterTasksByDate(tasks, date);
-			ArrayList<Task> taskList = findAllConflict(tasksOnDate, task);
-			for (Task t : taskList) {
-				if (!totalConflict.contains(t)) {
-					totalConflict.add(t);
-				}
-			}
-		}
-		return totalConflict;
-	}
-
-	private static ArrayList<Integer> getTaskDates(Task task) {
-		ArrayList<Integer> dates = new ArrayList<Integer>();
-		int startD = task.getIntDate();
-		int endD = task.getIntDateEnd();
-		for (int i = startD; i <= endD; i++) {
-			dates.add(i);
-		}
-		return dates;
-	}
-
+// ========================= Conflict Compilation Operation =========================
 	private static ArrayList<Task> findAllConflict(ArrayList<Task> tasksOnDate, Task task) {
 		ArrayList<Task> taskList = new ArrayList<Task>();
 		ArrayList<Date> dateTimes = task.getDateTimes();
@@ -305,6 +237,106 @@ public class FreeSlots {
 		}
 		return taskList;
 	}
+	
+	private static ArrayList<Task> findConflictByTask(Task task) { //for commands
+		ArrayList<Task> tasks = Storage.getListOfUncompletedTasks();
+		ArrayList<Integer> dates = getTaskDates(task);
+		ArrayList<Task> totalConflict = new ArrayList<Task>();
+		for (int date : dates) {
+			ArrayList<Task> tasksOnDate = filterTasksByDate(tasks, date);
+			ArrayList<Task> taskList = findAllConflict(tasksOnDate, task);
+			for (Task t : taskList) {
+				if (!totalConflict.contains(t)) {
+					totalConflict.add(t);
+				}
+			}
+		}
+		return totalConflict;
+	}
+	
+// ========================= Variable Initialisation Methods =========================
+	private static HashMap<Integer, ArrayList<Integer>> initTimeSlot() {
+		HashMap<Integer, ArrayList<Integer>> timeSlots = 
+				new HashMap<Integer, ArrayList<Integer>>(24);
+		for (int i = 0; i < 24; i++) {
+			ArrayList<Integer> mins = new ArrayList<Integer>();
+			for (int j = 0; j < 60; j++){ 
+				mins.add(j);
+			}
+			timeSlots.put(i, mins);
+		}
+		return timeSlots;
+	}
+	
+// ========================= Format Conversion Methods =========================
+	private static ArrayList<String> convertToArrayListString(ArrayList<IntegerPair> aip) {
+		//System.out.println(aip.isEmpty()==true);
+		ArrayList<String> as = new ArrayList<String>();
+		for (IntegerPair ip : aip) {
+			as.add(toTimeString(ip.getInt1(), ip.getInt2()));
+		}
+		return as;
+	}
+	
+	private static String toTimeString(int startTRange, int endTRange) {
+		String sString = "";
+		String eString = "";
+		int sHour = startTRange / 100 == 0 ? 12 : startTRange / 100;
+		if (startTRange < 1200) {
+			sString = String.format("%d:%02dam", sHour, startTRange % 100);
+		} else {
+			sString = String.format("%d:%02dpm", sHour - 12 == 0 ? 12 : sHour - 12, startTRange % 100);
+		}
+		int eHour = endTRange / 100 == 0 ? 12 : endTRange / 100;
+		if (endTRange < 1200) {
+			eString = String.format("%d:%02dam", eHour, endTRange % 100);
+		} else {
+			eString = String.format("%d:%02dpm", eHour - 12 == 0 ? 12 : eHour - 12, endTRange % 100);
+		}
+		return sString + " to " + eString;
+	}
+	
+//========================= Filter Methods =================================
+	private static ArrayList<Task> filterTaskSlots(ArrayList<Task> tasks, int input) {
+		ArrayList<Task> taskSlots = new ArrayList<Task>();
+		ArrayList<Task> tasksDate = filterTasksByDate(tasks, input);
+		for (Task t : tasksDate) {
+			if (t.getDateTimes().get(3) != null) { // no time range ignore
+				taskSlots.add(t);
+			}
+		}
+		return taskSlots;
+	}
+	
+	private static ArrayList<Task> filterTasksByDate(ArrayList<Task> tasks, int date) {
+		ArrayList<Task> tasksOnDate = new ArrayList<Task>();
+		for (Task t : tasks) {
+			if (t.getDateTimes().get(2) == null) { // no time at all ignore
+				continue;
+			} else if (t.getIntDateEnd() != Keywords.NO_DATE) { // have range of dates
+				if (date >= t.getIntDate() && date <= t.getIntDateEnd()) {
+					tasksOnDate.add(t);
+				} else {
+					continue;
+				}
+			} else { // start date only
+				if (t.getIntDate() == date && t.getIsCompleted() != Keywords.TASK_COMPLETED) {
+					tasksOnDate.add(t);
+				}
+			}
+		}
+		return tasksOnDate;
+	}
+
+	private static ArrayList<Integer> getTaskDates(Task task) {
+		ArrayList<Integer> dates = new ArrayList<Integer>();
+		int startD = task.getIntDate();
+		int endD = task.getIntDateEnd();
+		for (int i = startD; i <= endD; i++) {
+			dates.add(i);
+		}
+		return dates;
+	}
 
 	private static ArrayList<Integer> getAllDatesWithTime(ArrayList<Task> tasks) {
 		ArrayList<Integer> dates = new ArrayList<Integer>();
@@ -328,25 +360,5 @@ public class FreeSlots {
 			}
 		}
 		return dates;
-	}
-
-	private static ArrayList<Task> filterTasksByDate(ArrayList<Task> tasks, int date) {
-		ArrayList<Task> tasksOnDate = new ArrayList<Task>();
-		for (Task t : tasks) {
-			if (t.getDateTimes().get(2) == null) { // no time at all ignore
-				continue;
-			} else if (t.getIntDateEnd() != Keywords.NO_DATE) { // have range of dates
-				if (date >= t.getIntDate() && date <= t.getIntDateEnd()) {
-					tasksOnDate.add(t);
-				} else {
-					continue;
-				}
-			} else { // start date only
-				if (t.getIntDate() == date && t.getIsCompleted() != Keywords.TASK_COMPLETED) {
-					tasksOnDate.add(t);
-				}
-			}
-		}
-		return tasksOnDate;
 	}
 }
