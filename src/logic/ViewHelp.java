@@ -1,9 +1,16 @@
+//@@author A0076520L
+
 package logic;
 
 import java.util.LinkedList;
 
 public class ViewHelp extends Functionality {
 
+	/**
+	 * Set up the help sheet for user
+	 * 
+	 * @return the list of Strings to display as help
+	 */
 	public LinkedList<String> viewHelp() {
 		LinkedList<String> help = new LinkedList<String>();
 		help.add("Adding tasks");
@@ -28,9 +35,9 @@ public class ViewHelp extends Functionality {
 		help.add("view <category>");
 		help.add("Eg. view shopping");
 		help.add("Show help");
-		help.add("[? | help | h]");
+		help.add("[help]");
 		help.add("Undo previous command");
-		help.add("[u | undo]");
+		help.add("[undo]");
 		help.add("Keyboard shortcuts");
 		help.add("Launch application: CTRL + ALT + D");
 		help.add("Choose file location: ALT + E");

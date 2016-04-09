@@ -4,34 +4,38 @@ package logic;
 
 import java.util.ArrayList;
 
-import parser.Parser;
 import shared.Keywords;
 import shared.Task;
 import storage.Storage;
 
 public class UndoTask extends Functionality {
 
+	/**
+	 * Check the logic for undoing a task
+	 * 
+	 * @return the Notification object
+	 */
 	public Notification undoTask() {
 		ArrayList<Task> t = Storage.getLastTasks();
 		String action = Storage.getLastAction();
 		Notification n = new Notification();
-		switch(action){
-		case "do":
-			for(Task task : t){
+		switch (action) {
+		case "do":// handles the reverse of do
+			for (Task task : t) {
 				Storage.getTask(task.getId()).setIsCompleted(Keywords.TASK_NOT_COMPLETED);
 			}
 			n = printSuccessful("Complete command undone");
 			break;
-		case "add":
-			for(Task task: t){
+		case "add":// handles the reverse of add
+			for (Task task : t) {
 				Storage.recycleId(task.getId());
 				Storage.removeTaskUsingTaskId(task.getId());
 			}
 			n = printSuccessful("Add command undone");
 			break;
-		case "edit":
-			for(Task task: t){
-				//when there are more attributes, we will add accordingly
+		case "edit":// handles the reverse of edit
+			for (Task task : t) {
+				// change back to the original values
 				Storage.getTask(task.getId()).setDate(task.getDate());
 				Storage.getTask(task.getId()).setIntDate(task.getIntDate());
 				Storage.getTask(task.getId()).setCategories(task.getCategories());
@@ -42,30 +46,38 @@ public class UndoTask extends Functionality {
 			}
 			n = printSuccessful("Edit command undone");
 			break;
-		case "delete":
-			for(Task task:t){
+		case "delete":// handles the reverse of delete
+			for (Task task : t) {
 				Storage.addTaskToList(task);
 				Storage.removeSpecificId(task.getId());
 			}
 			n = printSuccessful("Delete command undone");
 			break;
-		case "mark":
-			for(Task task : t){
+		case "mark":// handles the reverse of mark
+			for (Task task : t) {
 				Storage.getTask(task.getId()).togglePriority();
 			}
 			n = printSuccessful("Mark command undone");
 			break;
 		}
-		if(t == null){
+		// if t does not contain anything
+		if (t == null) {
 			n.setTitle("Undo Failed.");
 			n.setMessage("Nothing to undo!");
 		}
-		
+
 		super.synchronization();
 		return n;
 	}
-	
-	private Notification printSuccessful(String toUpdate){
+
+	/**
+	 * Set up the Notification Object
+	 * 
+	 * @param toUpdate
+	 *            the String to be input
+	 * @return the Notification object
+	 */
+	private Notification printSuccessful(String toUpdate) {
 		Notification n = new Notification();
 		n.setTitle("Undo Successful.");
 		n.setMessage(toUpdate);

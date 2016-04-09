@@ -16,19 +16,39 @@ import storage.Storage;
 
 public class SearchTask extends Functionality {
 
-	ArrayList<String> replace;
-	public HashMap<String, Object> searchTask(String words, int isPriortise,
-			String month, int date, ArrayList<String> categories){
+	private ArrayList<String> replace;
+
+	/**
+	 * Search the tasks accordingly to the attributes given
+	 * 
+	 * @param words
+	 *            the words to be filtered
+	 * @param isPriortise
+	 *            1 for priortise, 0 for not priortise
+	 * @param month
+	 *            the month to be searched
+	 * @param date
+	 *            the specific date to be searched
+	 * @param categories
+	 *            the categories to be filtered
+	 * @return the results of the filtering
+	 */
+	public HashMap<String, Object> searchTask(String words, int isPriortise, String month, int date,
+									ArrayList<String> categories) {
 		replace = new ArrayList<String>();
 		replace.add("Do you mean:");
 		HashMap<String, Object> results = new HashMap<String, Object>();
 		ArrayList<Task> result = new ArrayList<Task>();
+
+		// Check if user wants to search for prioritise, no prioritise or get
+		// all uncompleted
 		if (isPriortise == 1 || isPriortise == 0) {
 			result = filterPriority(Storage.getListOfUncompletedTasks(), isPriortise);
 		} else {
 			result = Storage.getListOfUncompletedTasks();
 		}
-		
+
+		// Compare the dates
 		if (date != -1) {
 			// search <result> comparing dates
 			result = filterDate(result, date);
@@ -39,17 +59,18 @@ public class SearchTask extends Functionality {
 			}
 			results.put("free", freeSlots);
 		}
-		
-		//search by month
-		if(!month.equals(Keywords.EMPTY_STRING)){
+
+		// search by month
+		if (!month.equals(Keywords.EMPTY_STRING)) {
 			result = filterByMonth(result, month);
 		}
 
+		// search by categories
 		if (!categories.isEmpty()) {
 			result = filterCategories(result, categories);
 		}
 		// Lastly, after all the filtering, search for words containing if any
-		if(!words.equals("")){
+		if (!words.equals("")) {
 			result = filterWords(result, words);
 		}
 		if (result.size() == 0) {
@@ -59,6 +80,8 @@ public class SearchTask extends Functionality {
 			setNTitle("Search Success!");
 			setNMessage("Results found: " + result.size());
 		}
+
+		// combines all of it into results and return to caller
 		ArrayList<Object> combined = new ArrayList<Object>();
 		combined.add(getNotification());
 		results.put("Tasks", result);
@@ -67,27 +90,37 @@ public class SearchTask extends Functionality {
 		combined.add(result);
 		return results;
 	}
+
+	/**
+	 * Filter by key words
+	 * 
+	 * @param list
+	 *            the list of tasks to be filtered
+	 * @param words
+	 *            the words to filter
+	 * @return the list of filtered tasks
+	 */
 	private ArrayList<Task> filterWords(ArrayList<Task> list, String words) {
 		ArrayList<Task> temp = new ArrayList<Task>();
-		
-		InputStream is= getClass().getResourceAsStream("/storage/dictionary");
+
+		InputStream is = getClass().getResourceAsStream("/storage/dictionary");
 		SymSpell.CreateDictionary(is, "");
 		for (Task t : list) {
 			for (String word : words.split(Keywords.SPACE_STRING)) {
 				ArrayList<String> result = SymSpell.Correct(word, "");
 				for (String wor : result) {
 					if (t.getTask().contains(wor) || t.getTask().contains(word)) {
-						if(wor!=word && !replace.contains(wor)){
+						if (wor != word && !replace.contains(wor)) {
 							replace.add(wor);
 						}
-						if(!temp.contains(t)){
+						if (!temp.contains(t)) {
 							temp.add(t);
 						}
 						break;
 					} else if (!t.getCategories().isEmpty()) {
 						for (String cat : t.getCategories()) {
-							if (cat.contains(wor)||cat.contains(word)) {
-								if(!temp.contains(t)){
+							if (cat.contains(wor) || cat.contains(word)) {
+								if (!temp.contains(t)) {
 									temp.add(t);
 								}
 								break;
@@ -100,6 +133,15 @@ public class SearchTask extends Functionality {
 		return temp;
 	}
 
+	/**
+	 * Filter the list of tasks by date
+	 * 
+	 * @param list
+	 *            the list of tasks to be filtered
+	 * @param date
+	 *            the date to filter
+	 * @return the filtered list
+	 */
 	private ArrayList<Task> filterDate(ArrayList<Task> list, int date) {
 		ArrayList<Task> temp = new ArrayList<Task>();
 		for (Task t : list) {
@@ -110,7 +152,15 @@ public class SearchTask extends Functionality {
 		return temp;
 	}
 
-	// filter out task with priority
+	/**
+	 * Filter the list of tasks by priority
+	 * 
+	 * @param list
+	 *            the list of tasks to be filtered
+	 * @param isPriortise
+	 *            the priority
+	 * @return the list of filtered tasks
+	 */
 	private ArrayList<Task> filterPriority(ArrayList<Task> list, int isPriortise) {
 		ArrayList<Task> temp = new ArrayList<Task>();
 		for (Task t : list) {
@@ -121,6 +171,15 @@ public class SearchTask extends Functionality {
 		return temp;
 	}
 
+	/**
+	 * Filter the list of tasks by categories
+	 * 
+	 * @param list
+	 *            the list of tasks to be filtered
+	 * @param catToFilter
+	 *            the categories to filter
+	 * @return the list of filtered tasks
+	 */
 	private ArrayList<Task> filterCategories(ArrayList<Task> list, ArrayList<String> catToFilter) {
 
 		ArrayList<Task> temp = new ArrayList<Task>();
@@ -134,20 +193,29 @@ public class SearchTask extends Functionality {
 		}
 		return temp;
 	}
-	
-	private ArrayList<Task> filterByMonth(ArrayList<Task> list, String month){
+
+	/**
+	 * Filter the list of tasks by month
+	 * 
+	 * @param list
+	 *            the list of tasks to be filtered
+	 * @param month
+	 *            the month to filter
+	 * @return the list of filtered tasks
+	 */
+	private ArrayList<Task> filterByMonth(ArrayList<Task> list, String month) {
 		ArrayList<Task> temp = new ArrayList<Task>();
-		for(Task t: list){
+		for (Task t : list) {
 			String intDate = Integer.toString(t.getIntDate());
-			Date dateMth =null;
-			try{
+			Date dateMth = null;
+			try {
 				dateMth = new SimpleDateFormat("MMM", Locale.ENGLISH).parse(month);
-			}catch(Exception e){
+			} catch (Exception e) {
 				setNMessage("Wrong date format. Use Feb, may, Jan.");
 			}
 			Date date = Formatter.fromIntToDate(intDate);
-			if(date!=null){
-				if(date.getMonth()==dateMth.getMonth()){
+			if (date != null) {
+				if (date.getMonth() == dateMth.getMonth()) {
 					temp.add(t);
 				}
 			}

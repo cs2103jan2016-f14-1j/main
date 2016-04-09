@@ -26,19 +26,19 @@ public class DoTask extends Functionality {
 				validIds.add(id);
 			}
 		}
+		// check if the validIds is empty
 		if (validIds.isEmpty()) {
 			n.setTitle(Keywords.MESSAGE_ERROR);
-		} else if (validIds.size() > 1) {
+		} else if (validIds.size() > 1) { // shows that there will be definitely
+											// more than 1 task been completed
 			n.setTitle(Keywords.MESSAGE_COMPLETED_SUCCESS);
 			n.setMessage(validIds.toString());
-		} else {
+		} else {// there is only 1 task to be completed
 			n.setTitle(Keywords.MESSAGE_COMPLETED_SUCCESS);
 			n.setMessage(Storage.getTask(validIds.get(Keywords.FIRST_ELEMENT)).getUserFormat() + "done!");
 		}
 		for (int taskID : validIds) {
-			if (doTask(taskID)) {
-				//changing in progress
-			}
+			doTask(taskID);
 		}
 		// Add to history the action to be done
 		super.addToHistory("do");
@@ -46,6 +46,13 @@ public class DoTask extends Functionality {
 		return n;
 	}
 
+	/**
+	 * Set the task to be completed
+	 * 
+	 * @param taskID
+	 *            the ID to retrieve the task
+	 * @return true if task is set as completed or false if it is not found
+	 */
 	private boolean doTask(int taskID) {
 		Task t = Storage.getTask(taskID);
 		if (doesTaskExist(t)) {
@@ -56,6 +63,13 @@ public class DoTask extends Functionality {
 		return true;
 	}
 
+	/**
+	 * Check if the task is null
+	 * 
+	 * @param t
+	 *            the task to be checked
+	 * @return the truth value of t == null;
+	 */
 	private boolean doesTaskExist(Task t) {
 		return t == null;
 	}
