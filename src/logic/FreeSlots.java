@@ -10,7 +10,7 @@ import storage.Storage;
 
 public class FreeSlots {
 	private static ArrayList<Task> tasks = new ArrayList<Task>();
-	private static ArrayList<Task> tasksOnDate = new ArrayList<Task>();
+	private static ArrayList<Task> tasksDate = new ArrayList<Task>();
 	private static ArrayList<Task> taskSlots = new ArrayList<Task>();
 	private static ArrayList<IntegerPair> freeSlots = new ArrayList<IntegerPair>();
 	
@@ -183,8 +183,8 @@ public class FreeSlots {
 	
 	private static void filterTaskSlots(ArrayList<Task> tasks, int input) {
 		taskSlots.clear();
-		filterDateTask(tasks, input);
-		for (Task t : tasksOnDate) {
+		filterTasksByDate(tasks, input);
+		for (Task t : tasksDate) {
 			if (t.getDateTimes().get(3) == null) { // no time range ignore
 				continue;
 			}
@@ -192,78 +192,160 @@ public class FreeSlots {
 		}
 	}
 
-	private static void filterDateTask(ArrayList<Task> tasks, int input) {
-		tasksOnDate.clear();
-		for (Task t : tasks) {
-			if (t.getDateTimes().get(2) == null) { // no time at all ignore
-				continue;
-			} else if (t.getIntDateEnd() != 9999) { // have range of dates
-				if (input > t.getIntDate() && input < t.getIntDateEnd()) {
-					tasksOnDate.add(t);
-				} else {
-					continue;
+	public static ArrayList<Task> findConflict() { //for startup
+		ArrayList<Task> tasks = Storage.getListOfUncompletedTasks();
+		ArrayList<Integer> dates = getAllDatesWithTime(tasks);
+		ArrayList<Task> totalConflict = new ArrayList<Task>();
+		for (int date : dates) {
+			ArrayList<Task> tasksOnDate = filterTasksByDate(tasks, date);
+			ArrayList<Task> conflictByDate = new ArrayList<Task>();
+			for (int i = 0; i < tasksOnDate.size(); i++) {
+				Task task = tasksOnDate.get(i);
+				ArrayList<Task> taskList = findAllConflict(tasksOnDate, task);
+				for (Task t : taskList) {
+					if (!conflictByDate.contains(t)) {
+						conflictByDate.add(t);
+					}
 				}
-			} else { // start date only
-				if (t.getIntDate() == input && t.getIsCompleted() != Keywords.TASK_COMPLETED) {
-					tasksOnDate.add(t);
+			}
+			for (Task t : conflictByDate) {
+				if (!totalConflict.contains(t)) {
+					totalConflict.add(t);
 				}
 			}
 		}
+		return totalConflict;
 	}
 
-	public static ArrayList<Integer> getConflict(Task task) {
-		ArrayList<Task> conflicts = new ArrayList<Task>();
+	public static ArrayList<Integer> getConflictIDs(Task task) {
+		ArrayList<Task> taskList = findConflictByTask(task);
 		ArrayList<Integer> taskIDs = new ArrayList<Integer>();
-		if (task.getDateTimes().get(2) == null) {
-			taskIDs.add(task.getId());
-			return taskIDs;
+		for (Task t : taskList) {
+			taskIDs.add(t.getId());
 		}
-		filterDateTask(tasks, task.getIntDate());
-		
-		if (task.getDateTimes().get(3) == null) { //task only has start time
+		return taskIDs;
+	}
+
+	private static ArrayList<Task> findConflictByTask(Task task) { //for commands
+		ArrayList<Task> tasks = Storage.getListOfUncompletedTasks();
+		ArrayList<Integer> dates = getTaskDates(task);
+		ArrayList<Task> totalConflict = new ArrayList<Task>();
+		for (int date : dates) {
+			ArrayList<Task> tasksOnDate = filterTasksByDate(tasks, date);
+			ArrayList<Task> taskList = findAllConflict(tasksOnDate, task);
+			if (!taskList.isEmpty()) {
+				taskList.add(task);
+			}
+			for (Task t : taskList) {
+				if (!totalConflict.contains(t)) {
+					totalConflict.add(t);
+				}
+			}
+		}
+		return totalConflict;
+	}
+
+	private static ArrayList<Integer> getTaskDates(Task task) {
+		ArrayList<Integer> dates = new ArrayList<Integer>();
+		int startD = task.getIntDate();
+		int endD = task.getIntDateEnd();
+		for (int i = startD; i <= endD; i++) {
+			dates.add(i);
+		}
+		return dates;
+	}
+
+	private static ArrayList<Task> findAllConflict(ArrayList<Task> tasksOnDate, Task task) {
+		ArrayList<Task> taskList = new ArrayList<Task>();
+		ArrayList<Date> dateTimes = task.getDateTimes();
+		if (dateTimes.get(3) == null) { //task only has start time
 			for (Task t : tasksOnDate) {
-				if (t.getDateTimes().get(2) == null) {
+				if (task.getId() == t.getId()) {
 					continue;
-				} else if (t.getDateTimes().get(3) != null) { // t got time range
+				}
+				if (t.getDateTimes().get(3) != null) { // t got time range
+					if (task.getIntStartTime() == t.getIntEndTime()) {
+						continue;
+					}
 					IntegerPair tTimeRange = new IntegerPair(t.getIntStartTime(),t.getIntEndTime());
 					if (tTimeRange.inBetween(task.getIntStartTime())) {
-						taskIDs.add(t.getId());
-						conflicts.add(t);
+						taskList.add(t);
 					}
 				} else { // t only got start time;
 					if (t.getIntStartTime() == task.getIntStartTime()){
-						taskIDs.add(t.getId());
-						conflicts.add(t);
+						taskList.add(t);
 					}
 				}
 			}
 		} else { // task has a time range
 			IntegerPair taskTimeRange = new IntegerPair(task.getIntStartTime(),task.getIntEndTime());
 			for (Task t : tasksOnDate) {
-				if (t.getDateTimes().get(2) == null) {
+				if (task.getId() == t.getId()) {
 					continue;
-				} else if (t.getDateTimes().get(3) != null) { // t got time range
+				}
+				if (t.getDateTimes().get(3) != null) { // t got time range
+					if (t.getIntStartTime() == task.getIntEndTime() 
+							|| task.getIntStartTime() == t.getIntEndTime()) {
+						continue;
+					}
 					if (taskTimeRange.inBetween(t.getIntStartTime())
 							|| taskTimeRange.inBetween(t.getIntEndTime())) {
-						taskIDs.add(t.getId());
-						conflicts.add(t);
+						taskList.add(t);
 					}
 				} else { // t only got start time
+					if (t.getIntStartTime() == task.getIntEndTime()) {
+						continue;
+					}
 					if (taskTimeRange.inBetween(t.getIntStartTime())){
-						taskIDs.add(t.getId());
-						conflicts.add(t);
+						taskList.add(t);
 					}
 				}
 			}
 		}
-		if (!conflicts.isEmpty()) {
-			conflicts.add(task);
+		return taskList;
+	}
+
+	private static ArrayList<Integer> getAllDatesWithTime(ArrayList<Task> tasks) {
+		ArrayList<Integer> dates = new ArrayList<Integer>();
+		for (Task t : tasks) {
+			ArrayList<Date> dateTimes = t.getDateTimes();
+			if (dateTimes.get(2) != null) {
+				if (dateTimes.get(1) != null) {
+					int tStart = t.getIntDate();
+					int tEnd = t.getIntDateEnd();
+					for (int i = tStart; i <= tEnd; i++) {
+						if (!dates.contains(i)) {
+							dates.add(i);
+						}
+					}
+				} else {
+					int tStart = t.getIntDate();
+					if (!dates.contains(tStart)) {
+						dates.add(tStart);
+					}
+				}
+			}
 		}
-		taskIDs.add(task.getId());
-		//task.setConflict(conflicts);
-		//for (Task t : conflicts) {
-		//	t.setConflict(conflicts);
-		//}
-		return taskIDs;
+		return dates;
+	}
+
+	private static ArrayList<Task> filterTasksByDate(ArrayList<Task> tasks, int date) {
+		ArrayList<Task> tasksOnDate = new ArrayList<Task>();
+		for (Task t : tasks) {
+			if (t.getDateTimes().get(2) == null) { // no time at all ignore
+				continue;
+			} else if (t.getIntDateEnd() != Keywords.NO_DATE) { // have range of dates
+				if (date > t.getIntDate() && date < t.getIntDateEnd()) {
+					tasksOnDate.add(t);
+				} else {
+					continue;
+				}
+			} else { // start date only
+				if (t.getIntDate() == date && t.getIsCompleted() != Keywords.TASK_COMPLETED) {
+					tasksOnDate.add(t);
+				}
+			}
+		}
+		return tasksOnDate;
 	}
 }

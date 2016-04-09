@@ -50,12 +50,11 @@ public class AddTask extends Functionality {
 		
 		ArrayList<IntegerPair> freeTimeSlots = FreeSlots.getFreeSlotsInt(task.getIntDate());
 		//TODO: task with date range
-		ArrayList<Integer> conflictTaskIDs = FreeSlots.getConflict(task);
+		ArrayList<Integer> conflictTaskIDs = FreeSlots.getConflictIDs(task);
 		
 		if (freeTimeSlots.isEmpty()){
 			// If freeS is empty, the whole day is free
-			if (conflictTaskIDs.size() == 1) {
-				// If taskIDs size is 1, means there is no conflicts with other tasks
+			if (conflictTaskIDs.isEmpty()) {
 				setNTitle(Keywords.MESSAGE_ADD_SUCCESS);
 				setNMessage(task.getTask() + Keywords.MESSAGE_ADD_BODY);
 			} else {
