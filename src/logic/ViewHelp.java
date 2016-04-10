@@ -16,7 +16,7 @@ public class ViewHelp extends Functionality {
 		help.add("Adding tasks");
 		help.add("add <TODO>");
 		help.add("add <TODO> (at | by | on | to) <date> [#category]");
-		help.add("Eg. add do CS2103 tutorial by Sun");
+		help.add("Eg. add do CS2103 tutorial by 10 May");
 		help.add("      add buy milk by 15Feb #shopping");
 		
 		help.add("Edit tasks");
@@ -30,12 +30,12 @@ public class ViewHelp extends Functionality {
 		help.add("Searching tasks");
 		help.add("search \"<TODO>\"");
 		help.add("search \"<TODO>\" <date>");
-		help.add("search (at | by | on | to | from) <date>");
-		help.add("search priority <date>");
+		help.add("search <date>");
+		help.add("search (busiest | priority) (from | in) <date>");
 		help.add("Eg. search \"networking\"");
 		help.add("      search \"networking\" 14 apr");
-		help.add("      search from May");
-		help.add("      search priority 14 apr");
+		help.add("      search May");
+		help.add("      search busiest from Apr");
 		
 		help.add("Set priority");
 		help.add("mark <task_ID#>");
@@ -47,14 +47,15 @@ public class ViewHelp extends Functionality {
 		help.add("      do 1");
 		
 		help.add("View tasks");
-		help.add("view <category>");
+		help.add("view [category]");
 		help.add("Eg. view shopping");
+		help.add("      view");
 		
 		help.add("Show help");
-		help.add("[help]");
+		help.add("[help | h | ?]");
 		
 		help.add("Undo previous command");
-		help.add("[undo]");
+		help.add("[undo | u]");
 		
 		help.add("Keyboard shortcuts");
 		help.add("Launch application: CTRL + ALT + D");

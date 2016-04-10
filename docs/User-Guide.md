@@ -111,14 +111,14 @@ Examples:
 
 ## Show help
 ```
-[help]
+[help | h | ?]
 ```
 
 Shows a help screen containing all commands available.
 
 ## Undo previous command
 ```
-undo
+[undo | u]
 ```
 
 Undo the previous command.
