@@ -71,6 +71,7 @@ public class ParseSearch {
 			System.out.println(date.toString() + Keywords.SPACE_STRING + dateStart);
 		}
 		output.add(dateStart);
+		
 		// filter for categories
 		p = Pattern.compile(REGEX_CAT);
 		m = p.matcher(rawInput);
@@ -93,6 +94,13 @@ public class ParseSearch {
 			output.add(1);
 		}else{
 			output.add(0);
+		}
+		
+		//filter for conflict
+		if (rawInput.matches(Keywords.REGEX_CONFLICT)) {
+			output.add(rawInput);
+		} else {
+			output.add(Keywords.EMPTY_STRING);
 		}
 		return output;
 	}

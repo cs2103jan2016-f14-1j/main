@@ -73,7 +73,8 @@ public class Parser {
 					(String) output.get(2), //get month
 					(int )output.get(3),//get date by int
 					(ArrayList<String>) output.get(4),//category
-					(int) output.get(5));//does user want the busiest day of month
+					(int) output.get(5),//does user want the busiest day of month
+					(String) output.get(6));
 		case COMMAND_MARK:
 			return returnValue = ParseMark.prioritise(inputWithoutCommandType);
 		default:

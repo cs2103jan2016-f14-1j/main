@@ -153,6 +153,8 @@ public class FreeSlots {
 						endTRange = (key * Keywords.DATE_FORMAT_MULTIPLIER)
 									+ timeSlots.get(key).get(i+1);
 					}
+					freeSlots.add(new IntegerPair(startTRange, endTRange+1));
+					started = false;
 				}
 			} else {
 				if (totalMinSize == Keywords.CONSTANT_MIN) {
@@ -161,8 +163,10 @@ public class FreeSlots {
 					endTRange = key * Keywords.DATE_FORMAT_MULTIPLIER;
 					continue;
 				} else {
-					startTRange = timeSlots.get(key).get(Keywords.FIRST_ELEMENT);
-					endTRange = timeSlots.get(key).get(Keywords.FIRST_ELEMENT);
+					startTRange = (key * Keywords.DATE_FORMAT_MULTIPLIER)
+								  + timeSlots.get(key).get(Keywords.FIRST_ELEMENT);
+					endTRange = (key * Keywords.DATE_FORMAT_MULTIPLIER)
+								+ timeSlots.get(key).get(Keywords.FIRST_ELEMENT);
 					for (int i = 0; i < totalMinSize-1; i++) {
 						if (timeSlots.get(key).get(i)+1 != timeSlots.get(key).get(i+1)) {
 							freeSlots.add(new IntegerPair(startTRange, endTRange));
@@ -179,6 +183,8 @@ public class FreeSlots {
 				}
 			}
 		}
+		System.out.println(freeSlots.get(0).getInt1() + " " + freeSlots.get(0).getInt2() + " " +
+		freeSlots.get(1).getInt1()+ " " +freeSlots.get(1).getInt2() );
 		return freeSlots;
 	}
 	

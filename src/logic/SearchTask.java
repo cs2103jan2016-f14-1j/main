@@ -40,7 +40,7 @@ public class SearchTask extends Functionality {
 	 * @return the results of the filtering
 	 */
 	public HashMap<String, Object> searchTask(String words, int isPriortise, String month, int date,
-			ArrayList<String> categories, int isBusiest) {
+			ArrayList<String> categories, int isBusiest, String conflict) {
 		replace = new ArrayList<String>();
 		busiest = new HashMap<Integer, Integer>();
 		replace.add("Do you mean:");
@@ -97,6 +97,12 @@ public class SearchTask extends Functionality {
 		// search by categories
 		if (!categories.isEmpty()) {
 			result = filterCategories(result, categories);
+			isCheckPerformed++;
+		}
+		
+		//search for conflicts
+		if (!conflict.equals(Keywords.EMPTY_STRING)) {
+			result = FreeSlots.findConflict();
 			isCheckPerformed++;
 		}
 		// Lastly, after all the filtering, search for words containing if any
