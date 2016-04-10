@@ -4,6 +4,7 @@ package logic;
 
 import java.util.ArrayList;
 
+import parser.Formatter;
 import shared.Keywords;
 import shared.Task;
 import storage.Storage;
@@ -43,6 +44,8 @@ public class UndoTask extends Functionality {
 				Storage.getTask(task.getId()).setIsCompleted(task.getIsCompleted());
 				Storage.getTask(task.getId()).setPriority(task.getPriority());
 				Storage.getTask(task.getId()).setTask(task.getTask());
+				Storage.getTask(task.getId()).setStartTime(Formatter.getDateTimes(Integer.toString(task.getIntStartTime())).get(Keywords.INDEX_STARTTIME));
+				Storage.getTask(task.getId()).setEndTime(Formatter.getDateTimes(Integer.toString(task.getIntEndTime())).get(Keywords.INDEX_ENDTIME));
 			}
 			n = printSuccessful("Edit command undone");
 			break;

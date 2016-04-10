@@ -18,7 +18,6 @@ public class EditTask extends Functionality {
 	 */
 	public Notification editTask(int taskID, ArrayList<Date> datetimes , String task, ArrayList<String> categories, int resetDate, int resetTime) {
 		Notification n = new Notification();
-		System.out.println(taskID+"   " +datetimes.isEmpty()+"  :"+task+":"+categories.isEmpty());
 			if (!isValidId(taskID)) {
 				n.setTitle(Keywords.MESSAGE_ERROR);
 				n.setMessage(Keywords.INVALID_ID);
@@ -40,7 +39,6 @@ public class EditTask extends Functionality {
 				for(int i =0 ; i< datetimes.size(); i++){
 					if(datetimes.get(i)!=null){
 						dateExists = true;
-						System.out.println(i+" was ran");
 						break;
 					}
 				}

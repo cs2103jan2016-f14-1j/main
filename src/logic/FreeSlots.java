@@ -142,16 +142,24 @@ public class FreeSlots {
 					}
 					for (int i = 0; i < totalMinSize-1; i++) {
 						if (timeSlots.get(key).get(i)+1 != timeSlots.get(key).get(i+1)) {
+							endTRange = (key * Keywords.DATE_FORMAT_MULTIPLIER)
+										+ timeSlots.get(key).get(i);
 							freeSlots.add(new IntegerPair(startTRange, endTRange+1));
 							startTRange = (key * Keywords.DATE_FORMAT_MULTIPLIER) 
 										  + timeSlots.get(key).get(i+1);
 							endTRange = (key * Keywords.DATE_FORMAT_MULTIPLIER) 
 										+ timeSlots.get(key).get(i+1);
-							started = true;
+							started = false;
 							continue;
 						}
+					}
+					if (started) {
 						endTRange = (key * Keywords.DATE_FORMAT_MULTIPLIER)
-									+ timeSlots.get(key).get(i+1);
+									+ timeSlots.get(key).get(totalMinSize-1);
+						freeSlots.add(new IntegerPair(startTRange, endTRange+1));
+						started = false;
+					} else {
+						started = true;
 					}
 				}
 			} else {
@@ -161,8 +169,10 @@ public class FreeSlots {
 					endTRange = key * Keywords.DATE_FORMAT_MULTIPLIER;
 					continue;
 				} else {
-					startTRange = timeSlots.get(key).get(Keywords.FIRST_ELEMENT);
-					endTRange = timeSlots.get(key).get(Keywords.FIRST_ELEMENT);
+					startTRange = (key * Keywords.DATE_FORMAT_MULTIPLIER)
+								  + timeSlots.get(key).get(Keywords.FIRST_ELEMENT);
+					endTRange = (key * Keywords.DATE_FORMAT_MULTIPLIER)
+								+ timeSlots.get(key).get(Keywords.FIRST_ELEMENT);
 					for (int i = 0; i < totalMinSize-1; i++) {
 						if (timeSlots.get(key).get(i)+1 != timeSlots.get(key).get(i+1)) {
 							freeSlots.add(new IntegerPair(startTRange, endTRange));
@@ -214,10 +224,9 @@ public class FreeSlots {
 			ArrayList<Integer> mins = timeSlots.get(i);
 			if (sHour == eHour) {
 				// if the time blocked is 4.30pm-4.45pm
-				ArrayList<Integer> temp = new ArrayList<Integer>(mins.subList(0, sMin));
-				temp.addAll(mins.subList(eMin, mins.size()));
-				mins = temp;
-				timeSlots.replace(i, mins);
+				ArrayList<Integer> temp = new ArrayList<Integer>(mins);
+				removeMins(temp, sMin, eMin);
+				timeSlots.replace(i, temp);
 				break;
 			}
 			if (i == sHour){
@@ -246,8 +255,14 @@ public class FreeSlots {
 			}
 		}
 	}
+	
+	private static void removeMins(ArrayList<Integer> temp, int sMin, int eMin) {
+		for (int i = sMin; i < eMin; i++) {
+			temp.remove(new Integer(i));
+		}
+	}
 
-// ========================= Conflict Compilation Operation =========================
+	// ========================= Conflict Compilation Operation =========================
 	/**
 	 * This method finds all the conflicting tasks with the given task,
 	 * on a particular date.
@@ -355,7 +370,6 @@ public class FreeSlots {
 	
 // ========================= Format Conversion Methods =========================
 	private static ArrayList<String> convertToArrayListString(ArrayList<IntegerPair> aip) {
-		//System.out.println(aip.isEmpty()==true);
 		ArrayList<String> as = new ArrayList<String>();
 		for (IntegerPair ip : aip) {
 			as.add(toTimeString(ip.getInt1(), ip.getInt2()));

@@ -3,7 +3,6 @@
 package parser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import logic.Logic;
 import logic.Notification;
@@ -20,8 +19,11 @@ public class Parser {
 	private static final String COMMAND_DELETE = "delete";
 	private static final String COMMAND_EDIT = "edit";
 	private static final String COMMAND_VIEW = "view";
-	private static final String COMMAND_UNDO = "undo";
-	private static final String COMMAND_HELP = "help";
+	private static final String COMMAND_UNDO_1 = "undo";
+	private static final String COMMAND_UNDO_2 = "u";
+	private static final String COMMAND_HELP_1 = "help";
+	private static final String COMMAND_HELP_2 = "?";
+	private static final String COMMAND_HELP_3 = "h";
 	private static final String COMMAND_SEARCH = "search";
 	private static final String COMMAND_MARK = "mark";
 	private static Parser parser;
@@ -55,9 +57,12 @@ public class Parser {
 			return returnValue = ParseDelete.deleteTask(inputWithoutCommandType);
 		case COMMAND_EDIT:
 			return returnValue = ParseEdit.editTask(inputWithoutCommandType);
-		case COMMAND_UNDO:
+		case COMMAND_UNDO_1:
+		case COMMAND_UNDO_2:
 			return returnValue = ParseUndo.undoTask();
-		case COMMAND_HELP:
+		case COMMAND_HELP_1:
+		case COMMAND_HELP_2:
+		case COMMAND_HELP_3:
 			return Logic.viewHelp();
 		case COMMAND_VIEW:
 			return Logic.viewTask(inputWithoutCommandType);
@@ -68,7 +73,8 @@ public class Parser {
 					(String) output.get(2), //get month
 					(int )output.get(3),//get date by int
 					(ArrayList<String>) output.get(4),//category
-					(int) output.get(5));//does user want the busiest day of month
+					(int) output.get(5),//does user want the busiest day of month
+					(String) output.get(6));
 		case COMMAND_MARK:
 			return returnValue = ParseMark.prioritise(inputWithoutCommandType);
 		default:

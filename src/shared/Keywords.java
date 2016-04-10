@@ -16,7 +16,7 @@ public class Keywords {
 			+ "(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)$";
 	public static final String REGEX_MONTH_EXIST = 
 			".*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).*";
-	public static final String REGEX_CONFLICT = "conflict(s)?";
+	public static final String REGEX_CONFLICT = "\\s?conflict(s)?\\s?";
 	public static final String EMPTY_STRING = "";
 	public static final String SPACE_STRING = " ";
 	public static final String DELIMITER = "\\|";
