@@ -26,6 +26,9 @@ public class ViewTask extends Functionality {
 		setNTitle(String.format(Keywords.MESSAGE_VIEW_SUCCESS, toCat(input)));
 		if (input.equalsIgnoreCase(Keywords.WORD_DONE)) {
 			return doneView();
+		} else if (input.matches(Keywords.REGEX_CONFLICT)) {
+			setNTitle(Keywords.MESSAGE_VIEW_CONFLICTS);
+			return conflictView();
 		} else {
 			return otherView(input);
 		}
@@ -47,6 +50,13 @@ public class ViewTask extends Functionality {
 		currCat.clear();
 		combined.add(getNotification());
 		combined.add(Storage.getListOfCompletedTasks());
+		return combined;
+	}
+	
+	private ArrayList<Object> conflictView() {
+		ArrayList<Object> combined = new ArrayList<Object>();
+		combined.add(getNotification());
+		combined.add(FreeSlots.findConflict());
 		return combined;
 	}
 	
@@ -92,6 +102,9 @@ public class ViewTask extends Functionality {
 	 * @return
 	 */
 	private String toCat(String input) {
+		if (input.equalsIgnoreCase("conflict")){
+			return input;
+		}
 		String res = Keywords.EMPTY_STRING;
 		String[] cats = input.split(Keywords.SPACE_STRING);
 		for (String str : cats) {

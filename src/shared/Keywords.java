@@ -16,6 +16,7 @@ public class Keywords {
 			+ "(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)$";
 	public static final String REGEX_MONTH_EXIST = 
 			".*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).*";
+	public static final String REGEX_CONFLICT = "conflict(s)?";
 	public static final String EMPTY_STRING = "";
 	public static final String SPACE_STRING = " ";
 	public static final String DELIMITER = "\\|";
@@ -35,6 +36,7 @@ public class Keywords {
 	public static final String MESSAGE_MARK_SUCCESS = "Prioritised Successful!";
 	public static final String MESSAGE_MARK_BODY = "Prioritised: ";
 	public static final String MESSAGE_VIEW_SUCCESS = "View By %s";
+	public static final String MESSAGE_VIEW_CONFLICTS = "View All Conflict(s)!";
 	public static final String INVALID_COMMAND = "Invalid Command entered!";
 	public static final String INVALID_ID = "Invalid ID entered!";
 	public static final String INVALID_CAT = "No such category!";
