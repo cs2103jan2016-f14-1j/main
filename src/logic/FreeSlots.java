@@ -224,10 +224,9 @@ public class FreeSlots {
 			ArrayList<Integer> mins = timeSlots.get(i);
 			if (sHour == eHour) {
 				// if the time blocked is 4.30pm-4.45pm
-				ArrayList<Integer> temp = new ArrayList<Integer>(mins.subList(0, sMin));
-				temp.addAll(mins.subList(eMin, mins.size()));
-				mins = temp;
-				timeSlots.replace(i, mins);
+				ArrayList<Integer> temp = new ArrayList<Integer>(mins);
+				removeMins(temp, sMin, eMin);
+				timeSlots.replace(i, temp);
 				break;
 			}
 			if (i == sHour){
@@ -256,8 +255,14 @@ public class FreeSlots {
 			}
 		}
 	}
+	
+	private static void removeMins(ArrayList<Integer> temp, int sMin, int eMin) {
+		for (int i = sMin; i < eMin; i++) {
+			temp.remove(new Integer(i));
+		}
+	}
 
-// ========================= Conflict Compilation Operation =========================
+	// ========================= Conflict Compilation Operation =========================
 	/**
 	 * This method finds all the conflicting tasks with the given task,
 	 * on a particular date.
