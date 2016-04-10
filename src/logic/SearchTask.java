@@ -5,6 +5,7 @@ package logic;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -34,7 +35,7 @@ public class SearchTask extends Functionality {
 	 * @return the results of the filtering
 	 */
 	public HashMap<String, Object> searchTask(String words, int isPriortise, String month, int date,
-									ArrayList<String> categories) {
+			ArrayList<String> categories) {
 		replace = new ArrayList<String>();
 		replace.add("Do you mean:");
 		HashMap<String, Object> results = new HashMap<String, Object>();
@@ -104,33 +105,62 @@ public class SearchTask extends Functionality {
 		ArrayList<Task> temp = new ArrayList<Task>();
 
 		InputStream is = getClass().getResourceAsStream("/storage/dictionary");
-		SymSpell.CreateDictionary(is, "");
+		SymSpell.CreateDictionary(is, Keywords.EMPTY_STRING);
 		for (Task t : list) {
 			for (String word : words.split(Keywords.SPACE_STRING)) {
 				ArrayList<String> result = SymSpell.Correct(word, "");
+				if (t.getTask().contains(word)) {
+					temp = checkTask(temp, t);
+					break;
+				}
+				if (t.getCategories().contains(word)) {
+					temp = checkTask(temp, t);
+					break;
+				}
 				for (String wor : result) {
-					if (t.getTask().contains(wor) || t.getTask().contains(word)) {
-						if (wor != word && !replace.contains(wor)) {
-							replace.add(wor);
-						}
-						if (!temp.contains(t)) {
-							temp.add(t);
-						}
+					if (t.getTask().contains(wor)) {
+						addWordToReplace(word, wor);
+						temp = checkTask(temp, t);
 						break;
 					} else if (!t.getCategories().isEmpty()) {
-						for (String cat : t.getCategories()) {
-							if (cat.contains(wor) || cat.contains(word)) {
-								if (!temp.contains(t)) {
-									temp.add(t);
-								}
-								break;
-							}
+						if (t.getCategories().contains(wor)) {
+							addWordToReplace(word, wor);
+							temp = checkTask(temp, t);
+							break;
 						}
 					}
 				}
 			}
 		}
 		return temp;
+	}
+
+	/**
+	 * Check if task is exists in list
+	 * 
+	 * @param tasks
+	 *            list of tasks
+	 * @param task
+	 *            task to check
+	 * @return the list of tasks
+	 */
+	private ArrayList<Task> checkTask(ArrayList<Task> tasks, Task task) {
+		if (!tasks.contains(task)) {
+			tasks.add(task);
+		}
+		return tasks;
+	}
+
+	/**
+	 * Check if word in dictionary match
+	 * 
+	 * @param toReplace
+	 * @param toCheck
+	 */
+	private void addWordToReplace(String toReplace, String toCheck) {
+		if (!toCheck.equals(toReplace) && !replace.contains(toCheck)) {
+			replace.add(toCheck);
+		}
 	}
 
 	/**
@@ -207,15 +237,18 @@ public class SearchTask extends Functionality {
 		ArrayList<Task> temp = new ArrayList<Task>();
 		for (Task t : list) {
 			String intDate = Integer.toString(t.getIntDate());
-			Date dateMth = null;
+			Calendar dateMth = Calendar.getInstance();
+			Calendar dateOfTask = Calendar.getInstance();
+			Date mth = null;
 			try {
-				dateMth = new SimpleDateFormat("MMM", Locale.ENGLISH).parse(month);
+				mth = new SimpleDateFormat("MMM", Locale.ENGLISH).parse(month);
+				dateMth.setTime(mth);
+				dateOfTask.setTime(Formatter.fromIntToDate(intDate));
 			} catch (Exception e) {
 				setNMessage("Wrong date format. Use Feb, may, Jan.");
 			}
-			Date date = Formatter.fromIntToDate(intDate);
-			if (date != null) {
-				if (date.getMonth() == dateMth.getMonth()) {
+			if (dateOfTask != null && dateMth !=null) {
+				if (dateOfTask.get(Calendar.MONTH) == dateMth.get(Calendar.MONTH)) {
 					temp.add(t);
 				}
 			}

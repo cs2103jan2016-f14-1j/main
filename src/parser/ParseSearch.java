@@ -13,7 +13,7 @@ public class ParseSearch {
 
 	private static final String NO_PRIORITY = "no priority";
 	private static final String PRIORITY = "priority";
-	private static final String REGEX_CHECKMTH = "(?:from|in)?\\s?(?i)"
+	private static final String REGEX_CHECKMTH = "(?:from|in)\\s(?i)"
 			+ "(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|" 
 			+ "january|february|march|april|may|june|july|august|"
 			+ "september|october|november|december)";
@@ -71,7 +71,6 @@ public class ParseSearch {
 			System.out.println(date.toString() + Keywords.SPACE_STRING + dateStart);
 		}
 		output.add(dateStart);
-
 		// filter for categories
 		p = Pattern.compile(REGEX_CAT);
 		m = p.matcher(rawInput);
