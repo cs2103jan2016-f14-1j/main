@@ -85,7 +85,15 @@ public class ParseSearch {
 			}
 			output.add(list);
 		}
-
+		
+		//filter for busiest
+		p = Pattern.compile("busiest");
+		m = p.matcher(rawInput);
+		if(m.find()){
+			output.add(1);
+		}else{
+			output.add(0);
+		}
 		return output;
 	}
 

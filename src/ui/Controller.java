@@ -69,6 +69,7 @@ public class Controller {
 
 	private final static String TASK_HEADING = "Task(s)";
 	private final static String FREE_HEADING = "Free";
+	private final static String BUSY_HEADING = "Busiest Day(s)";
 
 	private final static String DELIMITER = " - ";
 	
@@ -552,6 +553,7 @@ public class Controller {
 		});
 
 		input.addKeyListener(new KeyAdapter() {
+			@SuppressWarnings("unchecked")//all instanceof checks are valid
 			public void keyPressed(KeyEvent event) {
 
 				String tempInput = input.getText();
@@ -991,12 +993,18 @@ public class Controller {
 	 * @param tempInput
 	 *            user's current input     
 	 */
-	private void displaySearch(HashMap<String,Object> items, String tempInput){
+	@SuppressWarnings("unchecked")
+	//it is safe as the HashMap tag with "Tasks" is an ArrayList<Task>
+	//it is safe as the HashMap tag with "replace" is an ArrayList<String>
+	//it is safe as the HashMap tag with "busiest" is an ArrayList<String>
+	//it is safe as the HashMap tag with "free" is an ArrayList<String>
+	private <T extends ArrayList<?>> void  displaySearch(HashMap<String,Object> items, String tempInput){
 		view.getMainTable().removeAll();
 		TableItem mainItem;
 		ArrayList<Task> tasks = (ArrayList<Task>)items.get("Tasks");
 		ArrayList<String> freeSlots = new ArrayList<String>();
 		ArrayList<String> replace = (ArrayList<String>)items.get("replace");
+		ArrayList<String> busiest = new ArrayList<String>();
 		if(items.get("free")!=null){
 			freeSlots = (ArrayList<String>) items.get("free");
 		}
@@ -1007,7 +1015,11 @@ public class Controller {
 		if(suggestionWords(replace)){
 			mainItem = new TableItem(view.getMainTable(),SWT.NONE);
 		}
-		
+
+		if(items.get("busiest")!=null){
+			busiest = (ArrayList<String>) items.get("busiest");
+			setBusiestDays(busiest);
+		}
 		setSearchTasks(tasks);
 		mainItem = new TableItem(view.getMainTable(),SWT.NONE);
 		setFreeSlots(freeSlots);
@@ -1058,6 +1070,25 @@ public class Controller {
 		for(int i = 0 ; i <tasks.size() ; i++){
 			mainItem = new TableItem(view.getMainTable(),SWT.NONE);
 			mainItem.setText(tasks.get(i).getUserFormat());
+			mainItem.setFont(View.normalFont);
+		}
+	}
+	
+	private void setBusiestDays(ArrayList<String> busiestDays){
+
+		TableItem mainItem = new TableItem(view.getMainTable(),SWT.NONE);
+		mainItem.setText(BUSY_HEADING+busiestDays.get(0));
+		mainItem.setFont(View.headingFont);
+		
+		if(busiestDays.isEmpty()){
+			mainItem.setForeground(View.missingColor);
+		} else {
+			mainItem.setForeground(View.orangeColor);
+		}
+		
+		for(int i = 1 ; i < busiestDays.size() ; i++){
+			mainItem = new TableItem(view.getMainTable(),SWT.NONE);
+			mainItem.setText(busiestDays.get(i));
 			mainItem.setFont(View.normalFont);
 		}
 	}
