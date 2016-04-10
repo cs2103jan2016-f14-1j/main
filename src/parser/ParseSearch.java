@@ -68,7 +68,6 @@ public class ParseSearch {
 		int dateStart = -1;
 		if (date != null) {
 			dateStart = Formatter.fromDateToInt(date);
-			System.out.println(date.toString() + Keywords.SPACE_STRING + dateStart);
 		}
 		output.add(dateStart);
 		

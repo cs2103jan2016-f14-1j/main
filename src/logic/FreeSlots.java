@@ -183,8 +183,6 @@ public class FreeSlots {
 				}
 			}
 		}
-		System.out.println(freeSlots.get(0).getInt1() + " " + freeSlots.get(0).getInt2() + " " +
-		freeSlots.get(1).getInt1()+ " " +freeSlots.get(1).getInt2() );
 		return freeSlots;
 	}
 	
@@ -361,7 +359,6 @@ public class FreeSlots {
 	
 // ========================= Format Conversion Methods =========================
 	private static ArrayList<String> convertToArrayListString(ArrayList<IntegerPair> aip) {
-		//System.out.println(aip.isEmpty()==true);
 		ArrayList<String> as = new ArrayList<String>();
 		for (IntegerPair ip : aip) {
 			as.add(toTimeString(ip.getInt1(), ip.getInt2()));
