@@ -32,7 +32,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.TextLayout;
 import org.eclipse.swt.graphics.TextStyle;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -65,16 +64,22 @@ public class Controller {
 	private final static String TOMORROW = "TOMORROW";
 	private final static String WEEK = "WEEK";
 	private final static String OTHERS = "OTHERS";
+	
 	private final static int STARTING_INDEX = 2;
 
 	private final static String TASK_HEADING = "Task(s)";
 	private final static String FREE_HEADING = "Free";
+
+	private final static String DELIMITER = " - ";
+	
+	private final static String PRIORITY_WHITESPACES = "      ";
 	
 	private View view;
 	private Parser parser;
 	private Logic logic;
 	private Storage storage;
-
+	
+	// To set the scroll index when new task is added, edited or marked
 	private int lastIndex = -1;
 	private int setIndex = -1;
 	
@@ -102,6 +107,9 @@ public class Controller {
 		storage = storage.getInstance();
 	}
 	
+	/**
+	 * Initializes the days array based on current day
+	 */
 	private void initDayArr(){
 		days[0] = TODAY;
 		days[1] = TOMORROW;
@@ -167,6 +175,7 @@ public class Controller {
 	private void setCategoryText(){
 		final TextLayout textLayout = new TextLayout(Display.getCurrent());
 
+		// Drawing the style (for colors)
 		view.getCategoryTable().addListener(SWT.PaintItem, new Listener() {
 			public void handleEvent(Event event) {
 				TableItem item = (TableItem) event.item;
@@ -179,6 +188,7 @@ public class Controller {
 			}
 		});
 
+		// Need this as we are drawing the style
 		view.getCategoryTable().addListener(SWT.EraseItem, new Listener() {
 			public void handleEvent(Event event) {
 				event.detail &= ~SWT.FOREGROUND;
@@ -188,6 +198,16 @@ public class Controller {
 		});
 	}
 	
+	/**
+	 * Get the length of days from startTaskDate to endTaskDate after
+	 * converting them to Calendar type.
+	 * 
+	 * @param startTaskDate
+	 *            the starting task date
+	 * @param endTaskDate
+	 *            the ending task date
+	 * @return the length of days
+	 */
 	private int getLengthOfDays(Date startTaskDate, Date endTaskDate){
 		int lengthOfDays = 0;
 		if (startTaskDate != null && endTaskDate != null) {
@@ -201,6 +221,7 @@ public class Controller {
 		}
 		return lengthOfDays;
 	}
+	
 	
 	private void displayList(ArrayList<Task> list) throws Exception {
 
@@ -220,7 +241,7 @@ public class Controller {
 			insertKeysToHashMap(task);
 		}
 
-		if (!insertKeyIntoTable(OVERDUE, false)) {
+		if (!insertKeyToTable(OVERDUE, false)) {
 			firstItem.setForeground(View.missingColor);
 			unpaintOverdueIcon(paintListener);
 		}
@@ -229,10 +250,16 @@ public class Controller {
 		mainItem.setText("                                                                                                  ");
 		lastIndex++;
 		
-		insertKeysIntoTable();
+		insertKeysToTable();
 		view.getMainTable().setTopIndex(setIndex);
 	}
 	
+	/**
+	 * Insert task to hashmap based on their day (key) for viewing purpose
+	 * 
+	 * @param task
+	 *            the task to be inserted
+	 */
 	private void insertKeysToHashMap(Task task){
 		
 		Date startTaskDate = task.getDateTimes().get(Keywords.INDEX_STARTDATE);
@@ -274,7 +301,7 @@ public class Controller {
 		}
 	}
 	
-	private void insertKeysIntoTable(){
+	private void insertKeysToTable(){
 		boolean thirdItem = false;
 		TableItem mainItem = null;
 		
@@ -285,11 +312,11 @@ public class Controller {
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				setTableHeading(mainItem, day);
 
-				if (!insertKeyIntoTable(day, false)) {
+				if (!insertKeyToTable(day, false)) {
 					mainItem.setForeground(View.missingColor);
 				}
 
-				setSpacing();
+				addSpacing();
 
 			} else if (day.equals(TOMORROW)) {
 
@@ -297,35 +324,35 @@ public class Controller {
 				setTableHeading(mainItem, day);
 				thirdItem = true;
 				
-				if (!insertKeyIntoTable(day, false)) {
+				if (!insertKeyToTable(day, false)) {
 					mainItem.setForeground(View.missingColor);
 				}
 				
-				setSpacing();
+				addSpacing();
 
 			} else if (thirdItem) {
 
 				mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 				setTableHeading(mainItem, WEEK);
 				thirdItem = false;
-				if (!insertKeyIntoTable(day, true)) {
+				if (!insertKeyToTable(day, true)) {
 					mainItem.setForeground(View.missingColor);
 				}
 
 			} else {
 
-				if (insertKeyIntoTable(day, true)) {
+				if (insertKeyToTable(day, true)) {
 					mainItem.setForeground(View.orangeColor);
 				}
 			}
 
 		}
 
-		setSpacing();
+		addSpacing();
 		mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 		setTableHeading(mainItem, OTHERS);
 		
-		if (!insertKeyIntoTable(OTHERS, false)) {
+		if (!insertKeyToTable(OTHERS, false)) {
 			mainItem.setForeground(View.missingColor);
 		}	
 	}
@@ -359,6 +386,13 @@ public class Controller {
 		view.getMainTable().addListener(SWT.PaintItem, paintStarListener);
 	}
 
+	/**
+	 * Paint the overdue icon
+	 * 
+	 * @param firstItem
+	 *            the first item in the table
+	 * @return the paint listener of the icon
+	 */
 	private Listener paintOverdueIcon(TableItem firstItem){
 		Listener paintListener = new Listener() {
 			public void handleEvent(Event event) {
@@ -391,6 +425,12 @@ public class Controller {
 		return paintListener;
 	}
 	
+	/**
+	 * Unpaint overdue icon when table refresh
+	 * 
+	 * @param paintListener
+	 *            the paintListener to be removed
+	 */
 	private void unpaintOverdueIcon(Listener paintListener){
 		view.getMainTable().removeListener(SWT.MeasureItem, paintListener);
 		view.getMainTable().removeListener(SWT.PaintItem, paintListener);
@@ -446,6 +486,16 @@ public class Controller {
 		mainItem.setFont(View.italicFont);
 		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setFont(View.headingFont);
+		mainItem.setForeground(View.orangeColor);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setFont(View.italicFont);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(View.italicFont);
 		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
@@ -483,7 +533,10 @@ public class Controller {
 		mainItem.setText(items.poll());
 
 	}
-
+	
+	/**
+	 * Add key listener to the input box.
+	 */
 	private void addKeyListener() {
 
 		StyledText input = view.getInput();
@@ -563,7 +616,10 @@ public class Controller {
 		});
 
 	}
-
+	
+	/**
+	 * Create a timer to update the time every second
+	 */
 	private void timer() {
 		Timer timer = new Timer();
 		TimerTask task = new TimerTask() {
@@ -612,15 +668,22 @@ public class Controller {
 		return dayFormat.format(date);
 	}
 
-	public String getHeaderFormat(Date date) {
-		DateFormat dayFormat = new SimpleDateFormat(Keywords.FORMAT_HEADER);
-		return dayFormat.format(date);
-	}
-
 	public int getCurrentYear() {
 		Date date = new Date();
 		DateFormat dayFormat = new SimpleDateFormat(Keywords.FORMAT_YEAR);
 		return Integer.parseInt(dayFormat.format(date));
+	}
+	
+	/**
+	 * Get the header format (dd MMM) from the date parameter
+	 * 
+	 * @param date
+	 *            the date to be formatted
+	 * @return the header format date
+	 */
+	public String getHeaderFormat(Date date) {
+		DateFormat dayFormat = new SimpleDateFormat(Keywords.FORMAT_HEADER);
+		return dayFormat.format(date);
 	}
 
 	private void inputToHint() {
@@ -633,6 +696,15 @@ public class Controller {
 		view.getInput().setForeground(View.normalColor);
 	}
 
+	/**
+	 * Get the length of days from startDate to endDate 
+	 * 
+	 * @param startDate
+	 *            the starting date
+	 * @param endDate
+	 *            the ending date
+	 * @return the length of days, -1 if endDate is earlier
+	 */
 	private int calculateDiffInDay(Calendar startDate, Calendar endDate) {
 		int daysBetween = -1;
 		endDate.add(Calendar.DAY_OF_MONTH, 1);
@@ -643,6 +715,13 @@ public class Controller {
 		return daysBetween;
 	}
 
+	private void setTableHeading(TableItem headerItem, String heading){
+		headerItem.setText(heading);
+		headerItem.setFont(View.headingFont);
+		headerItem.setForeground(View.orangeColor);
+		lastIndex++;
+	}
+	
 	private void setTableSubHeading(String subHeading){
 		TableItem headerItem = new TableItem(view.getMainTable(), SWT.NONE);
 		headerItem.setText(subHeading);
@@ -651,19 +730,22 @@ public class Controller {
 		lastIndex++;
 	}
 	
-	private void setSpacing(){
+	private void addSpacing(){
 		new TableItem(view.getMainTable(), SWT.NONE);
 		lastIndex++;
 	}
 	
-	private void setTableHeading(TableItem headerItem, String heading){
-		headerItem.setText(heading);
-		headerItem.setFont(View.headingFont);
-		headerItem.setForeground(View.orangeColor);
-		lastIndex++;
-	}
-	
-	private boolean insertKeyIntoTable(String key, boolean week) {
+	/**
+	 * Inserts a single key with their values from the hashmap to the table. 
+	 * Check if it is under "Week" for interface.
+	 * 
+	 * @param key
+	 *            the key in the hashmap
+	 * @param week
+	 *            true if the task is within the week else false
+	 * @return true if the key is successfully added else false
+	 */
+	private boolean insertKeyToTable(String key, boolean week) {
 		if (putIntoDays.containsKey(key)) {
 			
 			if (week) {
@@ -682,6 +764,16 @@ public class Controller {
 		return false;
 	}
 	
+	/**
+	 * Initialize the text layout for colors and formatting of text
+	 *
+	 * @param tempArrList
+	 *            the arraylist of tasks
+	 * @param lastTasks
+	 *            the last few tasks that are affected by the last command
+	 * @param week
+	 *            true if the task is within the week else false
+	 */
 	private void initTextLayout(ArrayList<Task> tempArrList, ArrayList<Task> lastTasks, boolean week){
 		
 		for (int i = 0; i < tempArrList.size(); i++) {
@@ -712,6 +804,19 @@ public class Controller {
 		
 	}
 	
+	/**
+	 * Takes in an arraylist of task and highlight it 
+	 * if it is newly added or conflicts with other tasks.
+	 *
+	 * @param lastTasks
+	 *            the arraylist of tasks
+	 * @param mainItem
+	 *            the table item to be highlighted
+	 * @param taskId
+	 *            compare with this task id
+	 * @param index
+	 *            index of the task         
+	 */
 	private void highlightTasks(ArrayList<Task> lastTasks, TableItem mainItem, int taskId, int index){
 		if (lastTasks != null) {
 			for (int k = 0; k < lastTasks.size(); k++) {
@@ -731,6 +836,20 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Set the text layout style 
+	 *
+	 * @param task
+	 *            task to be styled
+	 * @param textLayout
+	 *            textlayout of the task
+	 * @param text
+	 *            text of the task
+	 * @param whiteSpaces
+	 *            whitespaces infront of task
+	 * @param week
+	 *            true if the task is within the week else false       
+	 */
 	private void setLayoutStyle(Task task, TextLayout textLayout, String text, String whiteSpaces, boolean week){
 		TextStyle styleDescription = new TextStyle(View.normalFont, null, null);
 		TextStyle styleDate = new TextStyle(View.boldFont, View.dateColor, null);
@@ -742,7 +861,7 @@ public class Controller {
 			if (week) {
 				textLayout.setStyle(styleDate, seperatingIndex, text.length());
 			} else {
-				textLayout.setStyle(styleDate, seperatingIndex + 3, text.length());
+				textLayout.setStyle(styleDate, seperatingIndex + DELIMITER.length(), text.length());
 			}
 
 		} else {
@@ -756,14 +875,24 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Set the whitespaces infront of prioritized task for icon.
+	 * 
+	 * @param task
+	 *            the task to be edited
+	 * @param mainItem
+	 *            the task's table item
+	 * @return whitespaces if the task is prioritized     
+	 */
     private String setWhiteSpaces(Task task, TableItem mainItem){
     	if (task.getPriority() == 1) {
 			mainItem.setData(object);
-			return "      ";
+			return PRIORITY_WHITESPACES;
 		}
     	return Keywords.EMPTY_STRING;
     }
 	
+    
 	private void drawTextLayout(TableItem mainItem, TextLayout textLayout){
 		view.getMainTable().addListener(SWT.PaintItem, new Listener() {
 			public void handleEvent(Event event) {
@@ -800,6 +929,7 @@ public class Controller {
 	private void readFileLocation() throws IOException {
 		BufferedReader bufferReader = null;
 		try {
+			// Path of current tasks' file is stored in the settings file
 			bufferReader = new BufferedReader(new FileReader(Keywords.settingsPath));
 			String currentLine = Keywords.EMPTY_STRING;
 			while ((currentLine = bufferReader.readLine()) != null) {
@@ -822,6 +952,9 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Alt + E will prompt this method to save the tasks' file into a new location.
+	 */
 	public void writePathToFile() {
 		DirectoryDialog dialog = new DirectoryDialog(view.getShell());
 		dialog.setFilterPath("c:\\"); // Windows specific
@@ -849,12 +982,16 @@ public class Controller {
 			System.exit(0);
 		}
 	}
-
-	public View getView() {
-		return view;
-	}
 	
-	public void displaySearch(HashMap<String,Object> items, String tempInput){
+	/**
+	 * Display search results.
+	 * 
+	 * @param items
+	 *            the tasks, replace words and freeslots found
+	 * @param tempInput
+	 *            user's current input     
+	 */
+	private void displaySearch(HashMap<String,Object> items, String tempInput){
 		view.getMainTable().removeAll();
 		TableItem mainItem;
 		ArrayList<Task> tasks = (ArrayList<Task>)items.get("Tasks");
@@ -883,6 +1020,13 @@ public class Controller {
 		mainItem.setForeground(View.orangeColor);
 	}
 	
+	/**
+	 * Set suggested words
+	 * 
+	 * @param replace
+	 *         an arraylist of replace words.
+	 * @return true if there are any suggested words.  
+	 */
 	private boolean suggestionWords(ArrayList<String> replace){
 		TableItem mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 		boolean exist = false;
@@ -934,5 +1078,9 @@ public class Controller {
 			mainItem.setText(freeSlots.get(i));
 			mainItem.setFont(View.normalFont);
 		}
+	}
+	
+	public View getView() {
+		return view;
 	}
 }

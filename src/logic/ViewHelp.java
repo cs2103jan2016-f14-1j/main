@@ -1,13 +1,6 @@
 package logic;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.TableItem;
-
-import shared.Keywords;
-import ui.View;
 
 public class ViewHelp extends Functionality {
 
@@ -21,6 +14,9 @@ public class ViewHelp extends Functionality {
 		help.add("Edit tasks");
 		help.add("edit <task_ID#> to <date>");
 		help.add("Eg. edit 1 to 15Feb");
+		help.add("Delete tasks");
+		help.add("delete <task_ID#>");
+		help.add("Eg. delete 1 2");
 		help.add("Set priority");
 		help.add("mark <task_ID#>");
 		help.add("Eg. mark 2 3");

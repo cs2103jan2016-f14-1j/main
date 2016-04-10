@@ -10,7 +10,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -18,7 +17,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
@@ -116,6 +114,8 @@ public class View extends Logger{
 		categoryTable.setBounds(10, 125, 170, 459);
 		categoryTable.setBackground(blackGrayColor);
 		categoryTable.setForeground(normalColor);
+		
+		// To remove select function
 		categoryTable.addListener(SWT.Selection, new Listener()
 	    {
 	        @Override
@@ -152,7 +152,7 @@ public class View extends Logger{
 		return mainTable;
 	}
 	
-	public void initDayLabel(){
+	private void initDayLabel(){
 		dayLabel = new Label(shell, SWT.NONE);
 		dayLabel.setFont(SWTResourceManager.getFont("Trebuchet MS", 14, SWT.BOLD));
 		dayLabel.setAlignment(SWT.CENTER);
@@ -165,7 +165,7 @@ public class View extends Logger{
 		return dayLabel;
 	}
 	
-	public void initDateLabel(){
+	private void initDateLabel(){
 		dateLabel = new Label(shell, SWT.NONE);
 		dateLabel.setFont(normalFont);
 		dateLabel.setAlignment(SWT.CENTER);
@@ -178,7 +178,7 @@ public class View extends Logger{
 		return dateLabel;
 	}
 	
-	public void initTimeLabel(){
+	private void initTimeLabel(){
 		timeLabel = new Label(shell, SWT.NONE);
 		timeLabel.setFont(normalFont);
 		timeLabel.setAlignment(SWT.CENTER);
@@ -200,6 +200,7 @@ public class View extends Logger{
 		input.setBounds(196, 536, 513, 39);
 		input.setFocus();
 		
+		// Draw the border around the input box
 		input.addPaintListener(new PaintListener() {
 	        @Override
 	        public void paintControl(PaintEvent e) {

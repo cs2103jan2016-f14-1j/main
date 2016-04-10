@@ -9,8 +9,6 @@ import org.jnativehook.keyboard.NativeKeyListener;
 
 import shared.Keywords;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -50,7 +48,7 @@ public class MainGUI implements NativeKeyListener {
 			}
 		}
 	}
-
+	
 	private static void setCurrentLocation(){
 		try {
 			Keywords.currLocation = MainGUI.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString();
@@ -61,6 +59,9 @@ public class MainGUI implements NativeKeyListener {
 		}
 	}
 	
+	/**
+	 * Add an entry to registry for startup jar file launch
+	 */
 	private static void addToRegistry(){
 		// Run startup.reg to add preference
 		String value = "\"" + Keywords.currLocation + JAR_NAME +"\"";
@@ -75,6 +76,9 @@ public class MainGUI implements NativeKeyListener {
 		Keywords.settingsPath = Keywords.currLocation + Keywords.settingsPath;
 	}
 	
+	/**
+	 * Add filters to display
+	 */
 	private static void addFilter(){
 		// For alt tab bug
 		display.addFilter(SWT.FocusOut, new Listener(){
