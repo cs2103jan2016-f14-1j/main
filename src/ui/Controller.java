@@ -68,6 +68,7 @@ public class Controller {
 	
 	private final static int STARTING_INDEX = 2;
 	private final static int IMAGE_PADDING = 8;
+	private final static int TEXT_PADDING = 1;
 	
 	private final static String TASK_HEADING = "Task(s)";
 	private final static String FREE_HEADING = "Free";
@@ -85,6 +86,8 @@ public class Controller {
 	// To set the scroll index when new task is added, edited or marked
 	private int lastIndex = -1;
 	private int setIndex = -1;
+	
+	private int imageWidth = 0;
 	
 	public Controller() throws Exception {
 		view = new View();
@@ -152,8 +155,9 @@ public class Controller {
 		warningImage = new Image(Display.getCurrent(),
 				Thread.currentThread().getContextClassLoader().getResourceAsStream(WARNING_FILE_PATH));
 		
-		starImage = resize(starImage, forStarSize.getBounds().height - IMAGE_PADDING,forStarSize.getBounds().height - IMAGE_PADDING);
-		warningImage = resize(warningImage, forWarningSize.getBounds().height- IMAGE_PADDING,forWarningSize.getBounds().height- IMAGE_PADDING);
+		starImage = resize(starImage, forStarSize.getBounds().height - IMAGE_PADDING, forStarSize.getBounds().height - IMAGE_PADDING);
+		warningImage = resize(warningImage, forWarningSize.getBounds().height- IMAGE_PADDING, forWarningSize.getBounds().height- IMAGE_PADDING);
+		imageWidth = forStarSize.getBounds().height;
 		
 		view.getMainTable().removeAll();
 	}
@@ -393,14 +397,14 @@ public class Controller {
 						case SWT.MeasureItem: {
 							Rectangle rect = starImage.getBounds();
 							event.width += rect.width;
-							event.height = Math.max(event.height, rect.height + 2);
+							event.height = Math.max(event.height, rect.height);
 							break;
 						}
 						case SWT.PaintItem: {
 							int x = 7;
 							Rectangle rect = starImage.getBounds();
 							int offset = Math.max(0, (event.height - rect.height) / 2);
-							event.gc.drawImage(starImage, x, event.y + offset + 1);
+							event.gc.drawImage(starImage, x, event.y + offset);
 							break;
 						}
 					}
@@ -841,21 +845,20 @@ public class Controller {
 			// To highlight added or edited tasks
 			highlightTasks(lastTasks, mainItem, task.getId(), i);
 
-			String text = whiteSpaces + task.getUserFormat();
+			String text = task.getUserFormat();
 
 			if (week) {
 
-				text = whiteSpaces + task.getUserFormatNoDate() + Keywords.SPACE_STRING
+				text = task.getUserFormatNoDate() + Keywords.SPACE_STRING
 						+ task.getDisplayTimeRange();
 			}
 
 			final TextLayout textLayout = new TextLayout(Display.getCurrent());
 
 			textLayout.setText(text);
-
 			setLayoutStyle(task, textLayout, text, whiteSpaces, week);
 			
-			drawTextLayout(mainItem, textLayout);
+			drawTextLayout(mainItem, textLayout, task.getPriority(), week);
 		}
 		
 	}
@@ -949,11 +952,21 @@ public class Controller {
     }
 	
     
-	private void drawTextLayout(TableItem mainItem, TextLayout textLayout){
+	private void drawTextLayout(TableItem mainItem, TextLayout textLayout, int priority, boolean week){
 		view.getMainTable().addListener(SWT.PaintItem, new Listener() {
 			public void handleEvent(Event event) {
 				if (event.item.equals(mainItem)) {
-					textLayout.draw(event.gc, event.x, event.y);
+					int padding = 0;
+					
+					if(week){
+						padding = TEXT_PADDING;
+					}
+					
+					if (priority == 1){
+						textLayout.draw(event.gc, event.x + imageWidth, event.y + padding);
+					} else {
+						textLayout.draw(event.gc, event.x, event.y + padding);
+					}
 				}
 			}
 		});
@@ -962,8 +975,8 @@ public class Controller {
 		view.getMainTable().addListener(SWT.MeasureItem, new Listener() {
 			public void handleEvent(Event e) {
 				if (e.item.equals(mainItem)) {
-					e.width = textLayoutBounds.width + 2;
-					e.height = textLayoutBounds.height + 2;
+					e.width = textLayoutBounds.width;
+					e.height = textLayoutBounds.height;
 				}
 			}
 		});
