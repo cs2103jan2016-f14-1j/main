@@ -457,6 +457,7 @@ public class Controller {
 		mainItem.setFont(View.italicFont);
 		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
+		
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);
@@ -467,6 +468,7 @@ public class Controller {
 		mainItem.setFont(View.italicFont);
 		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
+		
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);
@@ -477,6 +479,33 @@ public class Controller {
 		mainItem.setFont(View.italicFont);
 		mainItem.setText(items.poll());
 		mainItem = new TableItem(mainTable, SWT.NONE);
+
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setFont(View.headingFont);
+		mainItem.setForeground(View.orangeColor);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setFont(View.italicFont);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setFont(View.italicFont);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setFont(View.italicFont);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		mainItem.setFont(View.italicFont);
+		mainItem.setText(items.poll());
+		mainItem = new TableItem(mainTable, SWT.NONE);
+		
 		mainItem = new TableItem(mainTable, SWT.NONE);
 		mainItem.setFont(View.headingFont);
 		mainItem.setForeground(View.orangeColor);

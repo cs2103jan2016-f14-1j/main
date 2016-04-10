@@ -111,7 +111,7 @@ Examples:
 
 ## Show help
 ```
-[? | h | help]
+[help]
 ```
 
 Shows a help screen containing all commands available.

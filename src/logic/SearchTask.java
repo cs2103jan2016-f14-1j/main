@@ -73,12 +73,12 @@ public class SearchTask extends Functionality {
 		if (!month.equals(Keywords.EMPTY_STRING)) {
 			result = filterByMonth(result, month);
 			isCheckPerformed++;
-			if (isBusiest == Keywords.YES) {
-				int max = (int) Collections.max(busiest.values());
+			if (isBusiest == Keywords.YES) {//check if user wants to search for busiest
+				int max = (int) Collections.max(busiest.values());//find the highest value
 				ArrayList<String> busyDays = new ArrayList<String>();
 				busyDays.add(" in " + WordUtils.capitalizeFully(month) + " with " + max + " task(s) in the day(s).");
 				for (Map.Entry<Integer, Integer> e : busiest.entrySet()) {
-					if (max == e.getValue()) {
+					if (max == e.getValue()) {//find the days with the highest value
 						if (e.getKey() == 1) {
 							busyDays.add("On the " + e.getKey() + "st");
 						} else if (e.getKey() == 2) {
@@ -107,7 +107,7 @@ public class SearchTask extends Functionality {
 		if (result.size() == 0) {
 			setNTitle("Search Success!");
 			setNMessage("No results found!");
-		} else if (isCheckPerformed == 0) {
+		} else if (isCheckPerformed == 0) {//isCheckPerformed = 0 would mean user's input is wrong
 			result.clear();
 			setNTitle("Search Error!");
 			setNMessage("Your input format is wrong!");
@@ -141,23 +141,23 @@ public class SearchTask extends Functionality {
 		SymSpell.CreateDictionary(is, Keywords.EMPTY_STRING);
 		for (Task t : list) {
 			for (String word : words.split(Keywords.SPACE_STRING)) {
-				ArrayList<String> result = SymSpell.Correct(word, "");
-				if (t.getTask().contains(word)) {
+				ArrayList<String> result = SymSpell.Correct(word, Keywords.EMPTY_STRING);
+				if (t.getTask().contains(word)) {//check if task contains the word itself
 					temp = checkTask(temp, t);
 					break;
 				}
-				if (t.getCategories().contains(word)) {
+				if (t.getCategories().contains(word)) {//check if task's categories contains the word itself
 					temp = checkTask(temp, t);
 					break;
 				}
-				for (String wor : result) {
-					if (t.getTask().contains(wor)) {
-						addWordToReplace(word, wor);
+				for (String replacement : result) {//check if any replacement words found
+					if (t.getTask().contains(replacement)) {//check if it contains the replacement word
+						addWordToReplace(word, replacement);
 						temp = checkTask(temp, t);
 						break;
-					} else if (!t.getCategories().isEmpty()) {
-						if (t.getCategories().contains(wor)) {
-							addWordToReplace(word, wor);
+					} else if (!t.getCategories().isEmpty()) {//check if its categories contains the replacement word
+						if (t.getCategories().contains(replacement)) {
+							addWordToReplace(word, replacement);
 							temp = checkTask(temp, t);
 							break;
 						}
@@ -185,13 +185,14 @@ public class SearchTask extends Functionality {
 	}
 
 	/**
-	 * Check if word in dictionary match
+	 * Check if word in dictionary match and if it already exists in the ArrayList
 	 * 
 	 * @param toReplace
 	 * @param toCheck
 	 */
 	private void addWordToReplace(String toReplace, String toCheck) {
 		if (!toCheck.equals(toReplace) && !replace.contains(toCheck)) {
+			//if it is not in ArrayList, add it in, else ignore
 			replace.add(toCheck);
 		}
 	}
@@ -208,15 +209,19 @@ public class SearchTask extends Functionality {
 	private ArrayList<Task> filterDate(ArrayList<Task> list, int date) {
 		ArrayList<Task> temp = new ArrayList<Task>();
 		for (Task t : list) {
-			if (t.getIntDate() == date && t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
+			boolean isTaskCompleted = t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED;
+			if (t.getIntDate() == date && isTaskCompleted) {
+				//checks the start date
 				temp.add(t);
-			} else if (t.getIntDateEnd() == date && t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
+			} else if (t.getIntDateEnd() == date && isTaskCompleted) {
+				//checks end date
 				temp.add(t);
 			}else{
+				//check date range
 				int start = t.getIntDate();
 				int end = t.getIntDateEnd();
 				while(start<=end &&end!=9999){
-					if(start==date){
+					if(start==date && isTaskCompleted){
 						temp.add(t);
 						break;
 					}
@@ -240,6 +245,7 @@ public class SearchTask extends Functionality {
 		ArrayList<Task> temp = new ArrayList<Task>();
 		for (Task t : list) {
 			if (t.getPriority() == isPriortise && t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
+				//checks for priority based on the isPrioritise variable
 				temp.add(t);
 			}
 		}
@@ -282,20 +288,21 @@ public class SearchTask extends Functionality {
 		ArrayList<Task> temp = new ArrayList<Task>();
 		busiest.clear();
 		for (Task t : list) {
+			//initialise all variables needed
 			String intStartDate = Integer.toString(t.getIntDate());
 			String intEndDate = Integer.toString(t.getIntDateEnd());
 			Calendar startDateOfTask = null;
 			Calendar endDateOfTask = null;
 			Calendar dateMth = Calendar.getInstance();
-			if (Formatter.fromIntToDate(intStartDate) != null) {
+			if (Formatter.fromIntToDate(intStartDate) != null) {//if start date is found
 				startDateOfTask = Calendar.getInstance();
 				startDateOfTask.setTime(Formatter.fromIntToDate(intStartDate));
 			}
-			if (Formatter.fromIntToDate(intEndDate) != null) {
+			if (Formatter.fromIntToDate(intEndDate) != null) {//if end date is found
 				endDateOfTask = Calendar.getInstance();
 				endDateOfTask.setTime(Formatter.fromIntToDate(intEndDate));
 			}
-			Date userMth = getUserMth(month);
+			Date userMth = getUserMth(month);//check if the format of month is correct
 			if (userMth != null) {
 				dateMth.setTime(userMth);
 			}
@@ -309,7 +316,8 @@ public class SearchTask extends Functionality {
 			if (isEnd) {
 				temp = checkTask(temp, t);
 			}
-			loopThroughAllDates(startDateOfTask, endDateOfTask, dateMth.get(Calendar.MONTH));
+			//filter busiest just in case if user needs it
+			filterBusiest(startDateOfTask, endDateOfTask, dateMth.get(Calendar.MONTH));
 		}
 		return temp;
 	}
@@ -341,9 +349,10 @@ public class SearchTask extends Functionality {
 	 * @param userMth
 	 * 			the month user wants
 	 */
-	private void loopThroughAllDates(Calendar start, Calendar end, int userMth) {
+	private void filterBusiest(Calendar start, Calendar end, int userMth) {
 		boolean isStart = (start != null) ? start.get(Calendar.MONTH) == userMth : false;
 		boolean isEnd = (end != null) ? end.get(Calendar.MONTH) == userMth : false;
+		
 		if (start != null && end != null) {
 			if (start.get(Calendar.MONTH) == end.get(Calendar.MONTH) && isStart) {
 				int day = start.get(Calendar.DAY_OF_MONTH);
@@ -360,6 +369,7 @@ public class SearchTask extends Functionality {
 				boolean toSameStart = toUse.get(Calendar.MONTH) == start.get(Calendar.MONTH);
 				if (toSameEnd) {
 					int day = toUse.get(Calendar.DAY_OF_MONTH);
+					
 					while (toSameEnd) {
 						addToBusiest(day);
 						toUse.add(Calendar.DAY_OF_MONTH, -1);
@@ -368,6 +378,7 @@ public class SearchTask extends Functionality {
 					}
 				} else {
 					int day = toUse.get(Calendar.DAY_OF_MONTH);
+					
 					while (toSameStart) {
 						addToBusiest(day);
 						toUse.add(Calendar.DAY_OF_MONTH, 1);
@@ -384,6 +395,12 @@ public class SearchTask extends Functionality {
 		}
 	}
 	
+	/**
+	 * Add to the busiest HashMap
+	 * 
+	 * @param day
+	 * 			the day to add to
+	 */
 	private void addToBusiest(int day){
 		if (busiest.get(day) != null) {
 			busiest.put(day, busiest.get(day) + 1);
