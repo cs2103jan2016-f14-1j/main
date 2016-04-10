@@ -3,7 +3,6 @@
 package parser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import logic.Logic;
 import logic.Notification;
