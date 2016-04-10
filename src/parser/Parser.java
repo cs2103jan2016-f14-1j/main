@@ -19,9 +19,7 @@ public class Parser {
 	private static final String COMMAND_DO = "do";
 	private static final String COMMAND_DELETE = "delete";
 	private static final String COMMAND_EDIT = "edit";
-	private static final String COMMAND_DISPLAY = "display";
 	private static final String COMMAND_VIEW = "view";
-	private static final String COMMAND_CLEAR = "clear";
 	private static final String COMMAND_UNDO = "undo";
 	private static final String COMMAND_HELP = "help";
 	private static final String COMMAND_SEARCH = "search";
@@ -57,21 +55,13 @@ public class Parser {
 			return returnValue = ParseDelete.deleteTask(inputWithoutCommandType);
 		case COMMAND_EDIT:
 			return returnValue = ParseEdit.editTask(inputWithoutCommandType);
-		case COMMAND_DISPLAY:
-			// TODO
 		case COMMAND_UNDO:
 			return returnValue = ParseUndo.undoTask();
-			// TODO
-		case COMMAND_CLEAR:
-			// TODO
 		case COMMAND_HELP:
 			return Logic.viewHelp();
-			// TODO
 		case COMMAND_VIEW:
-			// returnValue = true;
 			return Logic.viewTask(inputWithoutCommandType);
 		case COMMAND_SEARCH:
-			// returnValue = true;
 			ArrayList<Object> output = ParseSearch.filterInput(inputWithoutCommandType);
 			return Logic.searchTask((String)output.get(0), //words to be searched
 					(int) output.get(1), //user's priority option
