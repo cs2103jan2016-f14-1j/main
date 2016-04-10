@@ -76,7 +76,7 @@ public class SearchTask extends Functionality {
 			if (isBusiest == Keywords.YES) {
 				int max = (int) Collections.max(busiest.values());
 				ArrayList<String> busyDays = new ArrayList<String>();
-				busyDays.add(" in " + WordUtils.capitalizeFully(month) + " with " + max + " task(s).");
+				busyDays.add(" in " + WordUtils.capitalizeFully(month) + " with " + max + " task(s) in the day(s).");
 				for (Map.Entry<Integer, Integer> e : busiest.entrySet()) {
 					if (max == e.getValue()) {
 						if (e.getKey() == 1) {
@@ -212,6 +212,16 @@ public class SearchTask extends Functionality {
 				temp.add(t);
 			} else if (t.getIntDateEnd() == date && t.getIsCompleted() == Keywords.TASK_NOT_COMPLETED) {
 				temp.add(t);
+			}else{
+				int start = t.getIntDate();
+				int end = t.getIntDateEnd();
+				while(start<=end &&end!=9999){
+					if(start==date){
+						temp.add(t);
+						break;
+					}
+					start++;
+				}
 			}
 		}
 		return temp;
@@ -299,7 +309,7 @@ public class SearchTask extends Functionality {
 			if (isEnd) {
 				temp = checkTask(temp, t);
 			}
-			filterBusiest(startDateOfTask, endDateOfTask, dateMth.get(Calendar.MONTH));
+			loopThroughAllDates(startDateOfTask, endDateOfTask, dateMth.get(Calendar.MONTH));
 		}
 		return temp;
 	}
@@ -331,18 +341,14 @@ public class SearchTask extends Functionality {
 	 * @param userMth
 	 * 			the month user wants
 	 */
-	private void filterBusiest(Calendar start, Calendar end, int userMth) {
+	private void loopThroughAllDates(Calendar start, Calendar end, int userMth) {
 		boolean isStart = (start != null) ? start.get(Calendar.MONTH) == userMth : false;
 		boolean isEnd = (end != null) ? end.get(Calendar.MONTH) == userMth : false;
 		if (start != null && end != null) {
 			if (start.get(Calendar.MONTH) == end.get(Calendar.MONTH) && isStart) {
 				int day = start.get(Calendar.DAY_OF_MONTH);
 				while (day <= end.get(Calendar.DAY_OF_MONTH)) {
-					if (busiest.get(day) != null) {
-						busiest.put(day, busiest.get(day) + 1);
-					} else {
-						busiest.put(day, 1);
-					}
+					addToBusiest(day);
 					start.add(Calendar.DAY_OF_MONTH, 1);
 					day = start.get(Calendar.DAY_OF_MONTH);
 				}
@@ -355,11 +361,7 @@ public class SearchTask extends Functionality {
 				if (toSameEnd) {
 					int day = toUse.get(Calendar.DAY_OF_MONTH);
 					while (toSameEnd) {
-						if (busiest.get(day) != null) {
-							busiest.put(day, busiest.get(day) + 1);
-						} else {
-							busiest.put(day, 1);
-						}
+						addToBusiest(day);
 						toUse.add(Calendar.DAY_OF_MONTH, -1);
 						day = toUse.get(Calendar.DAY_OF_MONTH);
 						toSameEnd = toUse.get(Calendar.MONTH) == end.get(Calendar.MONTH);
@@ -367,11 +369,7 @@ public class SearchTask extends Functionality {
 				} else {
 					int day = toUse.get(Calendar.DAY_OF_MONTH);
 					while (toSameStart) {
-						if (busiest.get(day) != null) {
-							busiest.put(day, busiest.get(day) + 1);
-						} else {
-							busiest.put(day, 1);
-						}
+						addToBusiest(day);
 						toUse.add(Calendar.DAY_OF_MONTH, 1);
 						day = toUse.get(Calendar.DAY_OF_MONTH);
 						toSameStart = toUse.get(Calendar.MONTH) == start.get(Calendar.MONTH);
@@ -381,13 +379,16 @@ public class SearchTask extends Functionality {
 		} else if (start != null) {
 			if (isStart) {
 				int day = start.get(Calendar.DAY_OF_MONTH);
-				;
-				if (busiest.get(day) != null) {
-					busiest.put(day, busiest.get(day) + 1);
-				} else {
-					busiest.put(day, 1);
-				}
+				addToBusiest(day);
 			}
+		}
+	}
+	
+	private void addToBusiest(int day){
+		if (busiest.get(day) != null) {
+			busiest.put(day, busiest.get(day) + 1);
+		} else {
+			busiest.put(day, 1);
 		}
 	}
 
