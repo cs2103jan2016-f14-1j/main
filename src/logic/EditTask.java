@@ -55,9 +55,16 @@ public class EditTask extends Functionality {
 				if(dateExists){
 					Storage.getTask(taskID).setDateTimes(datetimes);
 	         	}
+				Task t = Storage.getTask(taskID);
+				ArrayList<Integer> conflicts = FreeSlots.getConflictIDs(t);
+				if (conflicts.isEmpty()){
+					n.setTitle(Keywords.MESSAGE_EDIT_SUCCESS);
+					n.setMessage(Storage.getTask(taskID).getUserFormat() + " has been edited!");
+				} else {
+					n.setTitle(Keywords.MESSAGE_EDIT_SUCCESS);
+					n.setMessage(Keywords.MESSAGE_CONFLICT + conflicts.toString());
+				}
 				
-				n.setTitle(Keywords.MESSAGE_EDIT_SUCCESS);
-				n.setMessage(Storage.getTask(taskID).getUserFormat() + " has been edited!");
 			}
 		
 		super.synchronization();

@@ -54,7 +54,7 @@ public class AddTask extends Functionality {
 			setNMessage(task.getTask() + Keywords.MESSAGE_ADD_BODY);
 		} else {
 			setNTitle(Keywords.MESSAGE_ADD_SUCCESS);
-			setNMessage(Keywords.MESSAGE_ADD_CONFLICT + conflictTaskIDs.toString());
+			setNMessage(Keywords.MESSAGE_CONFLICT + conflictTaskIDs.toString());
 		}
 	}
 }
