@@ -734,7 +734,7 @@ public class Controller {
 	private void setLayoutStyle(Task task, TextLayout textLayout, String text, String whiteSpaces, boolean week){
 		TextStyle styleDescription = new TextStyle(View.normalFont, null, null);
 		TextStyle styleDate = new TextStyle(View.boldFont, View.dateColor, null);
-		TextStyle styleCategory = new TextStyle(View.normalFont, View.redColor, null);
+		TextStyle styleCategory = new TextStyle(View.normalFont, View.greenColor, null);
 
 		if (task.getDateTimes().get(0) != null) {
 			int seperatingIndex = whiteSpaces.length() + task.getUserFormatNoDate().length();
