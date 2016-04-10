@@ -2,7 +2,6 @@
 
 package logic;
 
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,6 +17,7 @@ import parser.Formatter;
 import shared.Keywords;
 import shared.Task;
 import storage.Storage;
+import storage.SymSpell;
 
 public class SearchTask extends Functionality {
 
@@ -150,8 +150,6 @@ public class SearchTask extends Functionality {
 	 */
 	private ArrayList<Task> filterWords(ArrayList<Task> list, String words) {
 		ArrayList<Task> temp = new ArrayList<Task>();
-		InputStream is = getClass().getResourceAsStream("/storage/dictionary");
-		SymSpell.CreateDictionary(is, Keywords.EMPTY_STRING);
 		for (Task t : list) {
 			for (String word : words.split(Keywords.SPACE_STRING)) {
 				ArrayList<String> result = SymSpell.Correct(word, Keywords.EMPTY_STRING);

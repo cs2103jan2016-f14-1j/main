@@ -2,7 +2,9 @@
 
 package storage;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+
 import shared.Keywords;
 import shared.Task;
 
@@ -22,6 +24,8 @@ public class Storage {
 		FreeIDs.init();
 		History.initHistory();
 		ReadWrite.readTasksFromFile(tasks);
+		InputStream is = getClass().getResourceAsStream("/storage/dictionary");
+		SymSpell.CreateDictionary(is, Keywords.EMPTY_STRING);
 	}
 
 	/**
