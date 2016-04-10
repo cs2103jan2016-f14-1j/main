@@ -28,6 +28,7 @@ import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.TextLayout;
@@ -66,7 +67,8 @@ public class Controller {
 	private final static String OTHERS = "OTHERS";
 	
 	private final static int STARTING_INDEX = 2;
-
+	private final static int IMAGE_PADDING = 8;
+	
 	private final static String TASK_HEADING = "Task(s)";
 	private final static String FREE_HEADING = "Free";
 	private final static String BUSY_HEADING = "Busiest Day(s)";
@@ -140,10 +142,33 @@ public class Controller {
 	}
 	
 	private void initImages(){
+		
+		TableItem forStarSize = new TableItem(view.getMainTable(), SWT.NONE);
+		forStarSize.setFont(View.headingFont);
+		TableItem forWarningSize = new TableItem(view.getMainTable(), SWT.NONE);
+		
 		starImage = new Image(Display.getCurrent(),
 				Thread.currentThread().getContextClassLoader().getResourceAsStream(MARK_FILE_PATH));
 		warningImage = new Image(Display.getCurrent(),
 				Thread.currentThread().getContextClassLoader().getResourceAsStream(WARNING_FILE_PATH));
+		
+		starImage = resize(starImage, forStarSize.getBounds().height - IMAGE_PADDING,forStarSize.getBounds().height - IMAGE_PADDING);
+		warningImage = resize(warningImage, forWarningSize.getBounds().height- IMAGE_PADDING,forWarningSize.getBounds().height- IMAGE_PADDING);
+		
+		view.getMainTable().removeAll();
+	}
+	
+	private Image resize(Image image, int width, int height) {
+		Image scaled = new Image(Display.getDefault(), width, height);
+		GC gc = new GC(scaled);
+		gc.setAntialias(SWT.ON);
+		gc.setInterpolation(SWT.HIGH);
+		gc.drawImage(image, 0, 0, 
+		image.getBounds().width, image.getBounds().height, 
+		0, 0, width, height);
+		gc.dispose();
+		image.dispose(); 
+		return scaled;
 	}
 	
 	private void displayNotification(Notification notify) {
