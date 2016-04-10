@@ -88,7 +88,6 @@ public class ParseEdit {
 		m = p.matcher(userInput);
 		while(m.find()) {
 			categories.add(m.group().replace("#", Keywords.EMPTY_STRING));
-			System.out.println(m.group()+"yup");
 			userInput = userInput.replaceAll(REGEX_CAT, Keywords.EMPTY_STRING);
 		}
 	}
@@ -122,7 +121,6 @@ public class ParseEdit {
 			if (result != null) {
 				datetimes.set(Keywords.INDEX_STARTDATE, Formatter.getDateFromString(result));
 				userInput = userInput.replaceAll(startDate + "\\s?", Keywords.EMPTY_STRING);
-				System.out.println("test|" + userInput + "|now");
 				findEndDate();
 			}
 		}

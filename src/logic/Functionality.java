@@ -4,6 +4,7 @@ package logic;
 
 import java.util.ArrayList;
 
+import parser.Formatter;
 import shared.Task;
 import storage.Storage;
 import shared.*;
@@ -51,6 +52,9 @@ public class Functionality extends Logger {
 		newt.setTask(task.getTask());
 		newt.setIsCompleted(task.getIsCompleted());
 		newt.setIntDate(task.getIntDate());
+		newt.setStartTime(Formatter.getDateTimes(Integer.toString(task.getIntStartTime())).get(Keywords.INDEX_STARTTIME));
+		newt.setEndTime(Formatter.getDateTimes(Integer.toString(task.getIntEndTime())).get(Keywords.INDEX_ENDTIME));
+		newt.setPriority(task.getPriority());
 		tasks.add(newt);
 	}
 
