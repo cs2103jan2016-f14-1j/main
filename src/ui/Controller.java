@@ -1065,6 +1065,7 @@ public class Controller {
 		if(items.get("busiest")!=null){
 			busiest = (ArrayList<String>) items.get("busiest");
 			setBusiestDays(busiest);
+			mainItem = new TableItem(view.getMainTable(),SWT.NONE);
 		}
 		setSearchTasks(tasks);
 		mainItem = new TableItem(view.getMainTable(),SWT.NONE);
