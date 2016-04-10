@@ -75,9 +75,7 @@ public class Controller {
 	private final static String BUSY_HEADING = "Busiest Day(s)";
 
 	private final static String DELIMITER = " - ";
-	
-	private final static String PRIORITY_WHITESPACES = "      ";
-	
+		
 	private View view;
 	private Parser parser;
 	private Logic logic;
@@ -401,7 +399,7 @@ public class Controller {
 							break;
 						}
 						case SWT.PaintItem: {
-							int x = 7;
+							int x = IMAGE_PADDING - 1;
 							Rectangle rect = starImage.getBounds();
 							int offset = Math.max(0, (event.height - rect.height) / 2);
 							event.gc.drawImage(starImage, x, event.y + offset);
@@ -840,7 +838,6 @@ public class Controller {
 			Task task = tempArrList.get(i);
 			final TableItem mainItem = new TableItem(view.getMainTable(), SWT.NONE);
 			lastIndex++;
-			String whiteSpaces = setWhiteSpaces(task, mainItem);
 
 			// To highlight added or edited tasks
 			highlightTasks(lastTasks, mainItem, task.getId(), i);
@@ -856,7 +853,7 @@ public class Controller {
 			final TextLayout textLayout = new TextLayout(Display.getCurrent());
 
 			textLayout.setText(text);
-			setLayoutStyle(task, textLayout, text, whiteSpaces, week);
+			setLayoutStyle(task, textLayout, text, week);
 			
 			drawTextLayout(mainItem, textLayout, task.getPriority(), week);
 		}
@@ -904,18 +901,16 @@ public class Controller {
 	 *            textlayout of the task
 	 * @param text
 	 *            text of the task
-	 * @param whiteSpaces
-	 *            whitespaces infront of task
 	 * @param week
 	 *            true if the task is within the week else false       
 	 */
-	private void setLayoutStyle(Task task, TextLayout textLayout, String text, String whiteSpaces, boolean week){
+	private void setLayoutStyle(Task task, TextLayout textLayout, String text, boolean week){
 		TextStyle styleDescription = new TextStyle(View.normalFont, null, null);
 		TextStyle styleDate = new TextStyle(View.boldFont, View.dateColor, null);
 		TextStyle styleCategory = new TextStyle(View.normalFont, View.greenColor, null);
 
 		if (task.getDateTimes().get(0) != null) {
-			int seperatingIndex = whiteSpaces.length() + task.getUserFormatNoDate().length();
+			int seperatingIndex = task.getUserFormatNoDate().length();
 			textLayout.setStyle(styleDescription, 0, seperatingIndex);
 			if (week) {
 				textLayout.setStyle(styleDate, seperatingIndex, text.length());
@@ -934,23 +929,6 @@ public class Controller {
 		}
 	}
 	
-	/**
-	 * Set the whitespaces infront of prioritized task for icon.
-	 * 
-	 * @param task
-	 *            the task to be edited
-	 * @param mainItem
-	 *            the task's table item
-	 * @return whitespaces if the task is prioritized     
-	 */
-    private String setWhiteSpaces(Task task, TableItem mainItem){
-    	if (task.getPriority() == 1) {
-			mainItem.setData(object);
-			return PRIORITY_WHITESPACES;
-		}
-    	return Keywords.EMPTY_STRING;
-    }
-	
     
 	private void drawTextLayout(TableItem mainItem, TextLayout textLayout, int priority, boolean week){
 		view.getMainTable().addListener(SWT.PaintItem, new Listener() {
@@ -963,6 +941,7 @@ public class Controller {
 					}
 					
 					if (priority == 1){
+						mainItem.setData(object);
 						textLayout.draw(event.gc, event.x + imageWidth, event.y + padding);
 					} else {
 						textLayout.draw(event.gc, event.x, event.y + padding);
