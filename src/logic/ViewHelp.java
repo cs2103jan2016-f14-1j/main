@@ -51,10 +51,10 @@ public class ViewHelp extends Functionality {
 		help.add("Eg. view shopping");
 		
 		help.add("Show help");
-		help.add("[help]");
+		help.add("[help | h | ?]");
 		
 		help.add("Undo previous command");
-		help.add("[undo]");
+		help.add("[undo | u]");
 		
 		help.add("Keyboard shortcuts");
 		help.add("Launch application: CTRL + ALT + D");
