@@ -100,10 +100,13 @@ To search for task(s) containing string, use this command.
 search "<searchword(s)>"
 ```
 
-`<searchword>` can be any string that you want to search for. Dotdotdot can detect minor typos and return task(s) that contains similar dictionary strings.
+`<searchword>` can be any string that you want to search for. Dotdotdot can detect minor typos and return task(s) that contains similar dictionary strings. You can input multiple search words separated by space for more detailed searches.
 
 Examples:
+* `search priority 14 apr` (returns prioritised tasks on 14 Apr)
+* `search busiest in Apr` (returns day with most tasks in April)
 * `search "balolon"` (returns results containing "balloon" as well)
+* `search "balolon" 14 Apr no priority #yolo
 * `search "cake blue"` (returns results containing strings "cake" and "blue")
 
 ## Show help
