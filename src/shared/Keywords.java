@@ -61,6 +61,10 @@ public class Keywords {
 	public static final int NO_DATE = 9999;
 	public static final int CONSTANT_YEAR = 2016;
 	public static final int CONSTANT_DATE_BREAK = 32;
+	public static final int CONSTANT_HOURS = 24;
+	public static final int CONSTANT_MIN = 60;
+	public static final int CONSTANT_LAST_MIN = 59;
+	public static final int CONSTANT_LAST_HOUR = 23;
 	
 	
 	public static String settingsPath =  "settings.ini";
@@ -103,5 +107,5 @@ public class Keywords {
 	public static final String STORAGE_FORMAT = "%d|%s|%s|%s|%s|%s|%s|%d|%d|";
 	// DATE FORMAT		:	[startDate][endDate] [startTime][endTime]
 	public static final String DATE_FORMAT = "%s";
-	
+	public static final int DATE_FORMAT_MULTIPLIER = 100;
 }
