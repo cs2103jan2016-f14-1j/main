@@ -1,3 +1,5 @@
+//@@author A0125387Y
+
 package logic;
 
 import shared.*;
@@ -24,7 +26,6 @@ public class EditTask extends Functionality {
 				return n;
 			}
 			if (Storage.getTask(taskID) != null) {
-				//super.getTasks().add(Storage.getTask(taskID));
 				super.addToFuncTasks(Storage.getTask(taskID));
 				super.addToHistory("edit");
 				
