@@ -106,7 +106,11 @@ public class ParseEdit {
 		if (result == null) {
 			id = -1;
 		} else {
-			id = Integer.parseInt(result);
+			try {
+				id = Integer.parseInt(result);
+			} catch (NumberFormatException e) {
+				id = -1;
+			}
 			userInput = userInput.replaceAll(REGEX_ID + "(?:\\sto\\s)?", Keywords.EMPTY_STRING);
 		}
 	}
