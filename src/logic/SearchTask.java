@@ -86,7 +86,7 @@ public class SearchTask extends Functionality {
 																	// highest
 																	// value
 				ArrayList<String> busyDays = new ArrayList<String>();
-				busyDays.add(" in " + WordUtils.capitalizeFully(month) + " with " + max + " task(s) in the day(s).");
+				busyDays.add(" in " + WordUtils.capitalizeFully(month) + " with " + max + " task(s).");
 				for (Map.Entry<Integer, Integer> e : busiest.entrySet()) {
 					if (max == e.getValue()) {// find the days with the highest
 												// value

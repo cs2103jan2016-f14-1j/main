@@ -351,23 +351,19 @@ public class Task extends Logger {
 	
 	//For JUnit Testing Purposes
 	public boolean like(Task b){
-		boolean isCat = true, 
-				isDate = true;
+		boolean isCat = true;
 		for (String cat : b.getCategories()){
 			if (!categories.contains(cat)){
+				System.out.println("ran here");
 				isCat = false;
 				break;
 			}
 		}
 
-		for (Date d : b.getDateTimes()) {
-			if (!datetimes.contains(d)) {
-				isDate = false;
-				break;
-			}
-		}
-
+		System.out.println(b.getIntDate());;
+		System.out.println(intDate);;
+		System.out.println(this.date.equals(b.getDate())+"   "+this.task.equals(b.getTask())+"  "+(this.intDate == b.getIntDate())+" "+isCat);;
 		return (this.date.equals(b.getDate()) && this.task.equals(b.getTask())
-				&& this.intDate == b.getIntDate() && isCat && isDate) ? true : false; 
+				&& this.intDate == b.getIntDate() && isCat) ? true : false; 
 	}
 }

@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.ocpsoft.prettytime.shade.edu.emory.mathcs.backport.java.util.Arrays;
+
 import logic.Logic;
 import logic.Notification;
 import shared.Keywords;
@@ -19,7 +21,7 @@ public class ParseEdit {
 	private static final String REGEX_DATE = "(0?[1-9]|[12][0-9]|3[01])\\s?"
 			+ "(?i)(January|February|March|April|May|June|July|" + "August|September|October|November|December|"
 			+ "Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Oct|Nov|Dec)";
-	private static final String REGEX_CAT = "(\\#[a-zA-Z0-9]+\\s*)+";
+	private static final String REGEX_CAT = "(\\#+[a-zA-Z0-9.\\;]+\\s*)+";
 	private static final String REGEX_ID = "^\\d+";
 	private static final String NO_DATE = "NO DATE";
 	private static final String NO_TIME = "NO TIME";
@@ -87,7 +89,10 @@ public class ParseEdit {
 		p = Pattern.compile(REGEX_CAT);
 		m = p.matcher(userInput);
 		while(m.find()) {
-			categories.add(m.group().replace("#", Keywords.EMPTY_STRING));
+			ArrayList<String> cats = new ArrayList<String>(Arrays.asList(m.group().split(Keywords.SPACE_STRING)));
+			for(String cat : cats){
+				categories.add(cat.replace("#", Keywords.EMPTY_STRING));
+			}
 			userInput = userInput.replaceAll(REGEX_CAT, Keywords.EMPTY_STRING);
 		}
 	}
