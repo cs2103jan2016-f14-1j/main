@@ -337,6 +337,9 @@ public class FreeSlots {
 		ArrayList<Task> tasks = Storage.getListOfUncompletedTasks();
 		ArrayList<Integer> dates = getTaskDates(task);
 		ArrayList<Task> totalConflict = new ArrayList<Task>();
+		if (dates.isEmpty()) {
+			return totalConflict;
+		}
 		for (int date : dates) {
 			ArrayList<Task> tasksOnDate = filterTasksByDate(tasks, date);
 			ArrayList<Task> taskList = findAllConflict(tasksOnDate, task);
@@ -440,10 +443,16 @@ public class FreeSlots {
 	 */
 	private static ArrayList<Integer> getTaskDates(Task task) {
 		ArrayList<Integer> dates = new ArrayList<Integer>();
-		int startD = task.getIntDate();
-		int endD = task.getIntDateEnd();
-		for (int i = startD; i <= endD; i++) {
-			dates.add(i);
+		if (task.getDateTimes().get(Keywords.FIRST_ELEMENT) == null) {
+			return dates;
+		} else if (task.getDateTimes().get(Keywords.SECOND_ELEMENT) == null) {
+			dates.add(task.getIntDate());
+		} else {
+			int startD = task.getIntDate();
+			int endD = task.getIntDateEnd();
+			for (int i = startD; i <= endD; i++) {
+				dates.add(i);
+			}
 		}
 		return dates;
 	}

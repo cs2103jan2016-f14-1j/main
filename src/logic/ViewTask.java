@@ -102,8 +102,10 @@ public class ViewTask extends Functionality {
 	 * @return
 	 */
 	private String toCat(String input) {
-		if (input.equalsIgnoreCase("conflict")){
+		if (input.equalsIgnoreCase("conflict")) { 
 			return input;
+		} else if (input.equalsIgnoreCase(Keywords.WORD_DONE)){
+			return Keywords.WORD_DONE;
 		}
 		String res = Keywords.EMPTY_STRING;
 		String[] cats = input.split(Keywords.SPACE_STRING);

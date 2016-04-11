@@ -2,8 +2,11 @@
 
 package storage;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+
 import shared.Keywords;
+import shared.Logger;
 import shared.Task;
 
 public class Storage {
@@ -22,6 +25,8 @@ public class Storage {
 		FreeIDs.init();
 		History.initHistory();
 		ReadWrite.readTasksFromFile(tasks);
+		InputStream is = getClass().getResourceAsStream("/storage/dictionary");
+		SymSpell.CreateDictionary(is, Keywords.EMPTY_STRING);
 	}
 
 	/**
@@ -199,6 +204,7 @@ public class Storage {
 	 *            the action to be added
 	 */
 	public static void addToHistory(ArrayList<Task> tasks, String action) {
+		Logger.logf("Adding an action and set of tasks to history: ", action);
 		History.addActionToHistory(tasks, action);
 	}
 

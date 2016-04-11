@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.ocpsoft.prettytime.shade.edu.emory.mathcs.backport.java.util.Arrays;
 
 import logic.Notification;
+import parser.Formatter;
 import parser.ParseAdd;
 import parser.Parser;
 import shared.Task;
@@ -54,7 +55,7 @@ public class AddingTasksTest {
 		/*
 		n = (Notification) parser.parse("add \\/>#,|<.@~$%^&*!)(+_-|}{\";:");
 		t = new Task();
-		t.setTask("\\/>#,|<.@~$%^&*!)(+_-|}{\";:");
+		t.setTask("\\/>#,<.@~$%^&*!)(+_-}{\";:");
 		tasks.add(t);
 		assertTrue(t.like(ParseAdd.getTask()));
 		*/
@@ -67,7 +68,8 @@ public class AddingTasksTest {
 		t.setCategories(cat);
 		tasks.add(t);
 		assertTrue(t.like(ParseAdd.getTask()));
-
+		
+		
 		// Tasks with date, special characters, categories
 
 		n = (Notification) parser.parse("add thistime#withnospace by 23 Mar");
@@ -86,24 +88,16 @@ public class AddingTasksTest {
 		n = (Notification) parser.parse("add thistime#withnospace by 23 Mar 3pm to 5pm");
 		assertTrue(t.like(ParseAdd.getTask()));
 		
-		n = (Notification) parser.parse("add thistime#withnospace by 23 Mar on 3pm");
-		t = new Task();
-		t.setTask("thistime#withnospace");
-		t.setIntDate(87);
-		ArrayList<Date> ad = Formatter.getDateTimes("add thistime#withnospace by 23 Mar on 3pm");
-		t.setDateTimes(ad);
-		for (Date d : ad) {
-			System.out.println(d + " aweeeeee");
-		}
-		for (Date d : ParseAdd.getTask().getDatetimes()) {
-			System.out.println(d);
-		}
-		System.out.println(ParseAdd.getTask().getDate() + " asd " + ParseAdd.getTask().getIntDate() + " haha "
-				+ ParseAdd.getTask().getDisplayDate() + " d " + ParseAdd.getTask().getIntDateEnd() + " d "
-				+ ParseAdd.getTask().getIntEndTime() + " a" + ParseAdd.getTask().getIntStartTime() + " end");
-		tasks.add(t);
-		assertTrue(t.like(ParseAdd.getTask()));
- 		*/
+		// Inputs that would definitely result in errors
+		// Floating task with empty string
+		n = (Notification) parser.parse("add ");
+		assertEquals("Error!", n.getTitle());
+		
+		n = (Notification) parser.parse("add #withnospace by 23 Mar from 3pm to 5pm");
+		assertEquals("Error!", n.getTitle());
+		n = (Notification) parser.parse("add ##### by 23 Mar");
+		assertEquals("Error!", n.getTitle());
+		
 		//Check if each task in temp storage and actual storage are the same
 		for(Task sTask: Storage.getListOfTasks()){
 			boolean test = false;
@@ -116,17 +110,7 @@ public class AddingTasksTest {
 			assertTrue(test);
 		}
 		
-		
-		// Inputs that would definitely result in errors
-		// Floating task with empty string
-		n = (Notification) parser.parse("add ");
-		assertEquals("Error!", n.getTitle());
 		/*
-		n = (Notification) parser.parse("add #withnospace by 23 Mar 3pm to 5pm");
-		assertEquals("Error!", n.getTitle());
-		n = (Notification) parser.parse("add ##### by 23 Mar");
-		assertEquals("Error!", n.getTitle());
-		
 		//descriptions carried at the back
 		n = (Notification) parser
 				.parse("add tesing this task ##### by 23 Mar #### #category1 @!(#)&!)(@*$)(!@*#98)@#*()@#)}{[]");

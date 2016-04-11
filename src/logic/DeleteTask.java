@@ -27,6 +27,7 @@ public class DeleteTask extends Functionality {
 		setNotification(n, cats, ids);
 		deleteByIds(ids);
 		deleteByCats(cats);
+		super.addToHistory("delete");
 		return n;
 	}
 
@@ -36,18 +37,17 @@ public class DeleteTask extends Functionality {
 			n.setTitle(Keywords.MESSAGE_ERROR);
 		} else if (isBothNonEmpty(ids, cats)) {
 			n.setTitle(Keywords.MESSAGE_DELETE_SUCCESS);
-			if (cats.isEmpty()) {
-				n.setMessage(ids.toString());
-			} else if (ids.isEmpty()) {
-				n.setMessage(String.format(Keywords.MESSAGE_DELETE_CAT, cats.toString()));
-			} else {
-				n.setMessage(String.format(Keywords.MESSAGE_DELETE_CAT, cats.toString()));
-			}
+			n.setMessage(String.format(Keywords.MESSAGE_DELETE_CAT, cats.toString())
+						+ ids.toString());
 		} else {
 			n.setTitle(Keywords.MESSAGE_DELETE_SUCCESS);
 			if (cats.isEmpty()) {
-				Task t = Storage.getTask(ids.get(Keywords.FIRST_ELEMENT));
-				n.setMessage(t.getUserFormat());
+				if (ids.size() == 1) {
+					Task t = Storage.getTask(ids.get(Keywords.FIRST_ELEMENT));
+					n.setMessage(t.getUserFormat());
+				} else {
+					n.setMessage(ids.toString());
+				}
 			} else {
 				n.setMessage(String.format(Keywords.MESSAGE_DELETE_CAT, cats.toString()));
 			}
@@ -64,7 +64,6 @@ public class DeleteTask extends Functionality {
 		for (int id : ids) {
 			deleteTask(id);
 		}
-		super.addToHistory("delete");
 	}
 	
 	/**
@@ -79,7 +78,6 @@ public class DeleteTask extends Functionality {
 		for (Task task : taskList) {
 			deleteTask(task.getId());
 		}
-		super.addToHistory("delete");
 	}
 
 	/**
