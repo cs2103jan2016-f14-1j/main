@@ -27,6 +27,7 @@ public class DeleteTask extends Functionality {
 		setNotification(n, cats, ids);
 		deleteByIds(ids);
 		deleteByCats(cats);
+		super.addToHistory("delete");
 		return n;
 	}
 
@@ -63,7 +64,6 @@ public class DeleteTask extends Functionality {
 		for (int id : ids) {
 			deleteTask(id);
 		}
-		super.addToHistory("delete");
 	}
 	
 	/**
@@ -78,7 +78,6 @@ public class DeleteTask extends Functionality {
 		for (Task task : taskList) {
 			deleteTask(task.getId());
 		}
-		super.addToHistory("delete");
 	}
 
 	/**

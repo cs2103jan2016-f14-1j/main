@@ -31,7 +31,8 @@ public class ParseEdit {
 	private static ArrayList<Date> datetimes;
 	private static ArrayList<String> categories;
 	private static int resetDate, resetTime;
-	private static String userInput; 
+	private static String userInput;
+
 	/**
 	 * Interpret and dissect the user's input
 	 * 
@@ -44,8 +45,8 @@ public class ParseEdit {
 		categories = new ArrayList<String>();
 		p = null;
 		m = null;
-		resetDate =0;
-		resetTime =0;
+		resetDate = 0;
+		resetTime = 0;
 		userInput = rawInput;
 		String taskName = Keywords.EMPTY_STRING;
 		for (int i = 0; i < 4; i++) {
@@ -81,26 +82,26 @@ public class ParseEdit {
 			userInput = userInput.replace(NO_TIME, Keywords.EMPTY_STRING);
 		}
 	}
-	
+
 	/**
 	 * Find the categories in the user input
 	 */
-	private static void findCategory(){
+	private static void findCategory() {
 		p = Pattern.compile(REGEX_CAT);
 		m = p.matcher(userInput);
-		while(m.find()) {
+		while (m.find()) {
 			ArrayList<String> cats = new ArrayList<String>(Arrays.asList(m.group().split(Keywords.SPACE_STRING)));
-			for(String cat : cats){
+			for (String cat : cats) {
 				categories.add(cat.replace("#", Keywords.EMPTY_STRING));
 			}
 			userInput = userInput.replaceAll(REGEX_CAT, Keywords.EMPTY_STRING);
 		}
 	}
-	
+
 	/**
 	 * Find the ID in the user input
 	 */
-	private static void findID(){
+	private static void findID() {
 		String result = find(REGEX_ID, userInput);
 		if (result == null) {
 			id = -1;
@@ -109,11 +110,11 @@ public class ParseEdit {
 			userInput = userInput.replaceAll(REGEX_ID + "(?:\\sto\\s)?", Keywords.EMPTY_STRING);
 		}
 	}
-	
+
 	/**
 	 * Find the dates in the user input
 	 */
-	private static void findDates(){
+	private static void findDates() {
 		String startDate = "(?<=from|on|by|at)\\s" + REGEX_DATE;
 		String result = find(startDate, userInput);
 		if (result != null) {// may have multiple dates
@@ -130,11 +131,11 @@ public class ParseEdit {
 			}
 		}
 	}
-	
+
 	/**
 	 * Find the times in the user input
 	 */
-	private static void findTimes(){
+	private static void findTimes() {
 		String startTime = "(?<=from|on|by|at)\\s" + REGEX_TIME;
 		String result = find(startTime, userInput);
 		if (result != null) {// may have multiple times
