@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import shared.Logger;
+
 // SymSpell: 1 million times faster through Symmetric Delete spelling correction algorithm
 //
 // The Symmetric Delete spelling correction algorithm reduces the complexity of edit candidate generation and dictionary lookup 
@@ -187,7 +189,7 @@ public class SymSpell
             return;
         }*/
     	InputStreamReader isr = new InputStreamReader(corpus);
-        System.out.println("Creating dictionary ...");
+        Logger.logf("Storage SymSpell ", "Creating dictionary ...");
         long startTime = System.currentTimeMillis();
         long wordCount = 0;
         
@@ -209,7 +211,7 @@ public class SymSpell
 		}
         //wordlist.TrimExcess();
         long endTime = System.currentTimeMillis();
-        System.out.println("\rDictionary: " + wordCount + " words, " + dictionary.size() + " entries, edit distance=" + editDistanceMax + " in " + (endTime-startTime)+"ms ");
+        Logger.logf("Storage SymSpell Done. ","\rDictionary: " + wordCount + " words, " + dictionary.size() + " entries, edit distance=" + editDistanceMax + " in " + (endTime-startTime)+"ms ");
     }
 
     //save some time and space
@@ -426,11 +428,8 @@ public class SymSpell
         for (suggestItem suggestion: suggestions)
         {
         	temp.add(suggestion.term);
-            //System.out.println( suggestion.term + " " + suggestion.distance + " " + suggestion.count);
         }
         return temp;
-       // if (verbose !=0) System.out.println(suggestions.size() + " suggestions");
-       // System.out.println("done");
     }
 
     // Damerau–Levenshtein distance algorithm and code 
