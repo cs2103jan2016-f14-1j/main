@@ -31,18 +31,28 @@ public class TestFile {
 	    parser.parse("add addadd add");
 	    assertEquals("Add Successful! addadd add has been added!", Parser.returnValue);
 	    
+	    // task with date
+	    // date is parsed and removed from task name
 		parser.parse("add task with date by 20Feb");
 		assertEquals("Add Successful! task with date has been added!", Parser.returnValue);
 	    
+		// task with date and category
+		// date and categories are parsed and removed from task name
 		parser.parse("add task with date and category #test by 20Feb");
 		assertEquals("Add Successful! task with date and category has been added!", Parser.returnValue);
 	    
+		// task with date, time, and category
+		// date, time and categories are parsed and removed from task name
 		parser.parse("add task with date and category #test by 20Feb from 8pm");
 		assertEquals("Add Successful! task with date and category has been added!", Parser.returnValue);
 		
+		// task with date, time range, and category
+		// date, time range and categories are parsed and removed from task name
 		parser.parse("add task with date and category #test by 20Feb from 8pm to 10pm");
 		assertEquals("Add Successful! task with date and category has been added!", Parser.returnValue);
 		
+		// task with date range and category
+		// date range and categories are parsed and removed from task namme
 		parser.parse("add task with date and category #test by 20Feb to 25Feb");
 		assertEquals("Add Successful! task with date and category has been added!", Parser.returnValue);
 		

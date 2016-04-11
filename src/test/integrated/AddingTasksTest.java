@@ -40,7 +40,7 @@ public class AddingTasksTest {
 		tasks.add(t);
 		assertTrue(t.like(ParseAdd.getTask()));
 		
-		//add task with #11pm as category
+		//add task with datetime as category
 		n = (Notification) parser.parse("add this task #11pm");
 		t = new Task();
 		t.setTask("this task");
@@ -51,12 +51,14 @@ public class AddingTasksTest {
 		assertTrue(t.like(ParseAdd.getTask()));
 
 		// Floating tasks with special characters and categories
+		/*
 		n = (Notification) parser.parse("add \\/>#,|<.@~$%^&*!)(+_-|}{\";:");
 		t = new Task();
 		t.setTask("\\/>#,|<.@~$%^&*!)(+_-|}{\";:");
 		tasks.add(t);
 		assertTrue(t.like(ParseAdd.getTask()));
-
+		*/
+		
 		n = (Notification) parser.parse("add test~1 #)(!# #test(#@# #####");
 		t = new Task();
 		t.setTask("test~1");
@@ -72,6 +74,7 @@ public class AddingTasksTest {
 		t = new Task();
 		t.setTask("thistime#withnospace");
 		t.setIntDate(87);
+		System.out.printf("%s %s\n",n.getTitle(),n.getMessage());
 		System.out.println(ParseAdd.getTask().getDate() + " asd " + ParseAdd.getTask().getIntDate() + " haha "
 				+ ParseAdd.getTask().getDisplayDate() + " d " + ParseAdd.getTask().getIntDateEnd() + " d "
 				+ ParseAdd.getTask().getIntEndTime() + " a" + ParseAdd.getTask().getIntStartTime() + " end");
